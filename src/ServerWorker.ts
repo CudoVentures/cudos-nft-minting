@@ -12,20 +12,10 @@ import RedisSessionStore from './backend/utilities/session-store/KoaSessionRedis
 const Config = require('../config/config');
 
 let sessionStore;
-if (Config.Build.DEV === true) {
-    sessionStore = new FileSessionStore();
-} else {
-    sessionStore = new RedisSessionStore({ 'host': Config.Server.SESSION_STORE_ADDR, 'port': Config.Server.SESSION_STORE_PORT });
-}
-
 // if (Config.Build.DEV === true) {
-//     const FileSessionStore = require(Config.Path.Backend.UTILITIES + '/session-store/koa-session-file');
-//     sessionStore = new FileSessionStore();
-//     Logger.log('Set FileSessionStore for cookie');
+sessionStore = new FileSessionStore();
 // } else {
-//     const RedisSessionStore = require(Config.Path.Backend.UTILITIES + '/session-store/koa-session-redis');
-//     sessionStore = new RedisSessionStore({'host': Config.Server.SESSION_STORE_ADDR, 'port': Config.Server.SESSION_STORE_PORT});
-//     Logger.log('Set RedisSessionStore for cookie');
+// sessionStore = new RedisSessionStore({ 'host': Config.Server.SESSION_STORE_TCP_ADDR, 'port': Config.Server.SESSION_STORE_PORT });
 // }
 
 const SESSION_CONFIG = {
