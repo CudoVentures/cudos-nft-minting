@@ -43,13 +43,15 @@ export default class Popover extends React.Component < PopoverProps > {
         }
     }
 
-    onEntered = () => {
-        this.nodes.ref.current.querySelector('.MuiPopover-paper').addEventListener('wheel', S.stopPropagation);
-    }
+    // No need to handle wheel event because the library is handing it for us
 
-    onExit = () => {
-        this.nodes.ref.current.querySelector('.MuiPopover-paper').removeEventListener('wheel', S.stopPropagation);
-    }
+    // onEntered = () => {
+    //     this.nodes.ref.current.querySelector('.MuiPopover-paper').addEventListener('wheel', S.stopPropagation);
+    // }
+
+    // onExit = () => {
+    //     this.nodes.ref.current.querySelector('.MuiPopover-paper').removeEventListener('wheel', S.stopPropagation);
+    // }
 
     render() {
         return (
@@ -58,8 +60,11 @@ export default class Popover extends React.Component < PopoverProps > {
                 ref = { this.nodes.ref }
                 disableScrollLock = { true }
                 className = { 'Popover' }
-                onEntered = { this.onEntered }
-                onExit = { this.onExit } >
+                // TransitionProps = {{
+                //     onEntered: this.onEntered,
+                //     onExit: this.onExit,
+                // }}
+            >
                 { this.props.children }
             </MuiPopover>
         )

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import MuiButton from '@material-ui/core/Button';
 
 import './../../css/components-inc/button.css';
 import S from '../utilities/Main';
 
-const theme01 = createMuiTheme({
+const theme01 = createTheme({
     palette: {
         primary: {
             main: '#FF314E',
@@ -20,7 +20,7 @@ const theme01 = createMuiTheme({
 });
 
 // this is not used
-const theme02 = createMuiTheme({
+const theme02 = createTheme({
     palette: {
         primary: {
             main: '#808080',

@@ -24,7 +24,9 @@ class MarkoModule {
 
         if (fs.existsSync(sourceChildPath) === true) {
             const timestamp = new Date().getTime();
-            let compiled = markoCompiler.compileFile(sourceChildPath);
+            let compiled = markoCompiler.compileFile(sourceChildPath, {
+                modules: 'cjs',
+            });
             compiled = compiled.replace('/vendor.css', `/vendor.css?${timestamp}`).replace('/vendor.js', `/vendor.js?${timestamp}`);
             compiled = compiled.replace('/bundle.css', `/bundle.css?${timestamp}`).replace('/bundle.js', `/bundle.js?${timestamp}`);
             const folderPath = path.dirname(targetChildPath);

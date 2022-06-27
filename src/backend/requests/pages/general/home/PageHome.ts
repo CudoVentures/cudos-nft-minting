@@ -6,7 +6,7 @@ import Context from '../../../../utilities/network/Context';
 
 const Config = require('../../../../../../config/config');
 
-const TEMPLATE = require(PageHomeH.TEMPLATE_PATH);
+const TEMPLATE = require(PageHomeH.TEMPLATE_PATH).default;
 
 const CSS_PAGE_LOADING = fs.readFileSync(`${Config.Path.Root.Frontend.RESOURCES}/common/css/inline/page-loading.css`);
 

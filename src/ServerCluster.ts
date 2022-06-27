@@ -21,7 +21,7 @@ class ServerCluster {
     dbPool: DatabasePool | null = null;
 
     async start() {
-        if (cluster.isMaster) {
+        if (cluster.isPrimary) {
             this.initMasterListeners();
             this.initErrorListeners();
             this.initFiles();
@@ -61,7 +61,7 @@ class ServerCluster {
         if (Config.Build.DEV === true) {
             process.on('unhandledRejection', async (reason, p) => {
                 Logger.error('Promise error', reason);
-                if (cluster.isMaster) {
+                if (cluster.isPrimary) {
                     process.exit(0);
                 } else {
                     await this.workerExit();
