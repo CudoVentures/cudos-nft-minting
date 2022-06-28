@@ -9,6 +9,7 @@ import ContextPageComponent, { ContextPageComponentProps } from './common/Contex
 import './../../css/components-pages/page-home-component.css';
 
 interface Props extends ContextPageComponentProps {
+    generalStore: GeneralStore,
 }
 
 export default class PageHomeComponent extends ContextPageComponent < Props > {
