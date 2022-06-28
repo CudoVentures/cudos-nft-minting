@@ -13,6 +13,7 @@ import Ajax from '../utilities/Ajax';
 import S from '../utilities/Main';
 
 import PageLayoutComponent from './PageLayoutComponent';
+import WalletStore from '../stores/WalletStore';
 
 configure({
     enforceActions: 'never',
@@ -26,17 +27,20 @@ export interface PageComponentProps {
 export default class PageComponent < Pr extends PageComponentProps, St = {}, SS = any > extends React.Component < Pr, St, SS > {
 
     static layout(componentNode: React.ReactNode) {
-        ReactDOM.render((
-            <Provider
-                appStore = { new AppStore() }
-                accountSessionStore = { new AccountSessionStore() }
-                alertStore = { new AlertStore() }
-                popupPasswordStore = { new PopupPasswordStore() } >
+        ReactDOM.render(
+            (
+                <Provider
+                    appStore = { new AppStore() }
+                    accountSessionStore = { new AccountSessionStore() }
+                    alertStore = { new AlertStore() }
+                    popupPasswordStore = { new PopupPasswordStore() }
+                    walletStore = { new WalletStore() } >
 
-                { componentNode }
+                    { componentNode }
 
-            </Provider>
-        ), document.querySelector('.ReactEntryPoint'));
+                </Provider>
+            ), document.querySelector('.ReactEntryPoint'),
+        );
     }
 
     constructor(props: Pr) {
