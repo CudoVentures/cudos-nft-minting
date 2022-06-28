@@ -20,13 +20,21 @@ const envVariables = [
     'BACKEND_PORT',
     'URL',
     'SESSION_UNIQUE_KEY',
+    'CHAIN_NAME',
+    'CHAIN_ID',
+    'RPC',
+    'API',
+    'GAS_PRICE',
+    'GAS',
+    'FEE',
+    'STAKING',
 ];
 
 if (process.env.NODE_ENV === 'production') {
-    envVariables.concat([
-        'SESSION_STORE_TCP_ADDR',
-        'SESSION_STORE_PORT',
-    ])
+    // envVariables.concat([
+    //     'SESSION_STORE_TCP_ADDR',
+    //     'SESSION_STORE_PORT',
+    // ])
 }
 
 envVariables.forEach((envVariable) => {
@@ -184,6 +192,16 @@ const Config = {
         GENERAL: `${URL_ROOT}`,
         CADMIN: `${URL_ROOT}/cadmin`,
         API: `${URL_ROOT}/api`,
+    },
+    CUDOS_NETWORK: {
+        CHAIN_NAME: process.env.CHAIN_NAME,
+        CHAIN_ID: process.env.CHAIN_ID,
+        RPC: process.env.RPC,
+        API: process.env.API,
+        GAS_PRICE: process.env.GAS_PRICE,
+        FEE: process.env.FEE,
+        GAS: process.env.GAS,
+        STAKING: process.env.STAKING,
     },
 };
 
