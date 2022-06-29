@@ -21,3 +21,4 @@ npm-debug.log.*
 vendor
 .node*
 dist
+src/cudosjs

@@ -92,6 +92,7 @@ const serverExclude = [
     path.join(Config.Path.ROOT, '/flow-typed'),
     path.join(Config.Path.ROOT, '/node_modules'),
     path.join(Config.Path.ROOT, '/src/frontend'),
+    path.join(Config.Path.ROOT, '/src/cudosjs'),
     path.join(Config.Path.ROOT, '/tests'),
     path.join(Config.Path.ROOT, '/tools'),
 ];

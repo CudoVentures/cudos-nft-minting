@@ -27,7 +27,7 @@
     "redis": "^4.1.0",
     "source-map-support": "^0.5.21",
     "winston": "^3.8.0",
-    "bignum": "^0.13.1"
+    "cudosjs": "file:./src/cudosjs"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
