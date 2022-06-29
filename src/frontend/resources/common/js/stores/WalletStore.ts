@@ -1,5 +1,5 @@
 import { makeAutoObservable, makeObservable, observable, observe } from 'mobx';
-import KeplrWallet from 'cudosjs/ledgers/KeplrWallet';
+import { KeplrWallet } from 'cudosjs/ledgers/KeplrWallet';
 import Config from '../../../../../../builds/dev-generated/Config';
 
 export default class WalletStore {
