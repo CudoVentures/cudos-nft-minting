@@ -151,7 +151,7 @@ class DevGeneratedModule {
     static processConfig() {
         const config = {
             'URL': Config.URL,
-            'APIS': Config.APIS,
+            'CUDOS_NETWORK': Config.CUDOS_NETWORK,
         };
 
         fs.writeFileSync(path.join(Config.Path.Builds.DEV_GENERATED, 'Config.ts'), `const Config = ${JSON.stringify(config)}; export default Config;`);
