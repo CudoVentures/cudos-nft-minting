@@ -14,6 +14,7 @@ import S from '../utilities/Main';
 
 import PageLayoutComponent from './PageLayoutComponent';
 import WalletStore from '../stores/WalletStore';
+import NftStore from '../stores/NftStore';
 
 configure({
     enforceActions: 'never',
@@ -34,8 +35,8 @@ export default class PageComponent < Pr extends PageComponentProps, St = {}, SS 
                     accountSessionStore = { new AccountSessionStore() }
                     alertStore = { new AlertStore() }
                     popupPasswordStore = { new PopupPasswordStore() }
-                    walletStore = { new WalletStore() } >
-
+                    walletStore = { new WalletStore() }
+                    nftStore = { new NftStore() } >
                     { componentNode }
 
                 </Provider>

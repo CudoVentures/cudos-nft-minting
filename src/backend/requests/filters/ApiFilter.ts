@@ -1,5 +1,6 @@
 import Api from '../api/Api';
 import GeneralApi from '../api/general/GeneralApi';
+import NftApi from '../api/nft/NftApi';
 import Logger from '../../utilities/Logger';
 import Response from '../../utilities/network/Response';
 import Context from '../../utilities/network/Context';
@@ -13,6 +14,7 @@ export default class ApiFilter {
     static init() {
         ApiFilter.map = new Map();
         ApiFilter.map.set(GeneralApi.URL, new GeneralApi());
+        ApiFilter.map.set(NftApi.URL, new NftApi());
     }
 
     static async onRequest(context: Context) {

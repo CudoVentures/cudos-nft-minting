@@ -25,9 +25,11 @@ const envVariables = [
     'RPC',
     'API',
     'GAS_PRICE',
-    'GAS',
-    'FEE',
     'STAKING',
+    'DENOM_ID',
+    'SIGNER_MNEMONIC',
+    'INFURA_ID',
+    'INFURA_SECRET',
 ];
 
 if (process.env.NODE_ENV === 'production') {
@@ -69,9 +71,6 @@ const Config = {
         SESSION_UNIQUE_KEY: process.env.SESSION_UNIQUE_KEY,
         SESSION_STORE_TCP_ADDR: process.env.SESSION_STORE_TCP_ADDR,
         SESSION_STORE_PORT: process.env.SESSION_STORE_PORT,
-    },
-    Cudos: {
-        RPC: process.env.RPC,
     },
     Path: {
         ROOT: path.join(__dirname, '..'),
@@ -202,9 +201,13 @@ const Config = {
         RPC: process.env.RPC,
         API: process.env.API,
         GAS_PRICE: process.env.GAS_PRICE,
-        FEE: process.env.FEE,
-        GAS: process.env.GAS,
         STAKING: process.env.STAKING,
+        DENOM_ID: process.env.DENOM_ID,
+    },
+    CUDOS_SIGNER: {
+        MNEMONIC: process.env.SIGNER_MNEMONIC,
+        INFURA_ID: process.env.INFURA_ID,
+        INFURA_SECRET: process.env.INFURA_SECRET,
     },
 };
 
