@@ -20,6 +20,7 @@ const envVariables = [
     'BACKEND_PORT',
     'URL',
     'SESSION_UNIQUE_KEY',
+    'RPC',
 ];
 
 if (process.env.NODE_ENV === 'production') {
@@ -61,6 +62,9 @@ const Config = {
         SESSION_UNIQUE_KEY: process.env.SESSION_UNIQUE_KEY,
         SESSION_STORE_TCP_ADDR: process.env.SESSION_STORE_TCP_ADDR,
         SESSION_STORE_PORT: process.env.SESSION_STORE_PORT,
+    },
+    Cudos: {
+        RPC: process.env.RPC,
     },
     Path: {
         ROOT: path.join(__dirname, '..'),
