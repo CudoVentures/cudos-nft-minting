@@ -11,7 +11,7 @@ import S from '../utilities/Main';
 const theme01 = createTheme({
     palette: {
         primary: {
-            main: '#FF314E',
+            main: '#52A6F8',
         },
         secondary: {
             main: '#262b31',

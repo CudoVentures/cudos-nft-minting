@@ -212,6 +212,13 @@ const Config = {
         HOST: process.env.INFURA_HOST,
         ID: process.env.INFURA_ID,
         SECRET: process.env.INFURA_SECRET,
+    },
+    SOCIALS: {
+        WEBSITE: process.env.WEBSITE,
+        DISCORD: process.env.DISCORD,
+        TELEGRAM: process.env.TELEGRAM,
+        TWITTER: process.env.TWITTER,
+        GITHUB: process.env.GITHUB,
     }
 };
 

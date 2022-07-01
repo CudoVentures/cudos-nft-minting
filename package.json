@@ -28,7 +28,7 @@
     "source-map-support": "^0.5.21",
     "winston": "^3.8.0",
     "cudosjs": "^0.1.0",
-    "ipfs-http-client": "56.0.0",
+    "ipfs-http-client": "56.0.0"
   },
   "devDependencies": {
     "ipfs-http-client": "56.0.0",

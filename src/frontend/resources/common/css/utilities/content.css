@@ -1,11 +1,10 @@
 :root {
-    --color-primary: #FF314E;
-    --color-secondary: #262b31;
-    --color-red:#bb0000;
-    --color-green:#2AD791;
-    --color-dark-gray: #425062;
-
-    --color-body-background:#fff;
+    --color-primary: #52A6F8;
+    --color-secondary: #636D8F;
+    --color-light-gray: #F6F9FE;
+    --color-red: #EA6161;
+    
+    --color-body-background: linear-gradient(296.82deg, rgba(246, 249, 254, 0) 0%, rgba(246, 249, 254, 0.86) 63.54%, #F6F9FE 100%);
 
     /* theme */
     --color-input-text: #000;
@@ -33,11 +32,6 @@
     --color-checkbox-border: #262b31;
     --color-checkbox-border-active: #262b31;
 
-    --color-datepicker-foreground: var(--color-dark-gray);
-    --color-datepicker-background: #fff;
-    --color-datepicker-content-background: #9FB0C5;
-    --color-datepicker-selected: var(--color-primary);
-
     --color-popup-background: #fff;
     /* theme */
     
@@ -47,7 +41,7 @@
 
 html {
 	color:#000;
-    font-family:BeseirCircle, sans-serif; font-weight:400; font-size:16px;
+    font-family:Poppins, sans-serif; font-weight:400; font-size:16px;
     scroll-behavior: smooth;
     background:var(--color-body-background);
 }
