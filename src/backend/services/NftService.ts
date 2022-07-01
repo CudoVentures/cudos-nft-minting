@@ -2,6 +2,7 @@ import NftModel from '../modules/cudos-network/model/nft/NftModel';
 import { GasPrice, DirectSecp256k1HdWallet, SigningStargateClient } from 'cudosjs';
 import Config from '../../../config/config';
 import NftImageModel from '../modules/cudos-network/model/nftImage/NftImageModel';
+import { create, CID, IPFSHTTPClient } from 'ipfs-http-client';
 
 const MEMO = 'Minted by Cudos NFT Minter';
 
@@ -17,8 +18,10 @@ export default class NftService {
     async mintNft(nftModel: NftModel): Promise<NftModel> {
         const wallet = await DirectSecp256k1HdWallet.fromMnemonic(Config.CUDOS_SIGNER.MNEMONIC);
         const sender = (await wallet.getAccounts())[0].address;
+        let client: SigningStargateClient;
+
         try {
-            const client = await SigningStargateClient.connectWithSigner('http://host.docker.internal:36657', wallet);
+            client = await SigningStargateClient.connectWithSigner('http://host.docker.internal:36657', wallet);
         } catch (e) {
             throw Error('Failed to connect to Cudos node.');
         }
@@ -58,9 +61,29 @@ export default class NftService {
     }
 
     async imageUpload(nftImageModel: NftImageModel): Promise<NftImageModel> {
+        const base64Buffer = nftImageModel.file.substring(nftImageModel.file.indexOf(',') + 1);
+        const documentBuffer = Buffer.from(base64Buffer, 'base64');
+        const authorization = `Basic ${Buffer.from(`${Config.INFURA.ID}:${Config.INFURA.SECRET}`).toString('base64')}`;
+
+        try {
+            const ipfs: IPFSHTTPClient = create({
+                url: Config.INFURA.HOST,
+            });
+            const added = await ipfs.add(documentBuffer, {
+                pin: true,
+                headers: {
+                    authorization,
+                },
+            });
+
+            const url = `https://ipfs.infura.io/ipfs/${added.path}`
+            nftImageModel.imageUrl = url;
+            nftImageModel.file = '';
+        } catch (error) {
+            console.error('IPFS error ', error);
+        }
 
         // TODO: upload to infura;
-
         return nftImageModel;
     }
 }

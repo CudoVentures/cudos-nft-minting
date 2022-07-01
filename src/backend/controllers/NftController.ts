@@ -22,8 +22,7 @@ export default class NftController {
     async imageUpload(context: Context) {
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
-
-        const req = new NftImageUploadReq(payload.params.nftImageModel);
+        const req = new NftImageUploadReq(payload.params);
 
         const nftService = servicesFactory.getNftService();
         const productModel = await nftService.imageUpload(req.nftImageModel);

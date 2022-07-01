@@ -5,16 +5,14 @@ import NftImageModelH from './NftImageModel.h.';
 export default class NftImageModelG extends NftImageModelH {
     constructor() {
         super();
-        this.imageId = SV.Strings.NOT_EXISTS;
         this.imageUrl = SV.Strings.EMPTY;
-        this.sizeInBytes = 0;
+        this.file = SV.Strings.EMPTY;
     }
 
     toNetwork(): any {
         return {
-            'imageId': this.imageId,
             'imageUrl': this.imageUrl,
-            'sizeInBytes': this.sizeInBytes,
+            'file': this.file,
         }
     }
 
@@ -25,9 +23,8 @@ export default class NftImageModelG extends NftImageModelH {
 
         const model = new NftImageModel();
 
-        model.imageId = json.imageId ?? model.imageId;
         model.imageUrl = json.imageUrl ?? model.imageUrl;
-        model.sizeInBytes = Number(json.sizeInBytes) ?? model.sizeInBytes;
+        model.file = json.file ?? model.file;
 
         return model;
     }

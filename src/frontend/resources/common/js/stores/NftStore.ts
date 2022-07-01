@@ -18,6 +18,7 @@ export default class NftStore {
         this.nftApi = new NftApi();
         this.infuraApi = new InfuraApi();
         this.nfts = [];
+        this.nftForm = new NftModel();
         makeObservable(this);
     }
 
@@ -38,14 +39,14 @@ export default class NftStore {
     }
 
     async mintNft(): Promise<void> {
-        this.infuraApi.uploadImage(this.nftImage, (nftImage: NftImageModel) => {
-            this.nftImage = nftImage;
-            this.nftForm.uri = this.nftImage.imageUrl;
+        this.nftApi.mintNft(this.nftForm, (nft: NftModel) => {
+            this.nfts.push(nft);
+        })
+    }
 
-            this.nftApi.mintNft(this.nftForm, (nft: NftModel) => {
-                this.nfts.push(nft);
-            })
-        });
+    nftImageStartUpload(): NftImageModel {
+        this.nftImage = new NftImageModel();
 
+        return this.nftImage;
     }
 }

@@ -28,6 +28,7 @@ const envVariables = [
     'STAKING',
     'DENOM_ID',
     'SIGNER_MNEMONIC',
+    'INFURA_HOST',
     'INFURA_ID',
     'INFURA_SECRET',
 ];
@@ -206,9 +207,12 @@ const Config = {
     },
     CUDOS_SIGNER: {
         MNEMONIC: process.env.SIGNER_MNEMONIC,
-        INFURA_ID: process.env.INFURA_ID,
-        INFURA_SECRET: process.env.INFURA_SECRET,
     },
+    INFURA: {
+        HOST: process.env.INFURA_HOST,
+        ID: process.env.INFURA_ID,
+        SECRET: process.env.INFURA_SECRET,
+    }
 };
 
 module.exports = Config;
