@@ -1,0 +1,33 @@
+.SideMenu {
+    margin-bottom: auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.SideMenu .MenuItem {
+    color: var(--color-secondary);
+    fill: var(--color-secondary);
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 21px;
+    width: 225px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 23px;
+    align-items: center;
+    border-radius: 2px 10px 10px 2px;
+    border-left: 3px solid #fff;
+}
+
+.SideMenu .MenuItem.Selected {
+    color: var(--color-primary);
+    fill: var(--color-primary);
+    border-color: var(--color-primary);
+    background: var(--color-light-gray);
+}
+
+
+.SideMenu .MenuItem .SVG {
+    margin-right: 13px;
+}

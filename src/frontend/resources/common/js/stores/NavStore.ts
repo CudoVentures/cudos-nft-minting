@@ -1,23 +1,28 @@
 import { makeObservable, observable } from 'mobx';
-import { MintOption } from '../../../general/js/components-inc/MintWindow/MintPageChooseOption';
-import { MintStage } from '../../../general/js/components-inc/MintWindow/MintWindow';
-
-import { InnerPage } from '../../../general/js/components-inc/SideMenu';
+import S from '../utilities/Main';
 
 export default class NavStore {
-    @observable selectedInnerPage: InnerPage;
-    @observable selectedMintOption: MintOption;
-    @observable mintStage: MintStage;
+    @observable innerPage: number;
+    @observable mintOption: number;
+    @observable mintStep: number;
 
     constructor() {
-        this.selectedInnerPage = InnerPage.Mint;
-        this.selectedMintOption = MintOption.Single;
-        this.mintStage = MintStage.ChooseOption;
+        this.innerPage = S.NOT_EXISTS;
+        this.mintOption = S.NOT_EXISTS;
+        this.mintStep = S.NOT_EXISTS;
 
         makeObservable(this);
     }
 
-    onSelectInnerPage(page: InnerPage): void {
-        this.selectedInnerPage = page;
+    onSelectInnerPage(page: number): void {
+        this.innerPage = page;
+    }
+
+    onSelectMintOption(option: number): void {
+        this.mintOption = option;
+    }
+
+    onSelectStage(stage: number): void {
+        this.mintStep = stage;
     }
 }

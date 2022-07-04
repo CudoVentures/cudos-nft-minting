@@ -1,35 +1,55 @@
+import { inject, observer } from 'mobx-react';
 import React from 'react';
-import NftImageModel from '../../../../common/js/models/NftImageModel';
-
-export enum MintOption {
-    Single,
-    Multiple
-}
-
-export class MintOptionData {
-    option: MintOption;
-    header: string;
-    info: string;
-
-    constructor(option: MintOption, header: string, info: string) {
-        this.option = option;
-        this.header = header;
-        this.info = info;
-    }
-}
+import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
+import NavStore from '../../../../common/js/stores/NavStore';
+import SvgUploadSingle from '../../../../common/svg/upload-single.svg';
+import SvgUploadMultiple from '../../../../common/svg/upload-multiple.svg';
 
 interface Props {
-    selectedMintOption: MintOption;
-    mintOptionsData: MintOptionData[];
+    navStore: NavStore
 }
 
 interface State {
 
 }
 
-// TODO: implement
-export default class MintPageChooseOption extends React.Component < Props, State > {
+class MintPageChooseOption extends React.Component<Props, State> {
+
+    OPTION_TYPES = {
+        SINGLE: 0,
+        MULTIPLE: 1,
+    }
+
+    OPTIONS: Map<number, any> = new Map<number, any>([
+        [this.OPTION_TYPES.SINGLE, {
+            icon: SvgUploadSingle,
+            title: 'Single Mint',
+            info: 'This option allows you to upload and mint only one file for NFT',
+        }],
+        [this.OPTION_TYPES.MULTIPLE, {
+            icon: SvgUploadMultiple,
+            title: 'Multiple Mint',
+            info: 'This option allows you to upload and mint multiple files in one mint',
+        }],
+    ])
+
     render() {
-        return (<></>)
+        return (
+            <div className={'ChooseOptionWindow'}>
+                <h3>Choose option</h3>
+                <LayoutBlock className={'OptionHolder'}>
+                    {Array.from(this.OPTIONS)
+                        .map(([key, option]) => <div key={key} className={`OptionBox FlexColumn ${this.props.navStore.mintOption === key ? 'Selected' : ''}`} onClick={() => this.props.navStore.onSelectMintOption(key)}>
+                            <div className={'SvgBox'}>
+                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: option.icon }}></div>
+                                <h4>{option.title}</h4>
+                                <span>{option.info}</span>
+                            </div>
+                        </div>)}
+                </LayoutBlock>
+            </div>
+        )
     }
 }
+
+export default inject('navStore')((observer(MintPageChooseOption)));

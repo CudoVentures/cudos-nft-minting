@@ -1,5 +1,5 @@
-import React from "react";
-import NftImageModel from "../../../../common/js/models/NftImageModel";
+import React from 'react';
+import NftImageModel from '../../../../common/js/models/NftImageModel';
 
 interface Props {
     images: NftImageModel[];
@@ -12,7 +12,7 @@ interface State {
 
 }
 
-//TODO: implement
+// TODO: implement
 export default class MintPageNftDetails extends React.Component<Props, State> {
 
     onDrop = (e) => {
@@ -56,7 +56,8 @@ export default class MintPageNftDetails extends React.Component<Props, State> {
         }
     }
 
+    // TODO: implement
     render() {
-        return ()
+        return (<></>)
     }
 }

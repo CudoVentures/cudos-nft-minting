@@ -1,2 +1,20 @@
 .PageInner {
+    /* background: red; */
+}
+
+.PageInner .MainContent {
+    padding-left: 30px;
+    padding-right: 75px;
+}
+
+.PageInner .MainContent .MainContentWindow {
+    padding-left: 30px;
+    padding-right: 75px;
+    flex-grow: 1;
+}
+
+.PageInner .MainContent .MainContentWindow .WhiteBox {
+    border-radius: 20px;
+    background: #fff;
+    padding: 30px 110px;
 }
