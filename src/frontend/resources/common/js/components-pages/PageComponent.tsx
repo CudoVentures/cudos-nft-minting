@@ -15,6 +15,7 @@ import S from '../utilities/Main';
 import PageLayoutComponent from './PageLayoutComponent';
 import WalletStore from '../stores/WalletStore';
 import NftStore from '../stores/NftStore';
+import NavStore from '../stores/NavStore';
 
 configure({
     enforceActions: 'never',
@@ -25,19 +26,20 @@ export interface PageComponentProps {
     alertStore: AlertStore,
 }
 
-export default class PageComponent < Pr extends PageComponentProps, St = {}, SS = any > extends React.Component < Pr, St, SS > {
+export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = any> extends React.Component<Pr, St, SS> {
 
     static layout(componentNode: React.ReactNode) {
         ReactDOM.render(
             (
                 <Provider
-                    appStore = { new AppStore() }
-                    accountSessionStore = { new AccountSessionStore() }
-                    alertStore = { new AlertStore() }
-                    popupPasswordStore = { new PopupPasswordStore() }
-                    walletStore = { new WalletStore() }
-                    nftStore = { new NftStore() } >
-                    { componentNode }
+                    appStore={new AppStore()}
+                    accountSessionStore={new AccountSessionStore()}
+                    alertStore={new AlertStore()}
+                    popupPasswordStore={new PopupPasswordStore()}
+                    walletStore={new WalletStore()}
+                    nftStore={new NftStore()}
+                    navStore={new NavStore()} >
+                    {componentNode}
 
                 </Provider>
             ), document.querySelector('.ReactEntryPoint'),
@@ -85,10 +87,10 @@ export default class PageComponent < Pr extends PageComponentProps, St = {}, SS 
     render() {
         return (
             <PageLayoutComponent
-                className = { `${this.getPageLayoutComponentCssClassName()} Transition` }
-                popups = { this.renderPopups() } >
+                className={`${this.getPageLayoutComponentCssClassName()} Transition`}
+                popups={this.renderPopups()} >
 
-                { this.renderContent() }
+                {this.renderContent()}
 
             </PageLayoutComponent>
         );

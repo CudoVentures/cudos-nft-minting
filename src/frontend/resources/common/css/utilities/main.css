@@ -12,9 +12,9 @@ html[class*='OverflowHidden'] {
 }
 
 /*
-In webview to prevent safari bounce 
+In webview to prevent safari bounce
 In this case scroll behaviour must be manage in some other container. This usually comes out of the box because of common PageView wrapper that is actually SPA main container
-This css snipper must be added in some content.css file in order to be applied only for specific v-* 
+This css snipper must be added in some content.css file in order to be applied only for specific v-*
 html {
     width: 100%;
     position: fixed;
@@ -196,6 +196,20 @@ html:not(.Touchable) .HoverHiddenTrigger:hover .HoverHidden {
 
 .FlexColumn {
     display:flex; flex-direction:column;
+}
+
+.SpaceBetween {
+    justify-items: space-between;
+}
+
+.SpaceAround {
+    justify-items: space-around;
+}
+
+.WithSeparatorVLine > *:not(:last-child):after {
+    border-left: 1px solid black;
+    content: '';
+    margin: 0 12px;
 }
 
 *, *:after, *:before {

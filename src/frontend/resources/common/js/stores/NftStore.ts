@@ -1,16 +1,15 @@
-
 import { makeObservable, observable } from 'mobx';
 import InfuraApi from '../api/InfuraApi';
 import NftApi from '../api/NftApi';
 import NftImageModel from '../models/NftImageModel';
 import NftModel from '../models/NftModel';
 
-
 export default class NftStore {
     nftApi: NftApi;
     infuraApi: InfuraApi;
 
-    @observable nftImage: NftImageModel;
+    @observable nftImages: NftImageModel[];
+    @observable selectedImages: number[];
     @observable nftForm: NftModel;
     @observable nfts: NftModel[];
 
@@ -19,6 +18,8 @@ export default class NftStore {
         this.infuraApi = new InfuraApi();
         this.nfts = [];
         this.nftForm = new NftModel();
+        this.nftImages = [];
+        this.selectedImages = [];
         makeObservable(this);
     }
 
@@ -45,8 +46,8 @@ export default class NftStore {
     }
 
     nftImageStartUpload(): NftImageModel {
-        this.nftImage = new NftImageModel();
-
-        return this.nftImage;
+        const nftImage = new NftImageModel();
+        this.nftImages.push(nftImage);
+        return nftImage;
     }
 }

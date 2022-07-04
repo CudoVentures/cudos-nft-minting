@@ -20,7 +20,7 @@ export default class PageHeader extends React.Component < Props, State > {
 
     render() {
         return (
-            <div className={' Header FlexRow SpaceBetween'}>
+            <div className={' Header FlexRow FlexSplit'}>
                 <div className={' HeaderLogo FlexRow'}>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCudosLogo }}></div>
                     { !this.props.connected
@@ -29,7 +29,7 @@ export default class PageHeader extends React.Component < Props, State > {
                     <div className={' SeparatorVLine '}></div>
                     <span className={' Bold '}>NFT Mint</span>
                 </div>
-                <div className={' HeaderEnd FlexRow'}>
+                <div className={' HeaderEnd FlexRow StartRight'}>
                     {this.props.connected
                         ? <>
                             <div className={' Rounded LightGray HeaderNetwork '}>
@@ -54,7 +54,7 @@ export default class PageHeader extends React.Component < Props, State > {
                                 </span>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
                             </a>
-                            <Button 
+                            <Button
                                 onClick={this.props.onClickToggleWallet}
                                 className={' ConnectWallet '}
                                 type = { Button.TYPE_ROUNDED }

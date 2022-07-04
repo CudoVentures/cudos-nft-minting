@@ -1,5 +1,5 @@
-import React from "react";
-import NftImageModel from "../../../../common/js/models/NftImageModel";
+import React from 'react';
+import NftImageModel from '../../../../common/js/models/NftImageModel';
 
 export enum MintOption {
     Single,
@@ -24,11 +24,12 @@ interface Props {
 }
 
 interface State {
-    
+
 }
 
+// TODO: implement
 export default class MintPageChooseOption extends React.Component < Props, State > {
     render() {
-        return ()
+        return (<></>)
     }
 }

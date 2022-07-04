@@ -1,6 +1,7 @@
 import Page from '../pages/Page';
 import PageNotFound from '../pages/general/not-found/PageNotFound';
 import PageHome from '../pages/general/home/PageHome';
+import PageInner from '../pages/general/inner/PageInner';
 
 const Config = require('./../../../../config/config');
 
@@ -11,7 +12,7 @@ export default class GeneralFilter {
     static init() {
         GeneralFilter.map = new Map();
         GeneralFilter.map.set(`${Config.URL.ROOT}/`, new PageHome());
-        GeneralFilter.map.set(PageHome.URL, new PageHome());
+        GeneralFilter.map.set(PageInner.URL, new PageInner());
         GeneralFilter.map.set(PageNotFound.URL, new PageNotFound());
     }
 
