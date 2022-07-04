@@ -1,71 +1,72 @@
 import React from 'react';
-import Button from '../../../common/js/components-inc/Button';
+import { inject, observer } from 'mobx-react';
+
 import { WEBSITE } from '../../../common/js/utilities/Links';
-import SvgCudosLogo from '../../../common/svg/cudos-logo.svg';
+
+import WalletStore from '../../../common/js/stores/WalletStore';
+import Button from '../../../common/js/components-inc/Button';
+
+import SvgCudosLogoWithText from '../../../common/svg/cudos-logo-with-text.svg';
 import SvgLinkBox from '../../../common/svg/link-box.svg';
 import SvgPlanet from '../../../common/svg/planet.svg';
 import SvgWallet from '../../../common/svg/wallet.svg';
 import SvgMenuDots from '../../../common/svg/menu-dots.svg';
+import './../../css/components-inc/page-header.css';
 
 interface Props {
-    connected: boolean;
-    address: string;
-    onClickToggleWallet: () => Promise<void>;
+    walletStore: WalletStore;
 }
 
 interface State {
 }
 
-export default class PageHeader extends React.Component < Props, State > {
+class PageHeader extends React.Component < Props, State > {
+
+    onClickToggleKeplr = () => {
+        this.props.walletStore.onClickToggleKeplr();
+    }
 
     render() {
+        const keplrWallet = this.props.walletStore.keplrWallet;
+
         return (
-            <div className={' Header FlexRow FlexSplit'}>
-                <div className={' HeaderLogo FlexRow'}>
-                    <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCudosLogo }}></div>
-                    { !this.props.connected
-                        && <span>CUDOS</span>
-                    }
-                    <div className={' SeparatorVLine '}></div>
-                    <span className={' Bold '}>NFT Mint</span>
+            <header className={'PageHeader FlexRow FlexSplit'}>
+                <div className={'HeaderLogo FlexRow'}>
+                    <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCudosLogoWithText }}></div>
+                    <div className = { 'Slogan' }>NFT Mint</div>
                 </div>
-                <div className={' HeaderEnd FlexRow StartRight'}>
-                    {this.props.connected
+                <div className={'HeaderEnd FlexRow StartRight'}>
+                    {keplrWallet.connected
                         ? <>
-                            <div className={' Rounded LightGray HeaderNetwork '}>
+                            <div className={'InfoBlock FlexRow'}>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgPlanet }}></div>
-                                <span className={' Bold '}>CUDOS Mainnet</span>
+                                <div>CUDOS Mainnet</div>
                             </div>
-                            <div className={' Rounded LightGray HeaderAddress '}>
+                            <div className={'InfoBlock FlexRow'}>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgWallet }}></div>
-                                <span className={' Bold '}>{this.props.address}</span>
+                                <div className = { 'WalletAddress Dots' } title = { keplrWallet.accountAddress }>{keplrWallet.accountAddress}</div>
                             </div>
-                            <div className={' Rounded LightGray HeaderOptions '}>
+                            <div className={'InfoBlock FlexRow'}>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgMenuDots }}></div>
                             </div>
                         </>
                         : <>
-                            <a href={ WEBSITE } className={' NetworkLink '}>
-                                <span className={' Bold '}>
-                                    {'check '}
-                                </span>
-                                <span className={' Link '}>
-                                    cudos.org
-                                </span>
-                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
+                            <a href={ WEBSITE } className={'NetworkLink FlexRow'} target="_blank" rel="noreferrer">
+                                Check <span className = { 'Link' }>cudos.org</span>
+                                <div className={'SVG IconOpenUrl'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
                             </a>
                             <Button
-                                onClick={this.props.onClickToggleWallet}
-                                className={' ConnectWallet '}
-                                type = { Button.TYPE_ROUNDED }
-                                color = { Button.COLOR_SCHEME_1 }
-                            >
+                                onClick = { this.onClickToggleKeplr }
+                                type = { Button.TYPE_ROUNDED_LARGE }
+                                color = { Button.COLOR_SCHEME_1 } >
                                 Connect Wallet
                             </Button>
                         </>
                     }
                 </div>
-            </div>
+            </header>
         )
     }
 }
+
+export default inject('walletStore')(observer(PageHeader));

@@ -1,18 +1,13 @@
 import React from 'react';
-import {
-    TERMS_AND_CONDITIONS,
-    PRIVACY_POLICY,
-    WEBSITE,
-    TELEGRAM,
-    REDDIT,
-    TWITTER,
-    DISCORD,
-} from '../../../common/js/utilities/Links';
+
+import { TERMS_AND_CONDITIONS, PRIVACY_POLICY, WEBSITE, TELEGRAM, REDDIT, TWITTER, DISCORD } from '../../../common/js/utilities/Links';
+
 import SvgDiscord from '../../../common/svg/discord.svg';
 import SvgTwitter from '../../../common/svg/twitter.svg';
 import SvgTelegram from '../../../common/svg/telegram.svg';
 import SvgReddit from '../../../common/svg/reddit.svg';
-import SvgCudosLogo from '../../../common/svg/cudos-logo.svg';
+import SvgCudosLogoWithText from '../../../common/svg/cudos-logo-with-text.svg';
+import './../../css/components-inc/page-footer.css';
 
 interface Props {
 
@@ -26,32 +21,21 @@ export default class PageFooter extends React.Component < Props, State > {
 
     render() {
         return (
-            <div className={'Footer FlexRow FlexSplit'}>
-                <div className={'FooterLeft FlexRow WithSeparatorVLine'}>
-                    <div className={'FooterLogo FlexRow SpaceAround'}>
-                        <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCudosLogo }}></div>
-                        <span>CUDOS</span>
-                    </div>
+            <footer className={'PageFooter FlexRow FlexSplit'}>
+                <div className={'SVG IconLogoWithText'} dangerouslySetInnerHTML={{ __html: SvgCudosLogoWithText }}></div>
+                <div className = { 'FooterNav FlexRow' } >
                     <a href={TERMS_AND_CONDITIONS}>Terms &amp; Conditions</a>
                     <a href={PRIVACY_POLICY}>Privacy Policy</a>
                     <a href={WEBSITE}>Cudos.org</a>
-                    <span>License &copy; 2018 - 2022</span>
+                    <a>License &copy; 2018 - 2022</a>
                 </div>
-                <div className={'FooterRight FlexRow StartRight'}>
-                    <a href={DISCORD} className={'SocialLink'} >
-                        <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgDiscord }}></div>
-                    </a>
-                    <a href={TELEGRAM} className={'SocialLink'} >
-                        <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTelegram }}></div>
-                    </a>
-                    <a href={TWITTER} className={'SocialLink'} >
-                        <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTwitter }}></div>
-                    </a>
-                    <a href={REDDIT} className={'SocialLink'} >
-                        <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgReddit }}></div>
-                    </a>
+                <div className={'StartRightBlock'}>
+                    <a href = { DISCORD } className={'SVG IconSocial'} dangerouslySetInnerHTML={{ __html: SvgDiscord }} />
+                    <a href = { TELEGRAM } className={'SVG IconSocial'} dangerouslySetInnerHTML={{ __html: SvgTelegram }} />
+                    <a href = { TWITTER } className={'SVG IconSocial'} dangerouslySetInnerHTML={{ __html: SvgTwitter }} />
+                    <a href = { REDDIT } className={'SVG IconSocial'} dangerouslySetInnerHTML={{ __html: SvgReddit }} />
                 </div>
-            </div>
+            </footer>
         )
     }
 }

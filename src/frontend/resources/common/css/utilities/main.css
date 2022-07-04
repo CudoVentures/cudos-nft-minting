@@ -198,7 +198,7 @@ html:not(.Touchable) .HoverHiddenTrigger:hover .HoverHidden {
     display:flex; flex-direction:column;
 }
 
-.SpaceBetween {
+/* .SpaceBetween {
     justify-items: space-between;
 }
 
@@ -210,7 +210,7 @@ html:not(.Touchable) .HoverHiddenTrigger:hover .HoverHidden {
     border-left: 1px solid black;
     content: '';
     margin: 0 12px;
-}
+} */
 
 *, *:after, *:before {
     transition-property:none;

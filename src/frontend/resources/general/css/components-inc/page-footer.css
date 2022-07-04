@@ -1,0 +1,27 @@
+footer.PageFooter {
+    padding: 24px 72px;
+    margin-top: auto;
+}
+
+footer.PageFooter .IconLogoWithText {
+    margin-right: 12px;
+}
+
+footer.PageFooter .FooterNav {
+    color: var(--color-secondary);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+footer.PageFooter .FooterNav > a {
+    height: 12px; line-height: 12px;
+    padding: 0 12px;
+}
+
+footer.PageFooter .FooterNav > a:not(:last-child) {
+    border-right: 1px solid var(--color-secondary);
+}
+
+footer.PageFooter .IconSocial {
+    margin-left: 24px;
+}

@@ -12,9 +12,11 @@ const theme01 = createTheme({
     palette: {
         primary: {
             main: '#52A6F8',
+            contrastText: '#fff',
         },
         secondary: {
-            main: '#262b31',
+            main: '#636D8F',
+            contrastText: '#fff',
         },
     },
 });
@@ -41,7 +43,8 @@ interface Props {
 export default class Button extends React.Component < Props > {
 
     static TYPE_ROUNDED: number = 1;
-    static TYPE_TEXT_INLINE: number = 2;
+    static TYPE_ROUNDED_LARGE: number = 2;
+    static TYPE_TEXT_INLINE: number = 3;
 
     static COLOR_SCHEME_1: number = 1;
     static COLOR_SCHEME_2: number = 2;
@@ -49,22 +52,23 @@ export default class Button extends React.Component < Props > {
 
     cssMuiClassColor() {
         switch (this.props.color) {
-            default:
-            case Button.COLOR_SCHEME_1:
-            case Button.COLOR_SCHEME_3:
-                return 'primary';
             case Button.COLOR_SCHEME_2:
                 return 'secondary';
+            case Button.COLOR_SCHEME_1:
+            case Button.COLOR_SCHEME_3:
+            default:
+                return 'primary';
         }
     }
 
     muiVariant() {
         switch (this.props.type) {
-            default:
-            case Button.TYPE_ROUNDED:
-                return 'contained';
             case Button.TYPE_TEXT_INLINE:
                 return 'text';
+            case Button.TYPE_ROUNDED:
+            case Button.TYPE_ROUNDED_LARGE:
+            default:
+                return 'contained';
         }
     }
 
@@ -79,7 +83,7 @@ export default class Button extends React.Component < Props > {
     }
 
     render() {
-        const className = `Button Transition ${this.props.className}`;
+        const className = `Button Transition ${S.CSS.getClassName(this.props.type === Button.TYPE_ROUNDED_LARGE, 'ButtonRoundedLarge')} ${this.props.className}`;
 
         return (
             <ThemeProvider theme = { theme01 } >

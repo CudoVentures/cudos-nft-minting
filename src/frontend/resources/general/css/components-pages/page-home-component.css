@@ -1,2 +1,32 @@
-.PageHome {
+.PageHome .IntroBlock {
+    max-width: 520px;
+    padding: 72px;
+}
+
+.PageHome .IntroBlock .IntroBlockTitle {
+    display: flex;
+    font-weight: 700;
+    font-size: 50px;
+    margin-bottom: 24px;
+}
+
+.PageHome .IntroBlock .IntroBlockDesc {
+    color: var(--color-secondary);
+    font-weight: 400;
+    font-size: 20px;
+    margin-bottom: 70px;
+}
+
+.PageHome .IntroBlock .ButtonStartMinting {
+    padding: 0 82px;
+}
+
+.PageHome .MainImages {
+    position: absolute;
+    bottom: 0; right: 0;
+}
+
+.PageHome .MainImages img {
+    position: absolute;
+    bottom: 0; right: 0;
 }
