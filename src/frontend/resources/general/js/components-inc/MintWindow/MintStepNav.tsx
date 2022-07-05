@@ -15,34 +15,40 @@ interface State {
 
 // TODO: implement
 class MintStepNav extends React.Component<Props, State> {
-    static MINT_STEP = {
-        CHOOSE_OPTION: 0,
-        UPLOAD_FILE: 1,
-        NFT_DETAILS: 2,
-        FINISH: 3,
-    }
 
-    MENU_ITEMS: Map<number, string> = new Map<number, string>([
-        [MintStepNav.MINT_STEP.CHOOSE_OPTION, 'Choose Option'],
-        [MintStepNav.MINT_STEP.UPLOAD_FILE, 'Upload File'],
-        [MintStepNav.MINT_STEP.NFT_DETAILS, 'NFT Details'],
-        [MintStepNav.MINT_STEP.FINISH, 'Finish'],
-    ]);
+    MENU_ITEMS = [
+        {
+            name: 'Choose Option',
+            key: NavStore.STEP_CHOOSE_OPTION,
+        },
+        {
+            name: 'Upload File',
+            key: NavStore.STEP_UPLOAD_FILE,
+        },
+        {
+            name: 'NFT Details',
+            key: NavStore.STEP_NFT_DETAILS,
+        },
+        {
+            name: 'Finish',
+            key: NavStore.STEP_FINISH,
+        },
+    ];
 
     render() {
         return (
             <>
                 <div className={'HorizontalLine'}></div>
                 <div className={'MintStepNav FlexRow '}>
-                    {Array.from(this.MENU_ITEMS).map(([key, value]) => (
-                        <div key={key} className={`MintStep FlexColumn ${key <= this.props.navStore.mintStep ? 'BlueStep' : ''}`}>
+                    {this.MENU_ITEMS.map((step: any) => (
+                        <div key={step.key} className={`MintStep FlexColumn ${step.key <= this.props.navStore.mintStep ? 'BlueStep' : ''}`}>
                             <div className={'NumberBox'}>
-                                {key < this.props.navStore.mintStep
+                                {step.key < this.props.navStore.mintStep
                                     ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
-                                    : key + 1
+                                    : step.key
                                 }
                             </div>
-                            <div className={'StageName'}>{value}</div>
+                            <div className={'StageName'}>{step.value}</div>
                         </div>
                     ))}
                 </div>

@@ -20,7 +20,7 @@ interface Props extends ContextPageComponentProps {
     alertStore: AlertStore,
 }
 
-export default class PageHomeComponent extends ContextPageComponent < Props > {
+export default class PageHomeComponent extends ContextPageComponent<Props> {
 
     static layout() {
         const MobXComponent = inject('appStore', 'alertStore')(observer(PageHomeComponent));
@@ -35,21 +35,21 @@ export default class PageHomeComponent extends ContextPageComponent < Props > {
         return (
             <>
                 <MeshBackground />
-                <div className = { 'PageContent' } >
+                <div className={'PageContent'} >
                     <PageHeader />
-                    <div className = { 'HomeContent' } >
-                        <div className = { 'IntroCnt' } >
-                            <div className = { 'IntroBlockTitle' }>Start Minting NFTs On CUDOS Network</div>
-                            <div className = { 'IntroBlockDesc' }>CUDOS NFT Minet is the world&apos;s simplest NFT creation service on CUDOS Network. Try it out yourself</div>
+                    <div className={'HomeContent'} >
+                        <div className={'IntroCnt'} >
+                            <div className={'IntroBlockTitle'}>Start Minting NFTs On CUDOS Network</div>
+                            <div className={'IntroBlockDesc'}>CUDOS NFT Minet is the world&apos;s simplest NFT creation service on CUDOS Network. Try it out yourself</div>
                             <Button
-                                className = { 'ButtonStartMinting' }
-                                href = { PagesGeneral.INNER }
+                                className={'ButtonStartMinting'}
+                                href={PagesGeneral.Nft}
                                 type={Button.TYPE_ROUNDED_LARGE} >
-                            Start Minting
+                                Start Minting
                             </Button>
                         </div>
-                        <div className = { 'BubblesCnt' } >
-                            <div className = { 'BubblesWrapper' } >
+                        <div className={'BubblesCnt'} >
+                            <div className={'BubblesWrapper'} >
                                 <img src={`${Config.URL.RESOURCES}/common/img/home-page/blue-bubble.png`} />
                                 <img src={`${Config.URL.RESOURCES}/common/img/home-page/turq-bubble.png`} />
                                 <img src={`${Config.URL.RESOURCES}/common/img/home-page/orange-bubble.png`} />

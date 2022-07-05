@@ -34,7 +34,7 @@ class OptionChoose extends React.Component<Props, State> {
     render() {
         return (
             <div className={'OptionChoose'}>
-                <div className={'Heading3'}>Choose option</div>
+                <div className={'Heading3'}>Choose Option</div>
                 <div className={'OptionHolder FlexRow'}>
                     {this.OPTIONS.map((option: any) => <div
                         key={option.key}

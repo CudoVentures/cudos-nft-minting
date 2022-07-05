@@ -11,7 +11,7 @@ import ContextPageComponent, { ContextPageComponentProps } from './common/Contex
 import Actions from '../../../common/js/components-inc/Actions';
 import Button from '../../../common/js/components-inc/Button';
 
-import './../../css/components-pages/page-inner-component.css';
+import './../../css/components-pages/page-nft-component.css';
 import AlertStore from '../../../common/js/stores/AlertStore';
 import UploaderComponent from '../../../common/js/components-core/UploaderComponent';
 import PageHeader from '../components-inc/PageHeader';
@@ -31,10 +31,10 @@ interface Props extends ContextPageComponentProps {
     navStore: NavStore,
 }
 
-export default class InnerPageComponent extends ContextPageComponent<Props> {
+export default class NftPageComponent extends ContextPageComponent<Props> {
 
     static layout() {
-        const MobXComponent = inject('appStore', 'walletStore', 'nftStore', 'alertStore', 'navStore')(observer(InnerPageComponent));
+        const MobXComponent = inject('appStore', 'walletStore', 'nftStore', 'alertStore', 'navStore')(observer(NftPageComponent));
         PageComponent.layout(<MobXComponent />);
     }
 
@@ -45,7 +45,6 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
     async componentDidMount(): Promise<void> {
         super.componentDidMount();
 
-        this.props.navStore.mintStep = MintStepNav.MINT_STEP.CHOOSE_OPTION;
         // try {
         //     await this.props.nftStore.init();
         // } catch (e) {
@@ -54,7 +53,7 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
     }
 
     getPageLayoutComponentCssClassName() {
-        return 'PageInner';
+        return 'PageNft';
     }
 
     renderContent() {
@@ -68,13 +67,13 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
                         <SideMenu />
                         <div className={'NftContentColumn'} >
                             <div className={'NftPanels FlexColumn'} >
-                                <span className={'Heading2'}>{navStore.getInnerPageName()}</span>
+                                <span className={'Heading2'}>{navStore.getNftPageName()}</span>
 
-                                <div className={`NftPanel FlexColumn ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMintPage())}`} >
-                                    {navStore.isMintPage() === true && <MyNftsWindow />}
-                                </div>
                                 <div className={`NftPanel FlexColumn ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMyNftPage())}`} >
-                                    {navStore.isMyNftPage() === true && <MintWindow />}
+                                    {navStore.isMyNftPage() === true && <MyNftsWindow />}
+                                </div>
+                                <div className={`NftPanel FlexColumn ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMintPage())}`} >
+                                    {navStore.isMintPage() === true && <MintWindow />}
                                 </div>
                             </div>
                         </div>

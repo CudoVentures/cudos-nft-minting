@@ -1,18 +1,18 @@
 import fs from 'fs';
 
-import PageInnerH from './PageInner.h';
+import PageNftH from './PageNft.h';
 import SV from '../../../../utilities/SV';
 import Context from '../../../../utilities/network/Context';
 
 const Config = require('../../../../../../config/config');
 
-const TEMPLATE = require(PageInnerH.TEMPLATE_PATH).default;
+const TEMPLATE = require(PageNftH.TEMPLATE_PATH).default;
 
 const CSS_PAGE_LOADING = fs.readFileSync(`${Config.Path.Root.Frontend.RESOURCES}/common/css/inline/page-loading.css`);
 
-export default class PageInner extends PageInnerH {
+export default class PageNft extends PageNftH {
 
-    async onRequest(context: Context): Promise < boolean > {
+    async onRequest(context: Context): Promise<boolean> {
         context.payload.ctx.type = 'html';
         context.payload.ctx.body = TEMPLATE.stream({
             META: {
@@ -20,7 +20,7 @@ export default class PageInner extends PageInnerH {
                 DESC: '',
                 KEYWORDS: SV.KEYWORDS,
                 ROBOTS: 'noindex, nofollow',
-                PAGE_URL: `${Config.URL.GENERAL}${PageInner.URL}`,
+                PAGE_URL: `${Config.URL.GENERAL}${PageNft.URL}`,
             },
             CSS: {
                 PAGE_LOADING: CSS_PAGE_LOADING,

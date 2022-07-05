@@ -14,30 +14,30 @@ interface Props {
 
 const MENU_ITEMS = [{
     svg: SvgHouse,
-    pageKey: NavStore.MINT_PAGE_KEY,
+    pageKey: NavStore.MY_NFTS_PAGE_KEY,
 }, {
     svg: SvgMintNft,
-    pageKey: NavStore.MY_NFTS_PAGE_KEY,
+    pageKey: NavStore.MINT_PAGE_KEY,
 }]
 
-class SideMenu extends React.Component < Props > {
+class SideMenu extends React.Component<Props> {
 
     render() {
         return (
             <div className={'SideMenu'}>
-                { MENU_ITEMS.map((menuItem) => {
+                {MENU_ITEMS.map((menuItem) => {
                     return (
                         <div
-                            key = { menuItem.pageKey }
-                            className = {`MenuItem FlexRow Transition ${S.CSS.getActiveClassName(this.props.navStore.innerPage === menuItem.pageKey)}`}
-                            onClick = { this.props.navStore.onSelectInnerPage.bind(this.props.navStore, menuItem.pageKey) } >
+                            key={menuItem.pageKey}
+                            className={`MenuItem FlexRow Transition ${S.CSS.getActiveClassName(this.props.navStore.nftPage === menuItem.pageKey)}`}
+                            onClick={this.props.navStore.onSelectNftPage.bind(this.props.navStore, menuItem.pageKey)} >
 
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: menuItem.svg }}></div>
-                            {NavStore.getInnerPageName(menuItem.pageKey)}
+                            {NavStore.getNftPageName(menuItem.pageKey)}
 
                         </div>
                     )
-                }) }
+                })}
             </div>
         )
     }
