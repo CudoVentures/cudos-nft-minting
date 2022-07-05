@@ -7,10 +7,11 @@
 }
 
 .OptionChoose .OptionHolder .OptionBox {
-    border: 3px solid var(--color-dark-gray);
+    border: 3px solid var(--color-purple);
     border-radius: 20px;
     padding: 30px;
     align-items: flex-start;
+    cursor: pointer;
 }
 
 .OptionChoose .OptionHolder .OptionBox:first-child {

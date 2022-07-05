@@ -58,7 +58,7 @@ class MintWindow extends React.Component<Props, State> {
                     }
                     {this.props.navStore.mintStep !== MintStepNav.MINT_STEP.FINISH
                         && <div
-                            className={'FlexRight StepButton'}
+                            className={'FlexRow StartRight StepButton'}
                             onClick={() => this.props.navStore.onSelectStage(this.props.navStore.mintStep + 1)}
                         >
                             <span>NextStep</span>

@@ -3,7 +3,8 @@
     --color-secondary: #636D8F;
     --color-dark: #1b2031;
     --color-light-gray: #F6F9FE;
-    --color-dark-gray: rgba(99, 109, 143, 0.2);
+    --color-dark-gray: #999FB1;
+    --color-purple: rgba(99, 109, 143, 0.2);
     --color-red: #EA6161;
 
     --color-body-background: linear-gradient(296.82deg, rgba(246, 249, 254, 0) 0%, rgba(246, 249, 254, 0.86) 63.54%, #F6F9FE 100%);

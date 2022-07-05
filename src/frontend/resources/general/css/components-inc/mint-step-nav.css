@@ -4,7 +4,7 @@
 }
 
 .HorizontalLine{
-    border-top: 3px solid var(--color-dark-gray);
+    border-top: 3px solid var(--color-purple);
     position: relative;
     top: 21px;
     z-index: 0;

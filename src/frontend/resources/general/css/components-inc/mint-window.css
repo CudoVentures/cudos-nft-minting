@@ -16,5 +16,17 @@
 }
 
 .MintWindow .StepNav {
-    /* fle */
+    fill: var(--color-dark-gray);
+    color: var(--color-dark-gray);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+}
+
+.MintWindow .StepNav .StepButton {
+    cursor: pointer;
+}
+
+.MintWindow .StepNav span{
+    margin: 0 14px;
 }
