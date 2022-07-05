@@ -1,0 +1,33 @@
+.OptionChoose {
+
+}
+
+.OptionChoose .OptionHolder {
+    margin-top: 30px;
+}
+
+.OptionChoose .OptionHolder .OptionBox {
+    border: 3px solid var(--color-dark-gray);
+    border-radius: 20px;
+    padding: 30px;
+    align-items: flex-start;
+}
+
+.OptionChoose .OptionHolder .OptionBox:first-child {
+    margin-right: 30px;
+}
+
+.OptionChoose .OptionHolder .OptionBox .SVG{
+    padding: 15px;
+    background: var(--color-light-gray);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.OptionChoose .OptionHolder .OptionBox .OptionInfo{
+    margin-top: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--color-secondary);
+}

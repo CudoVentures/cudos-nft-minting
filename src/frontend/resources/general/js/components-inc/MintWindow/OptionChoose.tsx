@@ -4,6 +4,7 @@ import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import NavStore from '../../../../common/js/stores/NavStore';
 import SvgUploadSingle from '../../../../common/svg/upload-single.svg';
 import SvgUploadMultiple from '../../../../common/svg/upload-multiple.svg';
+import '../../../css/components-inc/option-choose.css'
 
 interface Props {
     navStore: NavStore
@@ -13,7 +14,7 @@ interface State {
 
 }
 
-class MintPageChooseOption extends React.Component<Props, State> {
+class OptionChoose extends React.Component<Props, State> {
 
     OPTION_TYPES = {
         SINGLE: 0,
@@ -35,21 +36,21 @@ class MintPageChooseOption extends React.Component<Props, State> {
 
     render() {
         return (
-            <div className={'ChooseOptionWindow'}>
-                <h3>Choose option</h3>
-                <LayoutBlock className={'OptionHolder'}>
+            <div className={'OptionChoose'}>
+                <h3 className={'Heading3'}>Choose option</h3>
+                <div className={'OptionHolder FlexRow'}>
                     {Array.from(this.OPTIONS)
                         .map(([key, option]) => <div key={key} className={`OptionBox FlexColumn ${this.props.navStore.mintOption === key ? 'Selected' : ''}`} onClick={() => this.props.navStore.onSelectMintOption(key)}>
                             <div className={'SvgBox'}>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: option.icon }}></div>
-                                <h4>{option.title}</h4>
-                                <span>{option.info}</span>
+                                <div className={'Heading4'}>{option.title}</div>
+                                <div className={'OptionInfo'}>{option.info}</div>
                             </div>
                         </div>)}
-                </LayoutBlock>
+                </div>
             </div>
         )
     }
 }
 
-export default inject('navStore')((observer(MintPageChooseOption)));
+export default inject('navStore')((observer(OptionChoose)));

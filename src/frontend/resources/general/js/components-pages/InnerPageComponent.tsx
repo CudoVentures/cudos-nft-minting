@@ -62,17 +62,18 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
         return (
             <>
                 <MeshBackground />
-                <div className = { 'PageContent' } >
+                <div className={'PageContent'} >
                     <PageHeader />
-                    <div className = { 'NftContentRow' } >
+                    <div className={'NftContentRow'} >
                         <SideMenu />
-                        <div className = { 'NftContentColumn' } >
-                            <h2>{navStore.getInnerPageName()}</h2>
-                            <div className = { 'NftPanels' } >
-                                <div className = { `NftPanel ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMintPage())}` } >
+                        <div className={'NftContentColumn'} >
+                            <div className={'NftPanels FlexColumn'} >
+                                <span className={'Heading2'}>{navStore.getInnerPageName()}</span>
+
+                                <div className={`NftPanel FlexColumn ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMintPage())}`} >
                                     {navStore.isMintPage() === true && <MyNftsWindow />}
                                 </div>
-                                <div className = { `NftPanel ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMyNftPage())}` } >
+                                <div className={`NftPanel FlexColumn ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMyNftPage())}`} >
                                     {navStore.isMyNftPage() === true && <MintWindow />}
                                 </div>
                             </div>

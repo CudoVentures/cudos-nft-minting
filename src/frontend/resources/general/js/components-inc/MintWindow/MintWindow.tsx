@@ -3,13 +3,14 @@ import React from 'react';
 import NavStore from '../../../../common/js/stores/NavStore';
 import NftStore from '../../../../common/js/stores/NftStore';
 import S from '../../../../common/js/utilities/Main';
-import MintPageChooseOption, { MintOption, MintOptionData } from './MintPageChooseOption';
+import OptionChoose, { MintOption, MintOptionData } from './OptionChoose';
 import MintPageNftDetails from './MintPageNftDetails';
 import MintPageNftFinish from './MintPageNftFinish';
 import MintPageUploadFiles from './MintPageUploadFiles';
 import MintStepNav from './MintStepNav';
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
+import '../../../css/components-inc/mint-window.css';
 
 interface Props {
     navStore: NavStore
@@ -26,23 +27,25 @@ class MintWindow extends React.Component<Props, State> {
         return (
             <div className={'MintWindow FlexColumn'}>
                 <MintStepNav />
-                <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep + 1}</span>
-                {
-                    (this.props.navStore.mintStep === MintStepNav.MINT_STEP.CHOOSE_OPTION || this.props.navStore.mintStep === S.NOT_EXISTS)
-                    && <MintPageChooseOption />
-                }
-                {
-                    this.props.navStore.mintStep === MintStepNav.MINT_STEP.UPLOAD_FILE
-                    && <MintPageUploadFiles />
-                }
-                {
-                    this.props.navStore.mintStep === MintStepNav.MINT_STEP.NFT_DETAILS
-                    && <MintPageNftDetails />
-                }
-                {
-                    this.props.navStore.mintStep === MintStepNav.MINT_STEP.FINISH
-                    && <MintPageNftFinish />
-                }
+                <div className={'MintStepPage'}>
+                    <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep + 1}</span>
+                    {
+                        (this.props.navStore.mintStep === MintStepNav.MINT_STEP.CHOOSE_OPTION || this.props.navStore.mintStep === S.NOT_EXISTS)
+                        && <OptionChoose />
+                    }
+                    {
+                        this.props.navStore.mintStep === MintStepNav.MINT_STEP.UPLOAD_FILE
+                        && <MintPageUploadFiles />
+                    }
+                    {
+                        this.props.navStore.mintStep === MintStepNav.MINT_STEP.NFT_DETAILS
+                        && <MintPageNftDetails />
+                    }
+                    {
+                        this.props.navStore.mintStep === MintStepNav.MINT_STEP.FINISH
+                        && <MintPageNftFinish />
+                    }
+                </div>
                 <div className={'FlexSplit StepNav'}>
                     {this.props.navStore.mintStep !== MintStepNav.MINT_STEP.CHOOSE_OPTION
                         && <div

@@ -3,8 +3,9 @@
     --color-secondary: #636D8F;
     --color-dark: #1b2031;
     --color-light-gray: #F6F9FE;
+    --color-dark-gray: rgba(99, 109, 143, 0.2);
     --color-red: #EA6161;
-    
+
     --color-body-background: linear-gradient(296.82deg, rgba(246, 249, 254, 0) 0%, rgba(246, 249, 254, 0.86) 63.54%, #F6F9FE 100%);
 
     /* theme */
@@ -35,7 +36,7 @@
 
     --color-popup-background: #fff;
     /* theme */
-    
+
     --mobile-spacing: 24px;
     --desktop-spacing: 32px;
     --page-spacing-h: 24px;
@@ -98,20 +99,20 @@ html.OverflowHidden {
 }
 
 .Heading1 {
-    font-size: 54px; font-weight: 700;
+    font-size: 50px; font-weight: 700;
 }
 
 .Heading2 {
-    font-size: 42px; font-weight: 700;
+    font-size: 30px; font-weight: 700;
 }
 
 .Heading3 {
-    font-size: 32px;
+    font-size: 25px; font-weight: 700;
 }
 
 .Heading4 {
-    text-transform: uppercase;
-    font-size: 24px; font-weight: 700;
+    font-size: 20px; font-weight: 700;
+    line-height: 30px;
 }
 
 .Heading5 {
@@ -127,23 +128,23 @@ html.OverflowHidden {
     .Heading1 {
         font-size: 30px;
     }
-    
+
     .Heading2 {
         font-size: 24px;
     }
-    
+
     .Heading3 {
         font-size: 18px;
     }
-    
+
     .Heading4 {
         font-size: 14px;
     }
-    
+
     .Heading5 {
         font-size: 12px;
     }
-    
+
     .Heading6 {
         font-size: 5px;
     }
@@ -202,7 +203,7 @@ html.OverflowHidden {
 .Scrolls::-webkit-scrollbar-track {
     background:none;
 }
- 
+
 .Scrolls::-webkit-scrollbar-thumb {
     border-radius:3px;
     background:var(--color-primary);

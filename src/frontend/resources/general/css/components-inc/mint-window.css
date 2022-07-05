@@ -1,0 +1,20 @@
+.MintWindow {
+    flex-grow: 1;
+}
+
+.MintWindow .MintStepPage{
+    margin-top: 40px;
+    flex-grow: 1;
+}
+
+.MintWindow .MintStepPage .SmallStepSign {
+    color: var(--color-primary);
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.05em;
+    margin-bottom: 5px;
+}
+
+.MintWindow .StepNav {
+    /* fle */
+}
