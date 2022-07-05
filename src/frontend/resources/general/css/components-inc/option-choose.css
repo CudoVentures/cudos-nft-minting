@@ -7,7 +7,7 @@
 }
 
 .OptionChoose .OptionHolder .OptionBox {
-    border: 3px solid var(--color-purple);
+    border: 4px solid var(--color-purple);
     border-radius: 20px;
     padding: 30px;
     align-items: flex-start;
@@ -18,11 +18,21 @@
     margin-right: 30px;
 }
 
+.OptionChoose .OptionHolder .OptionBox.Active {
+    background: rgba(82, 166, 248, 0.1);
+    border-color: var(--color-primary);
+}
+
+
 .OptionChoose .OptionHolder .OptionBox .SVG{
     padding: 15px;
     background: var(--color-light-gray);
     border-radius: 10px;
     margin-bottom: 10px;
+}
+
+.OptionChoose .OptionHolder .OptionBox.Active .SVG {
+    background: #fff;
 }
 
 .OptionChoose .OptionHolder .OptionBox .OptionInfo{

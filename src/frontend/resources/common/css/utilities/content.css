@@ -104,10 +104,12 @@ html.OverflowHidden {
 
 .Heading2 {
     font-size: 30px; font-weight: 700;
+    line-height: 45px;
 }
 
 .Heading3 {
     font-size: 25px; font-weight: 700;
+    line-height: 38px;
 }
 
 .Heading4 {

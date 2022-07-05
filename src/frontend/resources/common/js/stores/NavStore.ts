@@ -6,6 +6,9 @@ export default class NavStore {
     static MINT_PAGE_KEY: number = 1;
     static MY_NFTS_PAGE_KEY: number = 2;
 
+    static MINT_OPTION_SINGLE: number = 1;
+    static MINT_OPTION_MULTIPLE: number = 2;
+
     @observable innerPage: number;
     @observable mintOption: number;
     @observable mintStep: number;
