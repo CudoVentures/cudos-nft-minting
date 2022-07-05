@@ -1,5 +1,5 @@
 header.PageHeader {
-    padding: 24px 72px;
+    padding: var(--page-spacing-h) 72px;
 }
 
 header.PageHeader .HeaderLogo {

@@ -38,6 +38,7 @@
     
     --mobile-spacing: 24px;
     --desktop-spacing: 32px;
+    --page-spacing-h: 24px;
 }
 
 html {
