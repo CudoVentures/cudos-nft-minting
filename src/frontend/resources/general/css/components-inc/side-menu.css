@@ -18,9 +18,11 @@
     align-items: center;
     border-radius: 2px 10px 10px 2px;
     border-left: 3px solid #fff;
+    cursor: pointer;
+    transition-property: background, color, fill, border-color;
 }
 
-.SideMenu .MenuItem.Selected {
+.SideMenu .MenuItem.Active {
     color: var(--color-primary);
     fill: var(--color-primary);
     border-color: var(--color-primary);

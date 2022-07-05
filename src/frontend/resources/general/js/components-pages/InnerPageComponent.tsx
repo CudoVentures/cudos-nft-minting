@@ -46,7 +46,6 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
         super.componentDidMount();
 
         this.props.navStore.mintStep = MintStepNav.MINT_STEP.CHOOSE_OPTION;
-        this.props.navStore.innerPage = SideMenu.INNER_PAGE.MY_NFTS;
         // try {
         //     await this.props.nftStore.init();
         // } catch (e) {
@@ -59,6 +58,7 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
     }
 
     renderContent() {
+        const navStore = this.props.navStore;
         return (
             <>
                 <MeshBackground />
@@ -67,13 +67,13 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
                     <div className = { 'NftContentRow' } >
                         <SideMenu />
                         <div className = { 'NftContentColumn' } >
-                            <h2>{this.props.navStore.innerPage === SideMenu.INNER_PAGE.MY_NFTS ? 'My NFTs' : 'Mint NFTs'}</h2>
+                            <h2>{navStore.getInnerPageName()}</h2>
                             <div className = { 'NftPanels' } >
-                                <div className = { `NftPanel ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(this.props.navStore.innerPage === SideMenu.INNER_PAGE.MY_NFTS)}` } >
-                                    {this.props.navStore.innerPage === SideMenu.INNER_PAGE.MY_NFTS && <MyNftsWindow />}
+                                <div className = { `NftPanel ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMintPage())}` } >
+                                    {navStore.isMintPage() === true && <MyNftsWindow />}
                                 </div>
-                                <div className = { `NftPanel ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(this.props.navStore.innerPage === SideMenu.INNER_PAGE.MINT)}` } >
-                                    {this.props.navStore.innerPage === SideMenu.INNER_PAGE.MINT && <MintWindow />}
+                                <div className = { `NftPanel ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(navStore.isMyNftPage())}` } >
+                                    {navStore.isMyNftPage() === true && <MintWindow />}
                                 </div>
                             </div>
                         </div>
