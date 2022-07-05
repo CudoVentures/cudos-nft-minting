@@ -43,7 +43,7 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
                             <div className={'IntroBlockDesc'}>CUDOS NFT Minet is the world&apos;s simplest NFT creation service on CUDOS Network. Try it out yourself</div>
                             <Button
                                 className={'ButtonStartMinting'}
-                                href={PagesGeneral.Nft}
+                                href={PagesGeneral.NFT}
                                 type={Button.TYPE_ROUNDED_LARGE} >
                                 Start Minting
                             </Button>

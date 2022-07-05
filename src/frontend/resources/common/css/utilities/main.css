@@ -198,6 +198,10 @@ html:not(.Touchable) .HoverHiddenTrigger:hover .HoverHidden {
     display:flex; flex-direction:column;
 }
 
+.FlexGrow {
+    flex: 1 1 auto;
+}
+
 /* .SpaceBetween {
     justify-items: space-between;
 }

@@ -1,0 +1,17 @@
+.NoNfts .ComponentContent {
+    align-items: center;
+}
+
+.NoNfts .ComponentContent .IconImg {
+    width: 154px;
+    margin-bottom: 48px;
+}
+
+.NoNfts .ComponentContent label {
+    font-size: 20px; font-weight: 600;
+    margin-bottom: 48px;
+}
+
+.NoNfts .ComponentContent .MintButton {
+    padding-left: 96px; padding-right: 96px;
+}
