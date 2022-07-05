@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react';
 import { WEBSITE } from '../../../common/js/utilities/Links';
 
 import WalletStore from '../../../common/js/stores/WalletStore';
+import Actions from '../../../common/js/components-inc/Actions';
 import Button from '../../../common/js/components-inc/Button';
 
 import SvgCudosLogoWithText from '../../../common/svg/cudos-logo-with-text.svg';
@@ -55,12 +56,16 @@ class PageHeader extends React.Component < Props, State > {
                                 Check <span className = { 'Link' }>cudos.org</span>
                                 <div className={'SVG IconOpenUrl'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
                             </a>
-                            <Button
-                                onClick = { this.onClickToggleKeplr }
-                                type = { Button.TYPE_ROUNDED_LARGE }
-                                color = { Button.COLOR_SCHEME_1 } >
-                                Connect Wallet
-                            </Button>
+                            <Actions height = { Actions.HEIGHT_60 }>
+                                <Button
+                                    onClick = { this.onClickToggleKeplr }
+                                    type = { Button.TYPE_ROUNDED }
+                                    color = { Button.COLOR_SCHEME_1 }
+                                    padding = { Button.PADDING_48 }
+                                    radius = { Button.RADIUS_MAX } >
+                                    Connect Wallet
+                                </Button>
+                            </Actions>
                         </>
                     }
                 </div>

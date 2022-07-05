@@ -25,6 +25,7 @@ export default class Actions extends React.Component < Props > {
     static HEIGHT_42: number = 3;
     static HEIGHT_48: number = 4;
     static HEIGHT_52: number = 5;
+    static HEIGHT_60: number = 6;
 
     cssClassHeight() {
         switch (this.props.height) {
@@ -39,6 +40,8 @@ export default class Actions extends React.Component < Props > {
                 return 'H48';
             case Actions.HEIGHT_52:
                 return 'H52';
+            case Actions.HEIGHT_60:
+                return 'H60';
         }
     }
 

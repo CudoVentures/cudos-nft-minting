@@ -20,6 +20,6 @@
 }
 
 .PageNft .NftContentRow .NftContentColumn .NftPanels .NftPanel.Active {
+    flex: 1 1 auto;
     padding-top: 30px;
-    flex-grow: 1;
 }

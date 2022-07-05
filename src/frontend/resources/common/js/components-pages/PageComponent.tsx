@@ -16,6 +16,7 @@ import PageLayoutComponent from './PageLayoutComponent';
 import WalletStore from '../stores/WalletStore';
 import NftMintStore from '../stores/NftMintStore';
 import NavStore from '../stores/NavStore';
+import MyNftsStore from '../stores/MyNftsStore';
 
 configure({
     enforceActions: 'never',
@@ -29,6 +30,8 @@ export interface PageComponentProps {
 export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = any> extends React.Component<Pr, St, SS> {
 
     static layout(componentNode: React.ReactNode) {
+        const myNftsStore = new MyNftsStore();
+
         ReactDOM.render(
             (
                 <Provider
@@ -38,7 +41,9 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
                     popupPasswordStore={new PopupPasswordStore()}
                     walletStore={new WalletStore()}
                     nftMintStore={new NftMintStore()}
-                    navStore={new NavStore()} >
+                    navStore={new NavStore()}
+                    myNftsStore = { myNftsStore } >
+
                     {componentNode}
 
                 </Provider>

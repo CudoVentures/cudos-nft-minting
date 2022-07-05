@@ -25,7 +25,8 @@ const theme01 = createTheme({
 const theme02 = createTheme({
     palette: {
         primary: {
-            main: '#808080',
+            main: 'rgba(82, 166, 248, 0.1)',
+            contrastText: '#52A6F8',
         },
     },
 });
@@ -33,7 +34,9 @@ const theme02 = createTheme({
 interface Props {
     className?: string;
     type?: Button.TYPE_ROUNDED | Button.TYPE_TEXT_INLINE;
-    color?: Button.COLOR_SCHEME_1 | Button.COLOR_SCHEME_2;
+    color?: Button.COLOR_SCHEME_1 | Button.COLOR_SCHEME_2 | Button.COLOR_SCHEME_3;
+    padding?: Button.PADDING_DEFAULT | Button.PADDING_48 | Button.PADDING_96;
+    radius?: Button.RADIUS_DEFAULT | Button.RADIUS_MAX;
     href?: string,
     onClick?: () => void;
     disabled?: boolean;
@@ -43,12 +46,18 @@ interface Props {
 export default class Button extends React.Component < Props > {
 
     static TYPE_ROUNDED: number = 1;
-    static TYPE_ROUNDED_LARGE: number = 2;
-    static TYPE_TEXT_INLINE: number = 3;
+    static TYPE_TEXT_INLINE: number = 4;
 
     static COLOR_SCHEME_1: number = 1;
     static COLOR_SCHEME_2: number = 2;
     static COLOR_SCHEME_3: number = 3;
+
+    static PADDING_DEFAULT: number = 1;
+    static PADDING_48: number = 2;
+    static PADDING_96: number = 3;
+
+    static RADIUS_DEFAULT: number = 1;
+    static RADIUS_MAX: number = 2;
 
     cssMuiClassColor() {
         switch (this.props.color) {
@@ -66,7 +75,6 @@ export default class Button extends React.Component < Props > {
             case Button.TYPE_TEXT_INLINE:
                 return 'text';
             case Button.TYPE_ROUNDED:
-            case Button.TYPE_ROUNDED_LARGE:
             default:
                 return 'contained';
         }
@@ -82,8 +90,28 @@ export default class Button extends React.Component < Props > {
         }
     }
 
+    cssPadding() {
+        switch (this.props.padding) {
+            case Button.PADDING_48:
+                return 'Padding48';
+            case Button.PADDING_96:
+                return 'Padding96';
+            default:
+                return S.Strings.EMPTY;
+        }
+    }
+
+    cssRadius() {
+        switch (this.props.padding) {
+            case Button.RADIUS_MAX:
+                return 'Radius30';
+            default:
+                return S.Strings.EMPTY;
+        }
+    }
+
     render() {
-        const className = `Button Transition ${S.CSS.getClassName(this.props.type === Button.TYPE_ROUNDED_LARGE, 'ButtonRoundedLarge')} ${this.props.className}`;
+        const className = `Button Transition ${this.cssPadding()} ${this.cssRadius()} ${this.props.className}`;
 
         return (
             <ThemeProvider theme = { theme01 } >
@@ -113,6 +141,8 @@ Button.defaultProps = {
     'className': S.Strings.EMPTY,
     'type': Button.TYPE_ROUNDED,
     'color': Button.COLOR_SCHEME_1,
+    'padding': Button.PADDING_DEFAULT,
+    'radius': Button.RADIUS_DEFAULT,
     'href': null,
     'disabled': false,
     'onClick': null,
