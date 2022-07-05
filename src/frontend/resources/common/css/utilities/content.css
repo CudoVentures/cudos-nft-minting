@@ -39,8 +39,7 @@
     /* theme */
 
     --mobile-spacing: 24px;
-    --desktop-spacing: 32px;
-    --page-spacing-h: 24px;
+    --desktop-spacing: 24px;
 }
 
 html {

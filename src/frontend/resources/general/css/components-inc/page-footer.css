@@ -1,5 +1,5 @@
 footer.PageFooter {
-    padding: var(--page-spacing-h) 72px;
+    padding: var(--desktop-spacing) 20px;
     margin-top: auto;
 }
 
