@@ -14,7 +14,7 @@ import S from '../utilities/Main';
 
 import PageLayoutComponent from './PageLayoutComponent';
 import WalletStore from '../stores/WalletStore';
-import NftStore from '../stores/NftStore';
+import NftMintStore from '../stores/NftMintStore';
 import NavStore from '../stores/NavStore';
 
 configure({
@@ -37,7 +37,7 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
                     alertStore={new AlertStore()}
                     popupPasswordStore={new PopupPasswordStore()}
                     walletStore={new WalletStore()}
-                    nftStore={new NftStore()}
+                    nftMintStore={new NftMintStore()}
                     navStore={new NavStore()} >
                     {componentNode}
 

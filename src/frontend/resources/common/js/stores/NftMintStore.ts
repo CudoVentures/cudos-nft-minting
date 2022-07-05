@@ -5,7 +5,7 @@ import NftImageModel from '../models/NftImageModel';
 import NftModel from '../models/NftModel';
 import S from '../utilities/Main';
 
-export default class NftStore {
+export default class NftMintStore {
     URL_REGEX = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
 
     nftApi: NftApi;

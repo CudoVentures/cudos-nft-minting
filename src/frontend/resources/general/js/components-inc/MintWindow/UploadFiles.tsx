@@ -6,14 +6,16 @@ import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import Table from '../../../../common/js/components-inc/Table';
 import NftImageModel from '../../../../common/js/models/NftImageModel';
 import NavStore from '../../../../common/js/stores/NavStore';
-import NftStore from '../../../../common/js/stores/NftStore';
+import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import SvgUploadFile from '../../../../common/svg/upload-file.svg';
 import SvgTrash from '../../../../common/svg/trash.svg';
 import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
+import TableHelper from '../../../../common/js/helpers/TableHelper';
+import S from '../../../../common/js/utilities/Main';
 
 interface Props {
     navStore: NavStore
-    nftStore: NftStore
+    nftMintStore: NftMintStore
 }
 
 interface State {
@@ -21,6 +23,17 @@ interface State {
 }
 
 class UploadFiles extends React.Component<Props, State> {
+    tableHelper: TableHelper;
+
+    constructor(props: Props) {
+        super(props);
+
+        this.tableHelper = new TableHelper(
+            S.NOT_EXISTS,
+            [],
+            () => { },
+        );
+    }
 
     onDrop = (e) => {
         e.preventDefault();
@@ -52,13 +65,13 @@ class UploadFiles extends React.Component<Props, State> {
     //             this.props.alertStore.show('Max files size is 1MB');
     //         },
     //         onBeforeStart: () => {
-    //             nftImageModel = this.props.nftStore.nftImageStartUpload();
+    //             nftImageModel = this.props.nftMintStore.nftImageStartUpload();
     //         },
     //         onUpload: (base64File, response, files: any[], i: number) => {
     //             console.log(response);
     //             const res = new NftImageUploadRes(JSON.parse(response).obj.nftImageModel);
-    //             this.props.nftStore.nftImage = res.nftImageModel;
-    //             console.log(this.props.nftStore.nftImage);
+    //             this.props.nftMintStore.nftImage = res.nftImageModel;
+    //             console.log(this.props.nftMintStore.nftImage);
     //         },
     //     }
     // }
@@ -87,11 +100,11 @@ class UploadFiles extends React.Component<Props, State> {
                                 className={'LinkInput'}
                                 inputType={InputType.TEXT}
                                 placeholder={'www.mywebsite.com/item'}
-                                value={this.props.nftStore.imageUrlInputValue}
+                                value={this.props.nftMintStore.imageUrlInputValue}
                             />
                             <Button
-                                disabled={this.props.nftStore.isImageLinkValid}
-                                onClick={() => this.props.nftStore.onClickAddImageLink()}
+                                disabled={this.props.nftMintStore.isImageLinkValid}
+                                onClick={() => this.props.nftMintStore.onClickAddImageLink()}
                             >Upload File</Button>
                         </LayoutBlock>
                     </div>
@@ -100,6 +113,7 @@ class UploadFiles extends React.Component<Props, State> {
                         legend={this.getTableLegend()}
                         widths={this.getTableWidths()}
                         aligns={this.getTableAligns()}
+                        helper={this.tableHelper}
                         rows={this.renderRows()} />
                 </div>
             </div>
@@ -107,12 +121,12 @@ class UploadFiles extends React.Component<Props, State> {
     }
 
     renderRows() {
-        return this.props.nftStore.nftImages.map((image: NftImageModel, index: number) => [
+        return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => [
             Table.cellString(image.imageUrl),
             Table.cellString(image.type),
             Table.cellString(NftImageModel.getImageSizeString(image)),
             Table.cell(
-                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftStore.removeNftImage(index)}></div>,
+                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNftImage(index)}></div>,
             ),
         ])
     }
@@ -135,4 +149,4 @@ class UploadFiles extends React.Component<Props, State> {
     }
 }
 
-export default inject('navStore', 'nftStore')((observer(UploadFiles)));
+export default inject('navStore', 'nftMintStore')((observer(UploadFiles)));
