@@ -31,19 +31,22 @@ class MintStepNav extends React.Component<Props, State> {
 
     render() {
         return (
-            <div className={'MintStepNav FlexRow '}>
-                {Array.from(this.MENU_ITEMS).map(([key, value]) => (
-                    <div key={key} className={`MintStep FlexColumn ${key <= this.props.navStore.mintStep ? 'BlueStep' : ''}`}>
-                        <div className={'NumberBox'}>
-                            {key < this.props.navStore.mintStep
-                                ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
-                                : key + 1
-                            }
+            <>
+                <div className={'HorizontalLine'}></div>
+                <div className={'MintStepNav FlexRow '}>
+                    {Array.from(this.MENU_ITEMS).map(([key, value]) => (
+                        <div key={key} className={`MintStep FlexColumn ${key <= this.props.navStore.mintStep ? 'BlueStep' : ''}`}>
+                            <div className={'NumberBox'}>
+                                {key < this.props.navStore.mintStep
+                                    ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
+                                    : key + 1
+                                }
+                            </div>
+                            <div className={'StageName'}>{value}</div>
                         </div>
-                        <div className={'StageName'}>{value}</div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            </>
         )
     }
 }
