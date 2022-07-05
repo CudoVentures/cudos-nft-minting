@@ -9,6 +9,7 @@ import AlertStore from '../../../common/js/stores/AlertStore';
 
 import PageComponent from '../../../common/js/components-pages/PageComponent';
 import ContextPageComponent, { ContextPageComponentProps } from './common/ContextPageComponent';
+import Actions from '../../../common/js/components-inc/Actions';
 import Button from '../../../common/js/components-inc/Button';
 import MeshBackground from '../../../common/js/components-inc/MeshBackground';
 import PageHeader from '../components-inc/PageHeader';
@@ -41,12 +42,16 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
                         <div className={'IntroCnt'} >
                             <div className={'IntroBlockTitle'}>Start Minting NFTs On CUDOS Network</div>
                             <div className={'IntroBlockDesc'}>CUDOS NFT Minet is the world&apos;s simplest NFT creation service on CUDOS Network. Try it out yourself</div>
-                            <Button
-                                className={'ButtonStartMinting'}
-                                href={PagesGeneral.NFT}
-                                type={Button.TYPE_ROUNDED_LARGE} >
-                                Start Minting
-                            </Button>
+                            <Actions height = { Actions.HEIGHT_60 } layout = { Actions.LAYOUT_ROW_LEFT } >
+                                <Button
+                                    className={'ButtonStartMinting'}
+                                    href={PagesGeneral.NFT}
+                                    type={Button.TYPE_ROUNDED}
+                                    padding = { Button.PADDING_48 }
+                                    radius = { Button.RADIUS_MAX } >
+                                    Start Minting
+                                </Button>
+                            </Actions>
                         </div>
                         <div className={'BubblesCnt'} >
                             <div className={'BubblesWrapper'} >

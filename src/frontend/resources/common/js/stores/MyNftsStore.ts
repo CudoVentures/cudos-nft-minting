@@ -8,8 +8,8 @@ export default class MyNftsStore {
     nftCollectionModels: NftCollectionModel[];
 
     constructor() {
-        this.nftModels = [];
-        this.nftCollectionModels = [];
+        this.nftModels = [1];
+        this.nftCollectionModels = [2, 3];
         makeAutoObservable(this);
     }
 

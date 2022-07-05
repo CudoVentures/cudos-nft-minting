@@ -3,11 +3,10 @@
     line-height: normal !important;
     text-transform: none !important;
     font-family: inherit !important;
-    font-weight: 400 !important;
+    font-weight: 600 !important;
     font-size: 14px !important;
     position: relative !important;
     box-sizing: border-box !important;
-    border-radius: 30px !important;
 }
 
 .Button .SVG.ButtonSvg {
@@ -15,7 +14,14 @@
     margin-right: 8px;
 }
 
-.Button.ButtonRoundedLarge {
-    height: 60px;
+.Button.Radius30 {
+    border-radius: 30px !important;
+}
+
+.Button.Padding48 {
     padding: 0 48px;
+}
+
+.Button.Padding96 {
+    padding: 0 96px;
 }
