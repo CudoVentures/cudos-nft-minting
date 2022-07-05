@@ -45,13 +45,13 @@ export default class MintPageNftDetails extends React.Component<Props, State> {
                 this.props.alertStore.show('Max files size is 1MB');
             },
             onBeforeStart: () => {
-                nftImageModel = this.props.nftStore.nftImageStartUpload();
+                nftImageModel = this.props.nftMintStore.nftImageStartUpload();
             },
             onUpload: (base64File, response, files: any[], i: number) => {
                 console.log(response);
                 const res = new NftImageUploadRes(JSON.parse(response).obj.nftImageModel);
-                this.props.nftStore.nftImage = res.nftImageModel;
-                console.log(this.props.nftStore.nftImage);
+                this.props.nftMintStore.nftImage = res.nftImageModel;
+                console.log(this.props.nftMintStore.nftImage);
             },
         }
     }

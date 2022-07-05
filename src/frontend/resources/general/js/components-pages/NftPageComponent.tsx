@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 
 import S from '../../../common/js/utilities/Main';
 import WalletStore from '../../../common/js/stores/WalletStore';
-import NftStore from '../../../common/js/stores/NftStore';
+import NftMintStore from '../../../common/js/stores/NftMintStore';
 import AlertStore from '../../../common/js/stores/AlertStore';
 import NavStore from '../../../common/js/stores/NavStore';
 
@@ -20,7 +20,7 @@ import './../../css/components-pages/page-nft-component.css';
 
 interface Props extends ContextPageComponentProps {
     walletStore: WalletStore,
-    nftStore: NftStore,
+    nftMintStore: NftMintStore,
     alertStore: AlertStore,
     navStore: NavStore,
 }
@@ -28,7 +28,7 @@ interface Props extends ContextPageComponentProps {
 export default class NftPageComponent extends ContextPageComponent<Props> {
 
     static layout() {
-        const MobXComponent = inject('appStore', 'walletStore', 'nftStore', 'alertStore', 'navStore')(observer(NftPageComponent));
+        const MobXComponent = inject('appStore', 'walletStore', 'nftMintStore', 'alertStore', 'navStore')(observer(NftPageComponent));
         PageComponent.layout(<MobXComponent />);
     }
 
@@ -40,7 +40,7 @@ export default class NftPageComponent extends ContextPageComponent<Props> {
         super.componentDidMount();
 
         // try {
-        //     await this.props.nftStore.init();
+        //     await this.props.nftMintStore.init();
         // } catch (e) {
         //     this.props.alertStore.show('Failed to connect to node.');
         // }
