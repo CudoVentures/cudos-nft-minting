@@ -1,3 +1,17 @@
+.PageHome {
+    --page-spacing-h: 72px;
+}
+
+header.PageHeader {
+    padding-left: var(--page-spacing-h); padding-right: var(--page-spacing-h);
+    background: transparent;
+}
+
+footer.PageFooter {
+    padding-left: var(--page-spacing-h); padding-right: var(--page-spacing-h);
+    margin-top: auto;
+}
+
 .PageHome .HomeContent {
     display: flex;
     flex: 1 1 auto;
@@ -5,7 +19,7 @@
 
 .PageHome .IntroCnt {
     max-width: 520px;
-    padding: 72px;
+    padding: var(--page-spacing-h);
 }
 
 .PageHome .IntroCnt .IntroBlockTitle {
