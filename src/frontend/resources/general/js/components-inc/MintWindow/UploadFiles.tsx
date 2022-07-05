@@ -12,6 +12,8 @@ import SvgTrash from '../../../../common/svg/trash.svg';
 import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
 import TableHelper from '../../../../common/js/helpers/TableHelper';
 import S from '../../../../common/js/utilities/Main';
+import Config from '../../../../../../../builds/dev-generated/Config';
+import '../../../css/components-inc/upload-files.css';
 
 interface Props {
     navStore: NavStore
@@ -82,7 +84,7 @@ class UploadFiles extends React.Component<Props, State> {
             <div className={'UploadFiles'}>
                 <div className={'Heading3'}>Upload File</div>
                 <div className={'FileAddRow FlexRow'}>
-                    <div className={'UploadRileBox FlexRow'}>
+                    <div className={'UploadFileBox FlexRow'}>
                         <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadFile }}></div>
                         <div className={'BoxInfo FlexColumn'}>
                             <div className={'BoxHeading'}>
@@ -108,27 +110,39 @@ class UploadFiles extends React.Component<Props, State> {
                             >Upload File</Button>
                         </LayoutBlock>
                     </div>
-                    <Table
-                        className={'ImageFilesTable'}
-                        legend={this.getTableLegend()}
-                        widths={this.getTableWidths()}
-                        aligns={this.getTableAligns()}
-                        helper={this.tableHelper}
-                        rows={this.renderRows()} />
                 </div>
+                <Table
+                    className={'ImageFilesTable'}
+                    legend={this.getTableLegend()}
+                    widths={this.getTableWidths()}
+                    aligns={this.getTableAligns()}
+                    helper={this.tableHelper}
+                    rows={this.renderRows()}
+                    noRowsContent={this.noRowsContent()}
+                />
+            </div>
+        )
+    }
+
+    noRowsContent() {
+        return (
+            <div className={'NoRowsContent FlexColumn'} >
+                <img className={'NoNftImg'} src={`${Config.URL.RESOURCES}/common/img/nfts/no-nft.png}`} />
+                <div className={'NoRowsContentInfo'}>No uploaded files yet</div>
             </div>
         )
     }
 
     renderRows() {
-        return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => [
-            Table.cellString(image.imageUrl),
-            Table.cellString(image.type),
-            Table.cellString(NftImageModel.getImageSizeString(image)),
-            Table.cell(
-                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNftImage(index)}></div>,
-            ),
-        ])
+        return [];
+        // return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => [
+        //     Table.cellString(image.imageUrl),
+        //     Table.cellString(image.type),
+        //     Table.cellString(NftImageModel.getImageSizeString(image)),
+        //     Table.cell(
+        //         <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNftImage(index)}></div>,
+        //     ),
+        // ])
     }
 
     getTableLegend() {
@@ -136,7 +150,7 @@ class UploadFiles extends React.Component<Props, State> {
     }
 
     getTableWidths() {
-        return ['40%', '10%', '40', '10'];
+        return ['40%', '10%', '40%', '10%'];
     }
 
     getTableAligns() {

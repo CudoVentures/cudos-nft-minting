@@ -21,7 +21,7 @@ export default class NavStore {
     constructor() {
         this.nftPage = NavStore.MINT_PAGE_KEY;
         this.mintOption = S.NOT_EXISTS;
-        this.mintStep = NavStore.STEP_CHOOSE_OPTION;
+        this.mintStep = NavStore.STEP_UPLOAD_FILE;
 
         makeObservable(this);
     }
