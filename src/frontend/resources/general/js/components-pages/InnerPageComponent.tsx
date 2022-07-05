@@ -21,6 +21,7 @@ import NavStore from '../../../common/js/stores/NavStore';
 import MintWindow, { MintStage } from '../components-inc/MintWindow/MintWindow';
 import MintStepNav from '../components-inc/MintWindow/MintStepNav';
 import MyNftsWindow from '../components-inc/MyNftsWindow';
+import MeshBackground from '../../../common/js/components-inc/MeshBackground';
 
 interface Props extends ContextPageComponentProps {
     walletStore: WalletStore,
@@ -57,28 +58,28 @@ export default class InnerPageComponent extends ContextPageComponent<Props> {
     }
 
     renderContent() {
-        const walletStore = this.props.walletStore;
         return (
-            <div style={{ 'flex': '1 1 auto' }} className={'InnerPageComponent'}>
-                <PageHeader
-                    connected={walletStore.keplrWallet.connected}
-                    address={walletStore.keplrWallet.accountAddress}
-                    onClickToggleWallet={walletStore.onClickToggleKeplr}
-                />
-                <div className={'MainContent FlexRow'}>
-                    <SideMenu />
-                    <div className={'MainContentWindow'}>
-                        <h2>{this.props.navStore.innerPage === SideMenu.INNER_PAGE.MY_NFTS ? 'My NFTs' : 'Mint NFTs'}</h2>
-                        <div className={'WhiteBox'}>
-                            {this.props.navStore.innerPage === SideMenu.INNER_PAGE.MY_NFTS
+            <>
+                <MeshBackground />
+                <div className = { 'PageContent' } >
+                    <div style={{ 'flex': '1 1 auto' }} className={'InnerPageComponent'}>
+                        <PageHeader />
+                        <div className={'MainContent FlexRow'}>
+                            <SideMenu />
+                            <div className={'MainContentWindow'}>
+                                <h2>{this.props.navStore.innerPage === SideMenu.INNER_PAGE.MY_NFTS ? 'My NFTs' : 'Mint NFTs'}</h2>
+                                <div className={'WhiteBox'}>
+                                    {this.props.navStore.innerPage === SideMenu.INNER_PAGE.MY_NFTS
                                 && <MyNftsWindow />}
-                            {this.props.navStore.innerPage === SideMenu.INNER_PAGE.MINT
+                                    {this.props.navStore.innerPage === SideMenu.INNER_PAGE.MINT
                                 && <MintWindow />}
+                                </div>
+                            </div>
                         </div>
+                        <PageFooter />
                     </div>
                 </div>
-                <PageFooter />
-            </div>
+            </>
         )
     }
 }

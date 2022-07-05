@@ -166,6 +166,12 @@ html.OverflowHidden {
 }
 
 /* PageContent */
+.PageContent {
+    flex: 1 1 auto;
+    display: flex; flex-direction: column;
+    position: relative;
+}
+
 .PageMarginTop {
     margin-top:98px;
 }

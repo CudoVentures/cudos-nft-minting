@@ -1,32 +1,53 @@
-.PageHome .IntroBlock {
+.PageHome .HomeContent {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.PageHome .IntroCnt {
     max-width: 520px;
     padding: 72px;
 }
 
-.PageHome .IntroBlock .IntroBlockTitle {
+.PageHome .IntroCnt .IntroBlockTitle {
     display: flex;
     font-weight: 700;
     font-size: 50px;
     margin-bottom: 24px;
 }
 
-.PageHome .IntroBlock .IntroBlockDesc {
+.PageHome .IntroCnt .IntroBlockDesc {
     color: var(--color-secondary);
     font-weight: 400;
     font-size: 20px;
     margin-bottom: 70px;
 }
 
-.PageHome .IntroBlock .ButtonStartMinting {
+.PageHome .IntroCnt .ButtonStartMinting {
     padding: 0 82px;
 }
 
-.PageHome .MainImages {
-    position: absolute;
-    bottom: 0; right: 0;
+.PageHome .BubblesCnt {
+    flex: 1 1 auto;
+    position: relative;
 }
 
-.PageHome .MainImages img {
+.PageHome .BubblesCnt .BubblesWrapper {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: flex-end;
     position: absolute;
-    bottom: 0; right: 0;
+    left: 0; top: 0;
+}
+
+.PageHome .BubblesCnt img {
+    /* width: 500px; */
+    height: 50%;
+    /* position: absolute; */
+    /* bottom: 0; right: 0; */
+}
+
+.PageHome .BubblesCnt img:nth-child(2) {
+    position: absolute;
+    top: 23%;
+    transform: translateX(-50%);
 }
