@@ -23,9 +23,10 @@ export interface TableDesktopProps {
     onClickRow?: (i: number) => void;
     showPaging?: boolean;
     contentScrollable?: boolean;
+    noRowsContent?: JSX.Element;
 }
 
-class TableDesktop extends React.Component < TableDesktopProps > {
+class TableDesktop extends React.Component<TableDesktopProps> {
     static defaultProps: any;
 
     static ALIGN_LEFT: number = 1;
@@ -79,12 +80,12 @@ class TableDesktop extends React.Component < TableDesktopProps > {
 
     render() {
         return (
-            <div className = { `Table TableDesktop ${S.CSS.getClassName(this.props.contentScrollable, 'ContentScrollable')} ${this.props.className}` } >
-                { this.renderLegend() }
-                { this.renderRows() }
-                { this.props.showPaging === true && (
-                    <Paging helper = { this.props.helper } />
-                ) }
+            <div className={`Table TableDesktop ${S.CSS.getClassName(this.props.contentScrollable, 'ContentScrollable')} ${this.props.className}`} >
+                {this.renderLegend()}
+                {this.renderRows()}
+                {this.props.showPaging === true && (
+                    <Paging helper={this.props.helper} />
+                )}
             </div>
         )
     }
@@ -97,20 +98,20 @@ class TableDesktop extends React.Component < TableDesktopProps > {
         for (let i = 0; i < legend.length; ++i) {
             legendRow.push((
                 <div
-                    key = { i }
-                    className = { `TableCell FlexRow ${this.getCellAlign(i)} ${S.CSS.getClassName(helper.isTableSortIndexClickable(i), 'Clickable')} ${S.CSS.getClassName(helper.getTableSortIndex() === i, 'Sorted')}` }
-                    style = { this.getCellStyle(i) }
-                    onClick = { this.onClickLegendCell.bind(this, i) } >
+                    key={i}
+                    className={`TableCell FlexRow ${this.getCellAlign(i)} ${S.CSS.getClassName(helper.isTableSortIndexClickable(i), 'Clickable')} ${S.CSS.getClassName(helper.getTableSortIndex() === i, 'Sorted')}`}
+                    style={this.getCellStyle(i)}
+                    onClick={this.onClickLegendCell.bind(this, i)} >
 
-                    { legend[i] }
-                    { this.renderSortArrow(i) }
+                    {legend[i]}
+                    {this.renderSortArrow(i)}
 
                 </div>
             ))
         }
 
         return (
-            <div className = { 'TableRow Legend' } > { legendRow } </div>
+            <div className={'TableRow Legend'} > {legendRow} </div>
         )
     }
 
@@ -121,14 +122,14 @@ class TableDesktop extends React.Component < TableDesktopProps > {
             return null;
         }
 
-        return helper.tableState.sortKey > 0 ? <ArrowUpIcon/> : <ArrowDownIcon/>;
+        return helper.tableState.sortKey > 0 ? <ArrowUpIcon /> : <ArrowDownIcon />;
     }
 
     renderRows() {
         const rows = this.props.rows;
         if (rows.length === 0) {
             return (
-                <div className = { 'Empty FlexSingleCenter' } > No results found </div>
+                <div className={'Empty FlexSingleCenter'} > {this.props.noRowsContent ?? 'No results found'} </div>
             );
         }
 
@@ -144,17 +145,17 @@ class TableDesktop extends React.Component < TableDesktopProps > {
             const cells = row.cells;
             for (let j = 0; j < cells.length; ++j) {
                 resultRow.push((
-                    <div key = { j } className = { `TableCell FlexRow ${this.getCellAlign(j)} ${S.CSS.getClassName(tableSortIndex === j, 'Sorted')}` } style = { this.getCellStyle(j) } > { cells[j].content } </div>
+                    <div key={j} className={`TableCell FlexRow ${this.getCellAlign(j)} ${S.CSS.getClassName(tableSortIndex === j, 'Sorted')}`} style={this.getCellStyle(j)} > {cells[j].content} </div>
                 ))
             }
             resultRows.push((
-                <div key = { i } className = { `TableRow Transition ${row.rowClassName} ` } onClick = { this.onClickRow.bind(this, i) } > { resultRow } </div>
+                <div key={i} className={`TableRow Transition ${row.rowClassName} `} onClick={this.onClickRow.bind(this, i)} > {resultRow} </div>
             ));
         }
 
         if (this.props.contentScrollable === true) {
             return (
-                <Scrollable classNameContent = { 'FlexColumn' }>{resultRows}</Scrollable>
+                <Scrollable classNameContent={'FlexColumn'}>{resultRows}</Scrollable>
             );
         }
 

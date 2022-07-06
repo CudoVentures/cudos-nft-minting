@@ -1,0 +1,12 @@
+.UploadFiles .FileAddRow .UploadFileBox {
+    border: 2px dashed var(--color-dark-gray);
+    border-radius: 20px;
+    padding: 27px 44px;
+}
+
+.UploadFiles .FileAddRow .UploadFileBox .SVG {
+    width: 21px;
+    height: 21px;
+    fill: var(--color-primary);
+    margin-right: 31px;
+}
