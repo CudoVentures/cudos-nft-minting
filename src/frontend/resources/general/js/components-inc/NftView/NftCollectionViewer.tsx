@@ -16,13 +16,17 @@ interface Props {
 
 class NftCollectionViewer extends React.Component < Props > {
 
+    onClickBack = () => {
+        this.props.myNftsStore.markNftCollection(null);
+    }
+
     render() {
         const nftCollectionModel = this.props.nftCollectionModel;
         const nftModels = this.props.myNftsStore.getNftsInCollection(nftCollectionModel.denomId);
 
         return (
             <div className = { 'NftCollectionViewer' } >
-                <div className = { 'NavigationBack FlexRow' } >
+                <div className = { 'NavigationBack FlexRow' } onClick = { this.onClickBack } >
                     <div className = { 'SVG IconBack' } dangerouslySetInnerHTML = {{ __html: SvgArrowLeft }} />
                     Back to My NFTs
                 </div>
