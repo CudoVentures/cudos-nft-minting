@@ -5,6 +5,7 @@ import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 
 import NftCollectionModel from '../../../../common/js/models/NftCollectionModel';
 import NftModelsViewer from './NftModelsViewer';
+import NftViewer from './NftViewer';
 
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import '../../../css/components-inc/NftView/nft-collection-viewer.css'
@@ -30,6 +31,12 @@ class NftCollectionViewer extends React.Component < Props > {
                     <div className = { 'SVG IconBack' } dangerouslySetInnerHTML = {{ __html: SvgArrowLeft }} />
                     Back to My NFTs
                 </div>
+                <NftViewer
+                    img = { '' }
+                    collection = { 'collection' }
+                    name = { nftCollectionModel.name }
+                    txHash = { '0x123123' }
+                    tokenId = { nftCollectionModel.denomId } />
                 <div className = { 'NftModelsLabel' } >NFTs in this collection</div>
                 <NftModelsViewer nftModels = { nftModels } />
             </div>

@@ -30,38 +30,40 @@ class ListNfts extends React.Component < Props > {
 
         return (
             <div className = { 'ListNfts' } >
-                <div className = { 'NftListFilter FlexSplit' } >
-                    <Actions
-                        height = { Actions.HEIGHT_42 }
-                        layout = { Actions.LAYOUT_ROW_LEFT } >
+                { myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && (
+                    <div className = { 'NftListFilter FlexSplit' } >
+                        <Actions
+                            height = { Actions.HEIGHT_42 }
+                            layout = { Actions.LAYOUT_ROW_LEFT } >
 
-                        <Button
-                            type = { myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
-                            color = { myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
-                            onClick = { myNftsStore.markViewSingleNfts } >
+                            <Button
+                                type = { myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
+                                color = { myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
+                                onClick = { myNftsStore.markViewSingleNfts } >
                             Single NFTs ({myNftsStore.nftModels.length})
-                        </Button>
+                            </Button>
 
-                        <Button
-                            type = { myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
-                            color = { myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
-                            onClick = { myNftsStore.markViewNftCollections } >
+                            <Button
+                                type = { myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
+                                color = { myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
+                                onClick = { myNftsStore.markViewNftCollections } >
                             Collections ({myNftsStore.nftCollectionModels.length})
-                        </Button>
+                            </Button>
 
-                    </Actions>
-                    <Input
-                        className = { 'FilterString StartRight' }
-                        value = { myNftsStore.filterString }
-                        placeholder = { 'Search for NFTs' }
-                        gray = { true }
-                        InputProps = { {
-                            startAdornment: (
-                                <div className = { 'SVG IconSearch' } dangerouslySetInnerHTML = {{ __html: SvgSearch }} />
-                            ),
-                        } }
-                        onChange = { this.onChangeFilterString } />
-                </div>
+                        </Actions>
+                        <Input
+                            className = { 'FilterString StartRight' }
+                            value = { myNftsStore.filterString }
+                            placeholder = { 'Search for NFTs' }
+                            gray = { true }
+                            InputProps = { {
+                                startAdornment: (
+                                    <div className = { 'SVG IconSearch' } dangerouslySetInnerHTML = {{ __html: SvgSearch }} />
+                                ),
+                            } }
+                            onChange = { this.onChangeFilterString } />
+                    </div>
+                ) }
                 { myNftsStore.hasViewNft() === true && <NftModelViewer nftModel = { myNftsStore.viewNftModel } /> }
                 { myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === true && <NftCollectionViewer nftCollectionModel = { myNftsStore.viewNftCollectionModel } /> }
                 { myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && myNftsStore.isViewSingleNfts() === true && <NftModelsViewer nftModels = { myNftsStore.nftModels } /> }

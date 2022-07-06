@@ -1,0 +1,67 @@
+.NftViewer {
+    display: flex;
+}
+
+.NftViewer .Img {
+    width: 300px; height: 0;
+    padding-bottom: 100%;
+    margin-right: 30px;
+    border-radius: 10px;
+}
+
+.NftViewer .NftDataCnt {
+    flex: 1 1 auto;
+}
+
+.NftViewer .NftDataCnt .NftHeader {
+    margin-bottom: 4px;
+}
+
+.NftViewer .NftDataCnt .NftHeader .CollectionName {
+    color: var(--color-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.NftViewer .NftDataCnt .NftHeader .Share {
+    font-weight: 600;
+}
+
+.NftViewer .NftDataCnt .NftHeader .Share .IconTwitter {
+    margin-right: 12px;
+}
+
+.NftViewer .NftDataCnt .NftHeader .Share .IconTwitter path {
+    fill: var(--color-primary);
+}
+
+.NftViewer .NftDataCnt .NftName {
+    font-size: 40px; font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.NftViewer .NftDataCnt .TxInfo {
+    padding: 20px;
+    margin-bottom: 20px;
+    background: var(--color-gray-light);
+}
+
+.NftViewer .NftDataCnt .TxInfo .TxInfoRow {
+    color: var(--color-secondary);
+    font-weight: 600;
+}
+
+.NftViewer .NftDataCnt .TxInfo .TxInfoRow:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.NftViewer .NftDataCnt .TxInfo .TxInfoRow label {
+}
+
+.NftViewer .NftDataCnt .TxInfo .TxInfoRow div {
+    color: var(--color-dark);
+}
+
+.NftViewer .NftDataCnt .TxInfo .TxInfoRow div.TxInfoBlue {
+    color: var(--color-primary)
+}

@@ -1,0 +1,15 @@
+.NftModelViewer {
+    display: flex; flex-direction: column;
+}
+
+.NftModelViewer .NavigationBack {
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-bottom: 22px;
+    cursor: pointer;
+}
+
+.NftModelViewer .NavigationBack .IconBack {
+    fill: var(--color-primary);
+    margin-right: 14px;
+}
