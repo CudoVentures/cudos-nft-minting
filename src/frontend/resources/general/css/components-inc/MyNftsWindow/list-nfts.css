@@ -1,3 +1,12 @@
 .ListNfts .NftListFilter {
     margin-bottom: var(--desktop-spacing);
 }
+
+.ListNfts .NftListFilter .FilterString {
+    width: 300px;
+}
+
+.ListNfts .NftListFilter .FilterString .IconSearch {
+    fill: #999FB1;
+    margin-right: 10px;
+}

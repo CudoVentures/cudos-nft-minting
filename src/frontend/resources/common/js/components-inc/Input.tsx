@@ -25,10 +25,11 @@ interface Props extends TextFieldProps {
     decimalLength?: number;
     margin?: InputMargin.NORMAL | InputMargin.DENSE;
     readOnly?: boolean;
-    onChange?: null | ((e: ChangeEvent < HTMLInputElement | HTMLTextAreaElement >) => boolean | void);
+    onChange?: null | ((e: ChangeEvent < HTMLInputElement | HTMLTextAreaElement > | string) => boolean | void);
     onFocus?: () => void | boolean;
     onBlur?: () => void | boolean;
     stretch?: boolean;
+    gray?: boolean;
 }
 
 interface State {
@@ -89,11 +90,11 @@ export default class Input extends React.Component < Props, State > {
 
     getMargin() {
         switch (this.props.margin) {
-            default:
-            case InputMargin.NORMAL:
-                return 'normal';
             case InputMargin.DENSE:
                 return 'dense';
+            case InputMargin.NORMAL:
+            default:
+                return 'normal';
         }
     }
 
@@ -120,15 +121,16 @@ export default class Input extends React.Component < Props, State > {
         const margin = this.getMargin();
         const { inputType, decimalLength, stretch, className, ...props } = this.props;
         const cssClassStretch = S.CSS.getClassName(this.props.stretch, 'InputStretch');
+        const cssClassGray = S.CSS.getClassName(this.props.gray, 'InputGray');
         return (
-            <div className = { `Input ${className} ${cssClassStretch} ${S.CSS.getClassName(this.props.readOnly, 'ReadOnly')}` }>
-                <FormControl variant = 'outlined' margin = { margin }>
+            <div className = { `Input ${className} ${cssClassStretch} ${cssClassGray} ${S.CSS.getClassName(this.props.readOnly, 'ReadOnly')}` }>
+                <FormControl variant='standard' margin = { margin }>
 
                     <TextField
                         { ...props }
                         onChange = { this.props.onChange !== null && this.props.readOnly !== true ? this.onChange : undefined }
                         margin = { margin }
-                        variant = 'outlined' />
+                        variant='standard' />
 
                 </FormControl>
             </div>
@@ -145,6 +147,7 @@ Input.defaultProps = {
     'readOnly': false,
     'onChange': null,
     'stretch': false,
+    'gray': false,
 };
 
 function filterInteger(value: string) {

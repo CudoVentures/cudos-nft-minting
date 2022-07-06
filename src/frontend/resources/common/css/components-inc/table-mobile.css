@@ -1,7 +1,7 @@
 .TableMobile {
     /* border: 1px solid var(--color-dark-minus-02); */
     /* border-radius: 4px; */
-    color: var(--color-dark-gray);
+    color: var(--color-gray-dark);
 }
 
 .TableMobile .Empty {
