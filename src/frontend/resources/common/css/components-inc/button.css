@@ -18,6 +18,10 @@
     border-radius: 30px !important;
 }
 
+.Button.Padding24 {
+    padding: 0 24px;
+}
+
 .Button.Padding48 {
     padding: 0 48px;
 }

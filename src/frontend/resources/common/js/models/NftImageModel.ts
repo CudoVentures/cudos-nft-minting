@@ -42,17 +42,24 @@ export default class NftImageModel {
     }
 
     static getImageSizeString(imageModel: NftImageModel): string {
-        const kilo = 2 << 10;
+        const size = imageModel.sizeBytes;
 
-        switch (Math.floor(imageModel.sizeBytes / 2 << 10)) {
-            case 0:
-                return `${imageModel.sizeBytes} B`;
-            case 1:
-                return `${imageModel.sizeBytes / kilo} KB`;
-            case 2:
-                return `${imageModel.sizeBytes / kilo ** 2} MB`;
-            default:
-                return 'File too big.'
+        const kilo = 2 << 10;
+        const mega = 2 << 20;
+
+        if (size < kilo) {
+            return `${size} B`;
         }
+
+        if (Math.floor(size / kilo) < kilo) {
+            return `${(size / kilo).toFixed(2)} KB`
+        }
+
+        if (Math.floor(size / mega) < kilo) {
+            return `${(size / mega).toFixed(2)} MB`
+        }
+
+        return 'File too big.'
+
     }
 }

@@ -1,7 +1,16 @@
+.UploadFiles .FileAddRow {
+    position: relative;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
 .UploadFiles .FileAddRow .UploadFileBox {
     border: 2px dashed var(--color-dark-gray);
     border-radius: 20px;
     padding: 27px 44px;
+    width: 40%;
+    margin-right: 30px;
 }
 
 .UploadFiles .FileAddRow .UploadFileBox .SVG {
@@ -9,4 +18,67 @@
     height: 21px;
     fill: var(--color-primary);
     margin-right: 31px;
+}
+
+.UploadFiles .FileAddRow .UploadFileBox .BoxHeading {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--color-dark);
+    margin-bottom: 5px;
+}
+
+.UploadFiles .FileAddRow .UploadFileBox .BoxInfo {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--color-secondary);
+}
+
+.UploadFiles .FileAddRow .UploadFileBox .BoxHeading .BrowseButton {
+    color: var(--color-primary);
+}
+
+.UploadFiles .FileAddRow .FileFromLink {
+    flex-grow: 1;
+}
+
+.UploadFiles .FileAddRow .FileFromLink .BoxHeading {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-secondary);
+    margin-bottom: 5px;
+}
+
+.UploadFiles .FileAddRow .FileFromLink .Input {
+    margin-right: 20px;
+}
+
+.UploadFiles .FileAddRow .FileFromLink .MuiOutlinedInput-input {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: #999FB1;
+    padding-left: 21px;
+}
+
+.UploadFiles .TableDesktop .Empty .NoRowsContent {
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.UploadFiles .TableDesktop .Empty .NoRowsContent .NoNftImg{
+    width: 70px;
+    height: 66px;
+    margin-top: 60px;
+    margin-bottom: 20px;
+}
+
+.UploadFiles .TableDesktop .Empty .NoRowsContent .NoRowsContentInfo {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-secondary);
 }

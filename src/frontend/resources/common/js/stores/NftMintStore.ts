@@ -1,4 +1,5 @@
 import { makeObservable, observable } from 'mobx';
+import { ChangeEvent } from 'react';
 import InfuraApi from '../api/InfuraApi';
 import NftApi from '../api/NftApi';
 import NftImageModel from '../models/NftImageModel';
@@ -6,7 +7,6 @@ import NftModel from '../models/NftModel';
 import S from '../utilities/Main';
 
 export default class NftMintStore {
-    URL_REGEX = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
 
     nftApi: NftApi;
     infuraApi: InfuraApi;
@@ -26,7 +26,6 @@ export default class NftMintStore {
         this.nftForm = new NftModel();
         this.nftImages = [];
         this.selectedImages = [];
-        this.isImageLinkValid = false;
         this.imageUrlInputValue = S.Strings.EMPTY;
 
         makeObservable(this);
@@ -60,24 +59,69 @@ export default class NftMintStore {
         return nftImage;
     }
 
-    onImageUrlChange(): void {
-        this.isImageLinkValid = this.URL_REGEX.test(this.imageUrlInputValue);
+    onImageUrlChange(value: string): void {
+        this.imageUrlInputValue = value;
     }
 
-    onClickAddImageLink(): Promise<void> {
-        const url = this.imageUrlInputValue;
+    async getImageFromUrl(): Promise<void> {
+        let url = this.imageUrlInputValue;
 
-        // TODO: get valid image data
-        // const nftImage = new NftImageModel({
-        //     imageUrl: link,
-        // })
-        // this.nftImages.push(nftImage);
+        this.imageUrlInputValue = '';
 
-        // TODO: clear url input
-        return true;
+        try {
+            if (!url.startsWith('http')) {
+                url = `http://${url}`;
+            }
+            const imageRes = await fetch(url);
+            let contentType = imageRes.headers.get('Content-Type');
+            contentType = contentType.slice(contentType.indexOf('/') + 1);
+            const contentLength = imageRes.headers.get('Content-Length');
+            const nftImage = NftImageModel.fromJSON({
+                imageUrl: url,
+                fileName: 'linkedImage',
+                type: contentType,
+                sizeBytes: contentLength,
+            })
+            this.nftImages.push(nftImage);
+
+        } catch (e) {
+            throw Error('Could not fetch file.');
+        }
+
     }
 
     removeNftImage(indexToRemove: number): void {
         this.nftImages = this.nftImages.filter((image: NftImageModel, index: number) => index !== indexToRemove);
+        this.selectedImages = this.selectedImages.filter((i: number) => i !== indexToRemove);
+    }
+
+    onSelectImage(index: number): void {
+        if (this.isNftImageSelected(index) === S.INT_TRUE) {
+            this.selectedImages = this.selectedImages.filter((i: number) => i !== index);
+        } else {
+            this.selectedImages.push(index);
+        }
+    }
+
+    onSelectAllImages(): void {
+        const result = [];
+
+        if (this.areAllImagesSelected() === S.INT_FALSE) {
+            for (let i = 0; i < this.nftImages.length; i++) {
+                result.push(i);
+            }
+        }
+
+        this.selectedImages = result;
+    }
+
+    areAllImagesSelected(): number {
+        return this.nftImages.length === this.selectedImages.length
+            && this.nftImages.length !== 0
+            ? S.INT_TRUE : S.INT_FALSE;
+    }
+
+    isNftImageSelected(index: number): number {
+        return this.selectedImages.find((i: number) => i === index) !== undefined ? S.INT_TRUE : S.INT_FALSE;
     }
 }
