@@ -119,9 +119,9 @@ export default class Input extends React.Component < Props, State > {
     /* render */
     render() {
         const margin = this.getMargin();
-        const { inputType, decimalLength, stretch, className, ...props } = this.props;
-        const cssClassStretch = S.CSS.getClassName(this.props.stretch, 'InputStretch');
-        const cssClassGray = S.CSS.getClassName(this.props.gray, 'InputGray');
+        const { inputType, decimalLength, stretch, className, gray, ...props } = this.props;
+        const cssClassStretch = S.CSS.getClassName(stretch, 'InputStretch');
+        const cssClassGray = S.CSS.getClassName(gray, 'InputGray');
         return (
             <div className = { `Input ${className} ${cssClassStretch} ${cssClassGray} ${S.CSS.getClassName(this.props.readOnly, 'ReadOnly')}` }>
                 <FormControl variant='standard' margin = { margin }>

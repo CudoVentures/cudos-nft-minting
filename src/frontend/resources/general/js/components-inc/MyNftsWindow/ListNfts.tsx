@@ -9,6 +9,10 @@ import Input from '../../../../common/js/components-inc/Input';
 
 import SvgSearch from '../../../../common/svg/search.svg';
 import '../../../css/components-inc/MyNftsWindow/list-nfts.css'
+import NftCollectionsViewer from '../NftView/NftCollectionsViewer';
+import NftModelsViewer from '../NftView/NftModelsViewer';
+import NftCollectionViewer from '../NftView/NftCollectionViewer';
+import NftModelViewer from '../NftView/NftModelViewer';
 
 interface Props {
     myNftsStore: MyNftsStore;
@@ -32,16 +36,16 @@ class ListNfts extends React.Component < Props > {
                         layout = { Actions.LAYOUT_ROW_LEFT } >
 
                         <Button
-                            type = { myNftsStore.isFilterredSingleNftsPage() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
-                            color = { myNftsStore.isFilterredSingleNftsPage() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
-                            onClick = { myNftsStore.markSingleNftsFilterPage } >
+                            type = { myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
+                            color = { myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
+                            onClick = { myNftsStore.markViewSingleNfts } >
                             Single NFTs ({myNftsStore.nftModels.length})
                         </Button>
 
                         <Button
-                            type = { myNftsStore.isFilterredCollectionsPage() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
-                            color = { myNftsStore.isFilterredCollectionsPage() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
-                            onClick = { myNftsStore.markCollectionFilterPage } >
+                            type = { myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
+                            color = { myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
+                            onClick = { myNftsStore.markViewNftCollections } >
                             Collections ({myNftsStore.nftCollectionModels.length})
                         </Button>
 
@@ -58,6 +62,10 @@ class ListNfts extends React.Component < Props > {
                         } }
                         onChange = { this.onChangeFilterString } />
                 </div>
+                { myNftsStore.hasViewNft() === true && <NftModelViewer nftModel = { myNftsStore.viewNftModel } /> }
+                { myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === true && <NftCollectionViewer nftCollectionModel = { myNftsStore.viewNftCollectionModel } /> }
+                { myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && myNftsStore.isViewSingleNfts() === true && <NftModelsViewer nftModels = { myNftsStore.nftModels } /> }
+                { myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && myNftsStore.isViewNftCollections() === true && <NftCollectionsViewer nftCollectionModels = { myNftsStore.nftCollectionModels } /> }
             </div>
         )
     }
