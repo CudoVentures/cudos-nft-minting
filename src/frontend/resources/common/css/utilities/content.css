@@ -1,33 +1,39 @@
 :root {
     --color-primary: #52A6F8;
+    --color-primary-light: rgba(82, 166, 248, 0.1);
     --color-secondary: #636D8F;
     --color-dark: #1b2031;
-    --color-light-gray: #F6F9FE;
-    --color-dark-gray: #999FB1;
+    --color-gray-light: #F6F9FE;
+    --color-gray-light-02: #E0E2E9;
+    --color-gray-dark: #999FB1;
     --color-purple: rgba(99, 109, 143, 0.2);
     --color-red: #EA6161;
 
     --color-body-background: linear-gradient(296.82deg, rgba(246, 249, 254, 0) 0%, rgba(246, 249, 254, 0.86) 63.54%, #F6F9FE 100%);
 
+    --transition-duration: 0.4s;
+
     /* theme */
     --color-input-text: var(--color-dark);
-    --color-input-label: var(--color-dark-gray);
+    --color-input-label: var(--color-gray-dark);
     --color-input-focused: #262b31;
-    --color-input-border: var(--color-dark-gray);
+    --color-input-border: var(--color-gray-dark);
     --color-input-border-hover: #262b31;
-    --color-select-icon: var(--color-dark-gray);
+    --color-input-background: var(--color-gray-light);
+    --color-input-background-focused: var(--color-primary-light);
+    --color-select-icon: var(--color-gray-dark);
     --color-select-icon-focused: #262b31;
     --color-select-highlight: rgba(0, 0, 0, 0.1);
     --color-select-multi-item-color: #fff;
     --color-select-multi-item-background: #9FB0C5;
     --color-select-multi-delete-icon: #fff;
 
-    --color-popover-text: var(--color-dark-gray);
-    --color-popover-border: var(--color-dark-gray);
+    --color-popover-text: var(--color-gray-dark);
+    --color-popover-border: var(--color-gray-dark);
     --color-popover-background: #fff;
 
-    --color-tooltip-text: var(--color-dark-gray);
-    --color-tooltip-border: var(--color-dark-gray);
+    --color-tooltip-text: var(--color-gray-dark);
+    --color-tooltip-border: var(--color-gray-dark);
     --color-tooltip-background: #fff;
 
     --color-checkbox-fill: #fff;

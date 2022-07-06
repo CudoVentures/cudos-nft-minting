@@ -45,7 +45,7 @@ header.PageHeader .HeaderEnd .InfoBlock {
     font-weight: 600;
     border-radius: 24px;
     margin-left: 24px;
-    background: var(--color-light-gray);
+    background: var(--color-gray-light);
 }
 
 

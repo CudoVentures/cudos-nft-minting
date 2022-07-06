@@ -26,7 +26,7 @@
 
 .OptionChoose .OptionHolder .OptionBox .SVG{
     padding: 15px;
-    background: var(--color-light-gray);
+    background: var(--color-gray-light);
     border-radius: 10px;
     margin-bottom: 10px;
 }
