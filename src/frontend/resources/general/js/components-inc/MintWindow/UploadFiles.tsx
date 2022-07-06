@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import Button from '../../../../common/js/components-inc/Button';
-import Input, { InputType } from '../../../../common/js/components-inc/Input';
+import Input, { InputType, InputMargin } from '../../../../common/js/components-inc/Input';
 import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import Table from '../../../../common/js/components-inc/Table';
 import NftImageModel from '../../../../common/js/models/NftImageModel';
@@ -14,10 +14,14 @@ import TableHelper from '../../../../common/js/helpers/TableHelper';
 import S from '../../../../common/js/utilities/Main';
 import Config from '../../../../../../../builds/dev-generated/Config';
 import '../../../css/components-inc/upload-files.css';
+import Actions from '../../../../common/js/components-inc/Actions';
+import AlertStore from '../../../../common/js/stores/AlertStore';
+import Checkbox from '../../../../common/js/components-inc/Checkbox';
 
 interface Props {
     navStore: NavStore
     nftMintStore: NftMintStore
+    alertStore: AlertStore
 }
 
 interface State {
@@ -79,6 +83,15 @@ class UploadFiles extends React.Component<Props, State> {
     // }
 
     // TODO: implement
+
+    onClickUploadFile = async () => {
+        try {
+            await this.props.nftMintStore.getImageFromUrl();
+        } catch (e) {
+            this.props.alertStore.show(e.message);
+        }
+    }
+
     render() {
         return (
             <div className={'UploadFiles'}>
@@ -88,7 +101,7 @@ class UploadFiles extends React.Component<Props, State> {
                         <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadFile }}></div>
                         <div className={'BoxInfo FlexColumn'}>
                             <div className={'BoxHeading'}>
-                                Drop image here or <span className={'Blue'}>Browse</span>
+                                Drop image here or <span className={'BrowseButton'}>Browse</span>
                             </div>
                             <div className={'BoxInfo'}>
                                 Supported files: JPEG, JPG, PNG, GIF, SVG, MP4, WEBM, WEBP, MP3, WAV, OGG, GLTF, GLB
@@ -97,18 +110,26 @@ class UploadFiles extends React.Component<Props, State> {
                     </div>
                     <div className={'FileFromLink FlexColumn'}>
                         <div className={'BoxHeading'}>Add file from link</div>
-                        <LayoutBlock>
+                        <div className={'FlexRow'}>
                             <Input
                                 className={'LinkInput'}
                                 inputType={InputType.TEXT}
                                 placeholder={'www.mywebsite.com/item'}
                                 value={this.props.nftMintStore.imageUrlInputValue}
+                                margin={InputMargin.NORMAL}
+                                onChange={(event: ChangeEvent) => this.props.nftMintStore.onImageUrlChange(event.toString())}
                             />
-                            <Button
-                                disabled={this.props.nftMintStore.isImageLinkValid}
-                                onClick={() => this.props.nftMintStore.onClickAddImageLink()}
-                            >Upload File</Button>
-                        </LayoutBlock>
+
+                            <Actions height={Actions.HEIGHT_52}>
+                                <Button
+                                    color={Button.COLOR_SCHEME_1}
+                                    radius={Button.RADIUS_MAX}
+                                    type={Button.TYPE_ROUNDED}
+                                    padding={Button.PADDING_24}
+                                    onClick={this.onClickUploadFile}
+                                >Upload File</Button>
+                            </Actions>
+                        </div>
                     </div>
                 </div>
                 <Table
@@ -127,40 +148,64 @@ class UploadFiles extends React.Component<Props, State> {
     noRowsContent() {
         return (
             <div className={'NoRowsContent FlexColumn'} >
-                <img className={'NoNftImg'} src={`${Config.URL.RESOURCES}/common/img/nfts/no-nft.png}`} />
+                <img className={'NoNftImg'} src={`${Config.URL.RESOURCES}/common/img/nfts/no-nft.png`} />
                 <div className={'NoRowsContentInfo'}>No uploaded files yet</div>
             </div>
         )
     }
 
     renderRows() {
-        return [];
-        // return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => [
-        //     Table.cellString(image.imageUrl),
-        //     Table.cellString(image.type),
-        //     Table.cellString(NftImageModel.getImageSizeString(image)),
-        //     Table.cell(
-        //         <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNftImage(index)}></div>,
-        //     ),
-        // ])
+
+        return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => Table.row(
+            [
+                Table.cell(
+                    <Checkbox
+                        value={this.props.nftMintStore.isNftImageSelected(index)}
+                        onChange={() => this.props.nftMintStore.onSelectImage(index)}
+                    />,
+                ),
+                Table.cell(
+                    <div className={'FlexRow'}>
+                        <img className={'Image'} src={image.imageUrl} />
+                        {image.fileName}
+                    </div>,
+                ),
+                Table.cellString(image.type),
+                Table.cellString(NftImageModel.getImageSizeString(image)),
+                Table.cell(
+                    <div className={'SVG Icon Remove'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNftImage(index)}></div>,
+                ),
+            ],
+        ))
+
     }
 
     getTableLegend() {
-        return ['File Name', 'Type', 'Size', 'Action'];
+        return [
+            (<Checkbox
+                value={this.props.nftMintStore.areAllImagesSelected()}
+                onChange={() => this.props.nftMintStore.onSelectAllImages()}
+            />),
+            'File Name',
+            'Type',
+            'Size',
+            'Action',
+        ];
     }
 
     getTableWidths() {
-        return ['40%', '10%', '40%', '10%'];
+        return ['5%', '30%', '20%', '15%', '35%'];
     }
 
     getTableAligns() {
         return [
+            TableDesktop.ALIGN_CENTER,
             TableDesktop.ALIGN_LEFT,
             TableDesktop.ALIGN_CENTER,
             TableDesktop.ALIGN_CENTER,
-            TableDesktop.ALIGN_CENTER,
+            TableDesktop.ALIGN_RIGHT,
         ]
     }
 }
 
-export default inject('navStore', 'nftMintStore')((observer(UploadFiles)));
+export default inject('alertStore', 'navStore', 'nftMintStore')((observer(UploadFiles)));

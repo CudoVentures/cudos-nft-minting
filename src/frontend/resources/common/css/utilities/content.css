@@ -31,9 +31,9 @@
     --color-tooltip-background: #fff;
 
     --color-checkbox-fill: #fff;
-    --color-checkbox-background: #262b31;
-    --color-checkbox-border: #262b31;
-    --color-checkbox-border-active: #262b31;
+    --color-checkbox-background: var(--color-primary);
+    --color-checkbox-border: #7D87AA;
+    --color-checkbox-border-active:  var(--color-primary);
 
     --color-popup-background: #fff;
     /* theme */

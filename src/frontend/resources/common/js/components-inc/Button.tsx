@@ -35,7 +35,7 @@ interface Props {
     className?: string;
     type?: Button.TYPE_ROUNDED | Button.TYPE_TEXT_INLINE;
     color?: Button.COLOR_SCHEME_1 | Button.COLOR_SCHEME_2 | Button.COLOR_SCHEME_3;
-    padding?: Button.PADDING_DEFAULT | Button.PADDING_48 | Button.PADDING_96;
+    padding?: Button.PADDING_DEFAULT | Button.PADDING_24 | Button.PADDING_48 | Button.PADDING_96;
     radius?: Button.RADIUS_DEFAULT | Button.RADIUS_MAX;
     href?: string,
     onClick?: () => void;
@@ -43,7 +43,7 @@ interface Props {
     target?: string;
 }
 
-export default class Button extends React.Component < Props > {
+export default class Button extends React.Component<Props> {
 
     static TYPE_ROUNDED: number = 1;
     static TYPE_TEXT_INLINE: number = 4;
@@ -55,6 +55,7 @@ export default class Button extends React.Component < Props > {
     static PADDING_DEFAULT: number = 1;
     static PADDING_48: number = 2;
     static PADDING_96: number = 3;
+    static PADDING_24: number = 4;
 
     static RADIUS_DEFAULT: number = 1;
     static RADIUS_MAX: number = 2;
@@ -92,6 +93,8 @@ export default class Button extends React.Component < Props > {
 
     cssPadding() {
         switch (this.props.padding) {
+            case Button.PADDING_24:
+                return 'Padding24';
             case Button.PADDING_48:
                 return 'Padding48';
             case Button.PADDING_96:
@@ -102,7 +105,7 @@ export default class Button extends React.Component < Props > {
     }
 
     cssRadius() {
-        switch (this.props.padding) {
+        switch (this.props.radius) {
             case Button.RADIUS_MAX:
                 return 'Radius30';
             default:
@@ -114,19 +117,19 @@ export default class Button extends React.Component < Props > {
         const className = `Button Transition ${this.cssPadding()} ${this.cssRadius()} ${this.props.className}`;
 
         return (
-            <ThemeProvider theme = { theme01 } >
-                <ThemeProvider theme = { this.muiTheme() } >
+            <ThemeProvider theme={theme01} >
+                <ThemeProvider theme={this.muiTheme()} >
                     <MuiButton
-                        disabled = { this.props.disabled }
-                        className = { className }
-                        onClick = { this.props.onClick }
-                        variant = { this.muiVariant() }
-                        color = { this.cssMuiClassColor() }
-                        href = { this.props.href }
-                        target = { this.props.target } >
+                        disabled={this.props.disabled}
+                        className={className}
+                        onClick={this.props.onClick}
+                        variant={this.muiVariant()}
+                        color={this.cssMuiClassColor()}
+                        href={this.props.href}
+                        target={this.props.target} >
 
-                        <div className = { 'ButtonContent FlexRow' } >
-                            { this.props.children }
+                        <div className={'ButtonContent FlexRow'} >
+                            {this.props.children}
                         </div>
 
                     </MuiButton>

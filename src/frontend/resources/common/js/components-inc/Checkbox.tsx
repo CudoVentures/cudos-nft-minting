@@ -13,7 +13,7 @@ interface Props {
     onChange: (value: number) => void;
 }
 
-export default class Checkbox extends React.Component < Props > {
+export default class Checkbox extends React.Component<Props> {
 
     static defaultProps: Props;
 
@@ -26,11 +26,11 @@ export default class Checkbox extends React.Component < Props > {
     render() {
         return (
             <div
-                className = { `CheckboxComponent FlexRow Clickable ${S.CSS.getClassName(this.props.error, 'Error')} ${S.CSS.getActiveClassName(this.props.value === S.INT_TRUE)} ${this.props.className}` }
-                onClick = { this.onChange } >
+                className={`CheckboxComponent FlexRow Clickable ${S.CSS.getClassName(this.props.error, 'Error')} ${S.CSS.getActiveClassName(this.props.value === S.INT_TRUE)} ${this.props.className}`}
+                onClick={this.onChange} >
 
-                <div className = { 'SVG Size Transition Checkbox FlexSingleCenter' } ><SvgCheckbox /></div>
-                { this.props.label }
+                <div className={'SVG Size Transition Checkbox FlexSingleCenter'} ><SvgCheckbox /></div>
+                {this.props.label}
 
             </div>
         );

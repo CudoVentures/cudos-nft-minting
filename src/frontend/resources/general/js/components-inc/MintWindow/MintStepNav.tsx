@@ -48,7 +48,7 @@ class MintStepNav extends React.Component<Props, State> {
                                     : step.key
                                 }
                             </div>
-                            <div className={'StageName'}>{step.value}</div>
+                            <div className={'StageName'}>{step.name}</div>
                         </div>
                     ))}
                 </div>
