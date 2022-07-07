@@ -1,6 +1,7 @@
 import S from '../utilities/Main';
+import Filterable from './Filterable';
 
-export default class NftCollectionModel {
+export default class NftCollectionModel implements Filterable {
 
     denomId: string;
     name: string;
@@ -8,6 +9,10 @@ export default class NftCollectionModel {
     constructor() {
         this.denomId = S.Strings.NOT_EXISTS;
         this.name = S.Strings.EMPTY;
+    }
+
+    getFilterableString(): string {
+        return this.name;
     }
 
     toJson(): any {

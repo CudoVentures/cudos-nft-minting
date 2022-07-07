@@ -24,6 +24,7 @@ class ListNfts extends React.Component < Props > {
     onChangeFilterString = (value) => {
         const myNftsStore = this.props.myNftsStore;
         myNftsStore.filterString = value;
+        myNftsStore.invalidateFilterSignal();
     }
 
     render() {
@@ -101,7 +102,7 @@ class ListNfts extends React.Component < Props > {
 
         return (
             <div className = { `ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}` } >
-                { display === true && <NftModelsViewer nftModels = { myNftsStore.nftModels } /> }
+                { display === true && <NftModelsViewer nftModels = { myNftsStore.filterredNftModels } /> }
             </div>
         )
     }
@@ -112,7 +113,7 @@ class ListNfts extends React.Component < Props > {
 
         return (
             <div className = { `ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}` } >
-                { display === true && <NftCollectionsViewer nftCollectionModels = { myNftsStore.nftCollectionModels } /> }
+                { display === true && <NftCollectionsViewer nftCollectionModels = { myNftsStore.filteredNftCollectionModels } /> }
             </div>
         )
     }

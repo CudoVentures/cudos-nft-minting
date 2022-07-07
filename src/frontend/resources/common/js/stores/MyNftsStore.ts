@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import Config from '../../../../../../builds/dev-generated/Config';
+import FilterHelper from '../helpers/FilterHelper';
+import TimeoutHelper from '../helpers/TimeoutHelper';
 import NftCollectionModel from '../models/NftCollectionModel';
 import NftModel from '../models/NftModel';
 import S from '../utilities/Main';
@@ -18,8 +20,11 @@ export default class MyNftsStore {
     viewNftCollectionModel: NftCollectionModel;
 
     filterString: string;
+    filterredNftModels: NftModel[];
+    filteredNftCollectionModels: NftCollectionModel[];
 
     initialized: boolean;
+    timeoutHelper: TimeoutHelper;
 
     constructor() {
         this.nftModels = [];
@@ -33,6 +38,7 @@ export default class MyNftsStore {
         this.filterString = S.Strings.EMPTY;
 
         this.initialized = false;
+        this.timeoutHelper = new TimeoutHelper();
 
         makeAutoObservable(this);
     }
@@ -81,8 +87,17 @@ export default class MyNftsStore {
         this.viewNftCollectionModel = nftCollectionModel;
     }
 
+    invalidateFilterSignal() {
+        this.timeoutHelper.signal(this.filter);
+    }
+
     getNftsInCollection(denomId: string): NftModel[] {
         return this.nftsInCollectionsMap.get(denomId) ?? [];
+    }
+
+    filter = () => {
+        this.filterredNftModels = FilterHelper.filter(this.nftModels, this.filterString) as NftModel[];
+        this.filteredNftCollectionModels = FilterHelper.filter(this.nftCollectionModels, this.filterString) as NftCollectionModel[];
     }
 
     async fetchNfts() {
@@ -161,6 +176,8 @@ export default class MyNftsStore {
         });
 
         this.nftsInCollectionsMap = cache;
+
+        this.filter();
 
         this.initialized = true;
     }
