@@ -37,7 +37,7 @@ class OptionChoose extends React.Component < Props > {
                             return (
                                 <div
                                     key={option.key}
-                                    className={`OptionBox FlexColumn ${S.CSS.getActiveClassName(this.props.navStore.mintOption === option.key)}`}
+                                    className={`OptionBox FlexColumn Transition ${S.CSS.getActiveClassName(this.props.navStore.mintOption === option.key)}`}
                                     onClick={this.props.navStore.selectMintOption.bind(this.props.navStore, option.key)} >
                                     <div className={'SvgBox'}>
                                         <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: option.icon }}></div>
