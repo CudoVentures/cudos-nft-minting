@@ -1,5 +1,4 @@
 import { makeObservable, observable } from 'mobx';
-import { ChangeEvent } from 'react';
 import InfuraApi from '../api/InfuraApi';
 import NftApi from '../api/NftApi';
 import NftImageModel from '../models/NftImageModel';
@@ -15,6 +14,7 @@ export default class NftMintStore {
     @observable selectedImages: number[];
     @observable isImageLinkValid: boolean;
     @observable imageUrlInputValue: string;
+    @observable isAddressFieldActive: number;
 
     @observable nftForm: NftModel;
     @observable nfts: NftModel[];
@@ -26,13 +26,25 @@ export default class NftMintStore {
         this.nftForm = new NftModel();
         this.nftImages = [];
         this.selectedImages = [];
+        this.isAddressFieldActive = S.INT_FALSE;
         this.imageUrlInputValue = S.Strings.EMPTY;
+
+        this.nftImages.push(NftImageModel.fromJSON({
+            name: 'wegwegweg',
+            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png',
+            sizeBytes: 123123123,
+            type: 'jpeg',
+        }))
+
+        this.nftForm.name = 'test nftii';
+        this.nftForm.data = 'aerger erahaerhaer arehaerh';
+        this.nftForm.owner = 'cudos1aerhaerhaerhaerharhaerhaerhaerhaerh'
 
         makeObservable(this);
     }
 
     async init(): Promise<void> {
-        await this.nftApi.init();
+        // await this.nftApi.init();
     }
 
     async getAllNfts(): Promise<void> {
@@ -124,4 +136,21 @@ export default class NftMintStore {
     isNftImageSelected(index: number): number {
         return this.selectedImages.find((i: number) => i === index) !== undefined ? S.INT_TRUE : S.INT_FALSE;
     }
+
+    onChangeNftFormName(value: string): void {
+        this.nftForm.name = value;
+    }
+
+    onChangeNftFormDescription(value: string): void {
+        this.nftForm.data = value;
+    }
+
+    onChangeNftFormAddress(value: string): void {
+        this.nftForm.owner = value;
+    }
+
+    toggleAddressFieldActive(): void {
+        this.isAddressFieldActive = this.isAddressFieldActive === S.INT_TRUE ? S.INT_FALSE : S.INT_TRUE;
+    }
+
 }

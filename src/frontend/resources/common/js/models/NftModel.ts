@@ -1,3 +1,4 @@
+import { makeAutoObservable } from 'mobx';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
 
@@ -17,6 +18,7 @@ export default class NftModel implements Filterable {
         this.data = S.Strings.EMPTY;
         this.owner = S.Strings.EMPTY;
         this.approvedAddresses = [];
+        makeAutoObservable(this);
     }
 
     getFilterableString(): string {

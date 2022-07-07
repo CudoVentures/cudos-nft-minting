@@ -4,7 +4,7 @@ import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import NavStore from '../../../../common/js/stores/NavStore';
 import SvgUploadSingle from '../../../../common/svg/upload-single.svg';
 import SvgUploadMultiple from '../../../../common/svg/upload-multiple.svg';
-import '../../../css/components-inc/option-choose.css'
+import '../../../css/components-inc/NftMint/option-choose.css'
 import S from '../../../../common/js/utilities/Main';
 
 interface Props {
