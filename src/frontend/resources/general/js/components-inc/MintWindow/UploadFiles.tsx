@@ -2,7 +2,6 @@ import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import Button from '../../../../common/js/components-inc/Button';
 import Input, { InputType, InputMargin } from '../../../../common/js/components-inc/Input';
-import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import Table from '../../../../common/js/components-inc/Table';
 import NftImageModel from '../../../../common/js/models/NftImageModel';
 import NavStore from '../../../../common/js/stores/NavStore';
@@ -17,6 +16,7 @@ import '../../../css/components-inc/NftMint/upload-files.css';
 import Actions from '../../../../common/js/components-inc/Actions';
 import AlertStore from '../../../../common/js/stores/AlertStore';
 import Checkbox from '../../../../common/js/components-inc/Checkbox';
+import FileUpload from '../../../../common/js/components-inc/FileUpload';
 
 interface Props {
     navStore: NavStore
@@ -24,11 +24,7 @@ interface Props {
     alertStore: AlertStore
 }
 
-interface State {
-
-}
-
-class UploadFiles extends React.Component<Props, State> {
+class UploadFiles extends React.Component<Props> {
     tableHelper: TableHelper;
 
     constructor(props: Props) {
@@ -41,48 +37,34 @@ class UploadFiles extends React.Component<Props, State> {
         );
     }
 
-    onDrop = (e) => {
-        e.preventDefault();
+    makeImageUploadParams() {
+        // let nftImageModel: NftImageModel = null;
+        return {
+            'maxSize': 1 << 20, // 1MB
+            'controller': '#',
+            'progressWindow': false,
+            'onExceedLimit': () => {
+                this.props.alertStore.show('Max files size is 1MB');
+            },
+            onBeforeStart: () => {
+                // nftImageModel = this.props.nftMintStore.nftImageStartUpload();
+            },
+            onUpload: (base64File, response, files: any[], i: number) => {
+                const nftImageModel = NftImageModel.fromJSON({
+                    imageUrl: base64File,
+                    fileName: files[i].name,
+                    type: files[i].type,
+                    sizeBytes: files[i].size,
+                })
 
-        // this.props.popupStore.dragging = false;
-
-        let files = [];
-        if (e.dataTransfer.items) {
-            for (let i = 0; i < e.dataTransfer.items.length; i++) {
-                if (e.dataTransfer.items[i].kind === 'file') {
-                    const file = e.dataTransfer.items[i].getAsFile();
-                    files.push(file);
-                }
-            }
-        } else {
-            files = e.dataTransfer.files;
+                // console.log(JSON.parse(response).obj.nftImageModel);
+                // console.log(files[i]);
+                // const res = new NftImageUploadRes(JSON.parse(response).obj.nftImageModel);
+                this.props.nftMintStore.nftImages.push(nftImageModel);
+                console.log(this.props.nftMintStore.nftImages);
+            },
         }
-
-        this.iNodes.uploader.current.upload.uploadFiles(files);
     }
-
-    // makeImageUploadParams() {
-    //     let nftImageModel: NftImageModel = null;
-    //     return {
-    //         'maxSize': 1 << 20, // 1MB
-    //         'controller': CGeneralContext.urlShipmentDocumentUploadData(),
-    //         'progressWindow': false,
-    //         'onExceedLimit': () => {
-    //             this.props.alertStore.show('Max files size is 1MB');
-    //         },
-    //         onBeforeStart: () => {
-    //             nftImageModel = this.props.nftMintStore.nftImageStartUpload();
-    //         },
-    //         onUpload: (base64File, response, files: any[], i: number) => {
-    //             console.log(response);
-    //             const res = new NftImageUploadRes(JSON.parse(response).obj.nftImageModel);
-    //             this.props.nftMintStore.nftImage = res.nftImageModel;
-    //             console.log(this.props.nftMintStore.nftImage);
-    //         },
-    //     }
-    // }
-
-    // TODO: implement
 
     onClickUploadFile = async () => {
         try {
@@ -99,14 +81,19 @@ class UploadFiles extends React.Component<Props, State> {
                 <div className={'FileAddRow FlexRow'}>
                     <div className={'UploadFileBox FlexRow'}>
                         <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadFile }}></div>
-                        <div className={'BoxInfo FlexColumn'}>
-                            <div className={'BoxHeading'}>
-                                Drop image here or <span className={'BrowseButton'}>Browse</span>
+                        <FileUpload
+                            uploadId={'OptionChoosePage'}
+                            uploadParams={this.makeImageUploadParams()}
+                        >
+                            <div className={'BoxInfo FlexColumn'}>
+                                <div className={'BoxHeading'}>
+                                    Drop image here or <span className={'BrowseButton'}>Browse</span>
+                                </div>
+                                <div className={'BoxInfo'}>
+                                    Supported files: JPEG, JPG, PNG, GIF, SVG, MP4, WEBM, WEBP, MP3, WAV, OGG, GLTF, GLB
+                                </div>
                             </div>
-                            <div className={'BoxInfo'}>
-                                Supported files: JPEG, JPG, PNG, GIF, SVG, MP4, WEBM, WEBP, MP3, WAV, OGG, GLTF, GLB
-                            </div>
-                        </div>
+                        </FileUpload>
                     </div>
                     <div className={'FileFromLink FlexColumn'}>
                         <div className={'BoxHeading'}>Add file from link</div>

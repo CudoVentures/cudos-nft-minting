@@ -57,7 +57,6 @@ class UploaderImpl {
             this.inputN = null;
         }
 
-
         if (this.inputN !== null) {
             if (this.inputN.tagName !== 'INPUT') {
                 console.error('The element should be input type=\'file\'');
@@ -378,7 +377,6 @@ class UploaderImpl {
 
     //         this.nextUpload();
     //     };
-
 
     //     ajax.send(data);
     // }

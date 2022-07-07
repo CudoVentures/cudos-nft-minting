@@ -31,6 +31,8 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
 
     static layout(componentNode: React.ReactNode) {
         const myNftsStore = new MyNftsStore();
+        const nftMintSroe = new NftMintStore();
+        const navStore = new NavStore(nftMintSroe);
 
         ReactDOM.render(
             (
@@ -40,9 +42,9 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
                     alertStore={new AlertStore()}
                     popupPasswordStore={new PopupPasswordStore()}
                     walletStore={new WalletStore()}
-                    nftMintStore={new NftMintStore()}
-                    navStore={new NavStore()}
-                    myNftsStore = { myNftsStore } >
+                    nftMintStore={nftMintSroe}
+                    navStore={navStore}
+                    myNftsStore={myNftsStore} >
 
                     {componentNode}
 

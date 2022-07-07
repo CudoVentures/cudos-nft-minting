@@ -12,7 +12,7 @@ interface Props {
     navStore: NavStore
 }
 
-class OptionChoose extends React.Component < Props > {
+class OptionChoose extends React.Component<Props> {
 
     static OPTIONS: Array<any> = [
         {
@@ -31,6 +31,7 @@ class OptionChoose extends React.Component < Props > {
         return (
             <div className={'OptionChoose'}>
                 <div className={'Heading3'}>Choose Option</div>
+
                 <div className={'OptionHolder FlexRow'}>
                     {
                         OptionChoose.OPTIONS.map((option: any) => {

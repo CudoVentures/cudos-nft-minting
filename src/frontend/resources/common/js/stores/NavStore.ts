@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
+import ProjectUtils from '../ProjectUtils';
 import S from '../utilities/Main';
+import NftMintStore from './NftMintStore';
 
 export default class NavStore {
 
@@ -9,19 +11,26 @@ export default class NavStore {
     static MINT_OPTION_SINGLE: number = 1;
     static MINT_OPTION_MULTIPLE: number = 2;
 
+    // order matters up to STEP_FINISH
     static STEP_CHOOSE_OPTION: number = 1;
     static STEP_UPLOAD_FILE: number = 2;
     static STEP_NFT_DETAILS: number = 3;
     static STEP_FINISH: number = 4;
+    // these numbers can change and new ones can be added
+    static STEP_MINTING_IN_PROGRESS: number = 5;
+    static STEP_MINTING_DONE: number = 6;
+    static STEP_MINTING_FAILED: number = 7;
 
     nftPage: number;
     mintOption: number;
     mintStep: number;
+    nftMintStore: NftMintStore;
 
-    constructor() {
+    constructor(nftMintStore: NftMintStore) {
         this.nftPage = NavStore.MINT_PAGE_KEY;
-        this.mintOption = NavStore.MINT_OPTION_SINGLE;
+        this.mintOption = S.NOT_EXISTS;
         this.mintStep = NavStore.STEP_CHOOSE_OPTION;
+        this.nftMintStore = nftMintStore;
 
         makeAutoObservable(this);
     }
@@ -33,6 +42,10 @@ export default class NavStore {
 
     selectNftMintPage() {
         this.selectNftPage(NavStore.MINT_PAGE_KEY);
+    }
+
+    selectMyNftPage() {
+        this.selectNftPage(NavStore.MY_NFTS_PAGE_KEY);
     }
 
     isMintPage(): boolean {
@@ -83,12 +96,54 @@ export default class NavStore {
         return this.mintStep === NavStore.STEP_FINISH;
     }
 
+    isMintStepMinting(): boolean {
+        return this.mintStep === NavStore.STEP_MINTING_IN_PROGRESS;
+    }
+
+    isMintStepDone(): boolean {
+        return this.mintStep === NavStore.STEP_MINTING_DONE;
+    }
+
+    isMintStepFailed(): boolean {
+        return this.mintStep === NavStore.STEP_MINTING_FAILED;
+    }
+
     isFirstStep(): boolean {
         return this.isMintStepChooseOption();
     }
 
-    isLastStep() : boolean {
+    isLastStep(): boolean {
         return this.isMintStepFinish();
+    }
+
+    shouldShowNextStep(): boolean {
+        return !this.isMintStepFinish && !this.isMintStepMinting() && !this.isMintStepFailed();
+    }
+    shouldShowMintStepNavMap(): boolean {
+        return this.mintStep <= NavStore.STEP_FINISH;
+    }
+
+    getNextStepText(): string {
+        return this.isMintStepDone() ? 'Go to My NFTs' : 'Next Step';
+    }
+
+    getNextStepFunction() {
+        if (this.isNextStepActive()) {
+            if (this.isMintStepFinish()) {
+                return () => {
+                    this.nftMintStore.mintNft();
+                    this.mintStep = NavStore.STEP_MINTING_IN_PROGRESS;
+                }
+            }
+
+            if (this.isMintStepDone()) {
+                return () => this.selectMyNftPage();
+            }
+
+            return () => this.selectNextStep();
+        }
+
+        return null;
     }
 
     // option
@@ -111,4 +166,19 @@ export default class NavStore {
         return NavStore.getMintOptionText(this.mintOption);
     }
 
+    isNextStepActive(): boolean {
+        // on first step a mint option should be selected to continue
+        return (this.isMintStepChooseOption()
+            && this.mintOption !== S.NOT_EXISTS)
+            // on second step a file should be selected to continue
+            || (this.isMintStepUploadFile()
+                && this.nftMintStore.selectedImages.length > 0)
+            // on third step nft name should be entered
+            || (this.isMintStepDetails()
+                && this.nftMintStore.nftForm.name !== S.Strings.EMPTY)
+            // on fourth step always active
+            || this.isMintStepFinish()
+            // on step minting done button is always active as well
+            || this.isMintStepDone()
+    }
 }

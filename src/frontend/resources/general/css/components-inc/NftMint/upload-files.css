@@ -6,7 +6,7 @@
 }
 
 .UploadFiles .FileAddRow .UploadFileBox {
-    border: 2px dashed var(--color-dark-gray);
+    border: 2px dashed #2e2e2e;
     border-radius: 20px;
     padding: 27px 44px;
     width: 40%;

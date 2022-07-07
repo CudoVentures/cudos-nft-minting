@@ -29,17 +29,6 @@ export default class NftMintStore {
         this.isAddressFieldActive = S.INT_FALSE;
         this.imageUrlInputValue = S.Strings.EMPTY;
 
-        this.nftImages.push(NftImageModel.fromJSON({
-            name: 'wegwegweg',
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png',
-            sizeBytes: 123123123,
-            type: 'jpeg',
-        }))
-
-        this.nftForm.name = 'test nftii';
-        this.nftForm.data = 'aerger erahaerhaer arehaerh';
-        this.nftForm.owner = 'cudos1aerhaerhaerhaerharhaerhaerhaerhaerh'
-
         makeObservable(this);
     }
 
@@ -60,9 +49,10 @@ export default class NftMintStore {
     }
 
     async mintNft(): Promise<void> {
-        this.nftApi.mintNft(this.nftForm, (nft: NftModel) => {
-            this.nfts.push(nft);
-        })
+        console.log('MINT NFTTTTTT')
+        // this.nftApi.mintNft(this.nftForm, (nft: NftModel) => {
+        //     this.nfts.push(nft);
+        // })
     }
 
     nftImageStartUpload(): NftImageModel {

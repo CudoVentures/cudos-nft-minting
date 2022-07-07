@@ -14,11 +14,17 @@
 }
 
 .MintWindow .StepNav {
-    fill: var(--color-gray-dark);
-    color: var(--color-gray-dark);
+    fill: var(--color-dark-gray);
+    color: var(--color-dark-gray);
     font-weight: 600;
     font-size: 14px;
     margin-top: var(--desktop-spacing);
+}
+
+.MintWindow .StepNav .Active {
+    fill: var(--color-primary);
+    color: var(--color-primary);
+    cursor: pointer;
 }
 
 .MintWindow .StepNav span {

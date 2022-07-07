@@ -1,0 +1,31 @@
+.FilesUpload.ReadOnly {
+    pointer-events: none;
+}
+​
+.FilesUpload .FilesUploadHeader {
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+​
+.FilesUpload .FileUploadField {
+    text-align: center;
+    font-size: 20px; font-weight: 300;
+    color:#828282;
+    border: 1px solid var(--color-primary);
+    border-radius: 4px;
+    padding: 40px var(--spacing-half);
+    margin-bottom: var(--spacing-half);
+    transition-property: background-color;
+}
+​
+.FilesUpload .FileUploadField span {
+    color:var(--color-secondary);
+}
+​
+.FilesUpload .FileUploadField.Active {
+    background-color: var(--color-light-yellow);
+}
+​
+.FilesUpload .IconDownload, .FileUploadContainer .IconTrash {
+    width: 18px; height: 18px;
+}

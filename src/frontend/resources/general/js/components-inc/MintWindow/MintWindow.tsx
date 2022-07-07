@@ -11,6 +11,7 @@ import MintStepNav from './MintStepNav';
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
 import '../../../css/components-inc/NftMint/mint-window.css';
+import NavStore from '../../../../common/js/stores/NavStore';
 
 interface Props {
     navStore: NavStore
@@ -21,34 +22,46 @@ class MintWindow extends React.Component<Props> {
     render() {
         return (
             <div className={'MintWindow FlexColumn'}>
-                <MintStepNav />
+                {this.renderMintStepNavMap()}
                 <div className={'MintStepPage'}>
                     <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep}</span>
                     {this.renderStepChooseOption()}
                     {this.renderStepUploadFile()}
                     {this.renderStepDetails()}
                     {this.renderStepFinish()}
+                    {this.renderMintingInProgress()}
+                    {this.renderMintingDone()}
+                    {this.renderMintingFailed()}
                 </div>
                 <div className={'FlexSplit StepNav'}>
                     {this.props.navStore.isFirstStep() === false && (
                         <div
-                            className={'FlexRow Clickable'}
+                            className={'FlexRow Clickable Active'}
                             onClick={this.props.navStore.selectPreviousStep} >
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowLeft }}></div>
                             <span>Back</span>
                         </div>
                     )}
-                    {this.props.navStore.isLastStep() === false && (
-                        <div
-                            className={'FlexRow StartRight Clickable'}
-                            onClick={this.props.navStore.selectNextStep} >
-                            <span>NextStep</span>
+                    {this.props.navStore.shouldShowNextStep() === true && (
+                        <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(this.props.navStore.isNextStepActive())}`}
+                            onClick={this.props.navStore.getNextStepFunction()} >
+                            <span>this.props.navStore.getNextStepText()</span>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>
                         </div>
                     )}
                 </div>
             </div>
         );
+    }
+
+    renderMintStepNavMap() {
+        const display = this.props.navStore.shouldShowMintStepNavMap();
+
+        return (
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <MintStepNav />}
+            </div>
+        )
     }
 
     renderStepChooseOption() {
@@ -85,6 +98,21 @@ class MintWindow extends React.Component<Props> {
                 {display === true && <NftFinish />}
             </div>
         )
+    }
+
+    // TODO
+    renderMintingInProgress() {
+        return (<></>);
+    }
+
+    // TODO
+    renderMintingDone() {
+        return (<></>);
+    }
+
+    // TODO
+    renderMintingFailed() {
+        return (<></>);
     }
 }
 
