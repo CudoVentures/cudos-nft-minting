@@ -3,13 +3,13 @@ import React from 'react';
 import NavStore from '../../../../common/js/stores/NavStore';
 import S from '../../../../common/js/utilities/Main';
 import OptionChoose, { MintOption, MintOptionData } from './OptionChoose';
-import MintPageNftDetails from './MintPageNftDetails';
-import MintPageNftFinish from './MintPageNftFinish';
+import NftDetails from './NftDetails';
+import NftFinish from './NftFinish';
 import UploadFiles from './UploadFiles';
 import MintStepNav from './MintStepNav';
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
-import '../../../css/components-inc/mint-window.css';
+import '../../../css/components-inc/NftMint/mint-window.css';
 
 interface Props {
     navStore: NavStore
@@ -22,7 +22,6 @@ interface State {
 // TODO: implement
 class MintWindow extends React.Component<Props, State> {
     componentDidMount() {
-        this.props.navStore.mintOption = S.NOT_EXISTS
     }
 
     render() {
@@ -30,7 +29,7 @@ class MintWindow extends React.Component<Props, State> {
             <div className={'MintWindow FlexColumn'}>
                 <MintStepNav />
                 <div className={'MintStepPage'}>
-                    <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep + 1}</span>
+                    <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep}</span>
                     {
                         (this.props.navStore.mintStep === NavStore.STEP_CHOOSE_OPTION || this.props.navStore.mintStep === S.NOT_EXISTS)
                         && <OptionChoose />
@@ -41,11 +40,11 @@ class MintWindow extends React.Component<Props, State> {
                     }
                     {
                         this.props.navStore.mintStep === NavStore.STEP_NFT_DETAILS
-                        && <MintPageNftDetails />
+                        && <NftDetails />
                     }
                     {
                         this.props.navStore.mintStep === NavStore.STEP_FINISH
-                        && <MintPageNftFinish />
+                        && <NftFinish />
                     }
                 </div>
                 <div className={'FlexSplit StepNav'}>

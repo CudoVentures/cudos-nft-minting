@@ -1,0 +1,48 @@
+.NftFinish .NftFinishHolder {
+    align-items: flex-start;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails {
+    background: var(--color-light-gray);
+    border: 2px solid var(--color-primary);
+    border-radius: 20px;
+    padding: 30px;
+
+    flex-grow: 1;
+    /* width: 100%; */
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .SummaryHeading {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    color: var(--color-dark);
+    margin-bottom: 20px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsRow {
+    margin-bottom: 10px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsRow .DetailColumn {
+    margin-right: 30px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailColumn {
+    align-items: flex-start;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailHeading {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-secondary);
+    margin-bottom: 5px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailData {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-dark);
+}

@@ -13,7 +13,7 @@ import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
 import TableHelper from '../../../../common/js/helpers/TableHelper';
 import S from '../../../../common/js/utilities/Main';
 import Config from '../../../../../../../builds/dev-generated/Config';
-import '../../../css/components-inc/upload-files.css';
+import '../../../css/components-inc/NftMint/upload-files.css';
 import Actions from '../../../../common/js/components-inc/Actions';
 import AlertStore from '../../../../common/js/stores/AlertStore';
 import Checkbox from '../../../../common/js/components-inc/Checkbox';
@@ -117,7 +117,7 @@ class UploadFiles extends React.Component<Props, State> {
                                 placeholder={'www.mywebsite.com/item'}
                                 value={this.props.nftMintStore.imageUrlInputValue}
                                 margin={InputMargin.NORMAL}
-                                onChange={(event: ChangeEvent) => this.props.nftMintStore.onImageUrlChange(event.toString())}
+                                onChange={(event: string) => this.props.nftMintStore.onImageUrlChange(event)}
                             />
 
                             <Actions height={Actions.HEIGHT_52}>

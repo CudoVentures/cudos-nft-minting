@@ -20,8 +20,8 @@ export default class NavStore {
 
     constructor() {
         this.nftPage = NavStore.MINT_PAGE_KEY;
-        this.mintOption = S.NOT_EXISTS;
-        this.mintStep = NavStore.STEP_UPLOAD_FILE;
+        this.mintOption = NavStore.MINT_OPTION_SINGLE;
+        this.mintStep = NavStore.STEP_FINISH;
 
         makeObservable(this);
     }
@@ -61,4 +61,15 @@ export default class NavStore {
         return NavStore.getNftPageName(this.nftPage);
     }
 
+    getMintOptionText(): string {
+        console.log(this.mintOption);
+        switch (this.mintOption) {
+            case NavStore.MINT_OPTION_SINGLE:
+                return 'Single Mint';
+            case NavStore.MINT_OPTION_MULTIPLE:
+                return 'Multiple Mint';
+            default:
+                return '';
+        }
+    }
 }

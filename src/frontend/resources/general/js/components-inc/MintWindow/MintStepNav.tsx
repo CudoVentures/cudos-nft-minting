@@ -3,7 +3,7 @@ import React from 'react';
 import NavStore from '../../../../common/js/stores/NavStore';
 import SvgTick from '../../../../common/svg/tick.svg';
 import S from '../../../../common/js/utilities/Main';
-import '../../../css/components-inc/mint-step-nav.css';
+import '../../../css/components-inc/NftMint/mint-step-nav.css';
 
 interface Props {
     navStore: NavStore

@@ -1,3 +1,4 @@
+import { makeAutoObservable } from 'mobx';
 import S from '../utilities/Main';
 
 export default class NftModel {
@@ -16,6 +17,7 @@ export default class NftModel {
         this.data = S.Strings.EMPTY;
         this.owner = S.Strings.EMPTY;
         this.approvedAddresses = [];
+        makeAutoObservable(this);
     }
 
     clone(): NftModel {
