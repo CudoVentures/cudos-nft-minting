@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import S from '../utilities/Main';
 
 export default class NavStore {
@@ -14,28 +14,25 @@ export default class NavStore {
     static STEP_NFT_DETAILS: number = 3;
     static STEP_FINISH: number = 4;
 
-    @observable nftPage: number;
-    @observable mintOption: number;
-    @observable mintStep: number;
+    nftPage: number;
+    mintOption: number;
+    mintStep: number;
 
     constructor() {
         this.nftPage = NavStore.MINT_PAGE_KEY;
         this.mintOption = NavStore.MINT_OPTION_SINGLE;
-        this.mintStep = NavStore.STEP_FINISH;
+        this.mintStep = NavStore.STEP_CHOOSE_OPTION;
 
-        makeObservable(this);
+        makeAutoObservable(this);
     }
 
-    onSelectNftPage(page: number): void {
+    // page
+    selectNftPage(page: number): void {
         this.nftPage = page;
     }
 
-    onSelectMintOption(option: number): void {
-        this.mintOption = option;
-    }
-
-    onSelectStage(stage: number): void {
-        this.mintStep = stage;
+    selectNftMintPage() {
+        this.selectNftPage(NavStore.MINT_PAGE_KEY);
     }
 
     isMintPage(): boolean {
@@ -61,9 +58,46 @@ export default class NavStore {
         return NavStore.getNftPageName(this.nftPage);
     }
 
-    getMintOptionText(): string {
-        console.log(this.mintOption);
-        switch (this.mintOption) {
+    // step
+    selectPreviousStep = () => {
+        --this.mintStep;
+    }
+
+    selectNextStep = () => {
+        ++this.mintStep;
+    }
+
+    isMintStepChooseOption(): boolean {
+        return this.mintStep === NavStore.STEP_CHOOSE_OPTION;
+    }
+
+    isMintStepUploadFile(): boolean {
+        return this.mintStep === NavStore.STEP_UPLOAD_FILE;
+    }
+
+    isMintStepDetails(): boolean {
+        return this.mintStep === NavStore.STEP_NFT_DETAILS;
+    }
+
+    isMintStepFinish(): boolean {
+        return this.mintStep === NavStore.STEP_FINISH;
+    }
+
+    isFirstStep(): boolean {
+        return this.isMintStepChooseOption();
+    }
+
+    isLastStep() : boolean {
+        return this.isMintStepFinish();
+    }
+
+    // option
+    selectMintOption(option: number): void {
+        this.mintOption = option;
+    }
+
+    static getMintOptionText(mintOption: number): string {
+        switch (mintOption) {
             case NavStore.MINT_OPTION_SINGLE:
                 return 'Single Mint';
             case NavStore.MINT_OPTION_MULTIPLE:
@@ -72,4 +106,9 @@ export default class NavStore {
                 return '';
         }
     }
+
+    getMintOptionText(): string {
+        return NavStore.getMintOptionText(this.mintOption);
+    }
+
 }

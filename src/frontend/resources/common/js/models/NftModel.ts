@@ -1,7 +1,8 @@
 import { makeAutoObservable } from 'mobx';
 import S from '../utilities/Main';
+import Filterable from './Filterable';
 
-export default class NftModel {
+export default class NftModel implements Filterable {
 
     tokenId: string;
     name: string;
@@ -18,6 +19,10 @@ export default class NftModel {
         this.owner = S.Strings.EMPTY;
         this.approvedAddresses = [];
         makeAutoObservable(this);
+    }
+
+    getFilterableString(): string {
+        return this.name;
     }
 
     clone(): NftModel {

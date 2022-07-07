@@ -16,7 +16,7 @@ interface Props {
 class NoNfts extends React.Component < Props > {
 
     onClickMintNft = () => {
-        this.props.navStore.onSelectNftPage(NavStore.MINT_OPTION_SINGLE);
+        this.props.navStore.selectNftMintPage();
     }
 
     render() {
