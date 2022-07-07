@@ -2,7 +2,7 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import NavStore from '../../../../common/js/stores/NavStore';
 import S from '../../../../common/js/utilities/Main';
-import OptionChoose, { MintOption, MintOptionData } from './OptionChoose';
+import OptionChoose from './OptionChoose';
 import NftDetails from './NftDetails';
 import NftFinish from './NftFinish';
 import UploadFiles from './UploadFiles';
