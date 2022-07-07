@@ -19,7 +19,7 @@ export default class PageFooter extends React.Component {
                     <a href = { TERMS_AND_CONDITIONS } >Terms &amp; Conditions</a>
                     <a href = { PRIVACY_POLICY } >Privacy Policy</a>
                     <a href = { WEBSITE } target = { '_blank' } rel = { 'noreferrer' } >Cudos.org</a>
-                    <a>License &copy; 2018 - 2022</a>
+                    <a>License &copy; 2018 - {new Date().getFullYear()}</a>
                 </div>
                 <div className={'StartRightBlock'}>
                     <a href = { DISCORD } className = { 'SVG IconSocial' } target = { '_blank' } rel = { 'noreferrer' } dangerouslySetInnerHTML={{ __html: SvgDiscord }} />

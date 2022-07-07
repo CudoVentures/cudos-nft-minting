@@ -1,22 +1,19 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import NavStore from '../../../../common/js/stores/NavStore';
+
 import SvgTick from '../../../../common/svg/tick.svg';
-import S from '../../../../common/js/utilities/Main';
 import '../../../css/components-inc/NftMint/mint-step-nav.css';
+import S from '../../../../common/js/utilities/Main';
 
 interface Props {
     navStore: NavStore
 }
 
-interface State {
+class MintStepNav extends React.Component < Props > {
 
-}
-
-// TODO: implement
-class MintStepNav extends React.Component<Props, State> {
-
-    MENU_ITEMS = [
+    static MENU_ITEMS = [
         {
             name: 'Choose Option',
             key: NavStore.STEP_CHOOSE_OPTION,
@@ -37,22 +34,22 @@ class MintStepNav extends React.Component<Props, State> {
 
     render() {
         return (
-            <>
-                <div className={'HorizontalLine'}></div>
-                <div className={'MintStepNav FlexRow '}>
-                    {this.MENU_ITEMS.map((step: any) => (
-                        <div key={step.key} className={`MintStep FlexColumn ${step.key <= this.props.navStore.mintStep ? 'BlueStep' : ''}`}>
-                            <div className={'NumberBox'}>
-                                {step.key < this.props.navStore.mintStep
-                                    ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
-                                    : step.key
-                                }
-                            </div>
-                            <div className={'StageName'}>{step.name}</div>
+            <div className={'MintStepNav FlexRow '}>
+                <div className={'HorizontalLine'} />
+                { MintStepNav.MENU_ITEMS.map((step: any) => (
+                    <div
+                        key={step.key}
+                        className={`MintStep FlexColumn ${S.CSS.getClassName(step.key <= this.props.navStore.mintStep, 'BlueStep')} ${S.CSS.getClassName(step.key === this.props.navStore.mintStep, 'CurrentStep')}`}>
+                        <div className={'NumberBox'} >
+                            {step.key < this.props.navStore.mintStep
+                                ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
+                                : step.key
+                            }
                         </div>
-                    ))}
-                </div>
-            </>
+                        <div className={'StageName'}>{step.name}</div>
+                    </div>
+                )) }
+            </div>
         )
     }
 }

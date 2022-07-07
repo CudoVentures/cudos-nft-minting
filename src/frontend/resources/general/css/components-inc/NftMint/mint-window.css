@@ -2,16 +2,14 @@
     flex-grow: 1;
 }
 
-.MintWindow .MintStepPage{
+.MintWindow .MintStepPage {
     margin-top: 40px;
     flex-grow: 1;
 }
 
 .MintWindow .MintStepPage .SmallStepSign {
     color: var(--color-primary);
-    font-size: 12px;
-    line-height: 18px;
-    letter-spacing: 0.05em;
+    font-size: 12px; font-weight: 700;
     margin-bottom: 5px;
 }
 
@@ -20,13 +18,9 @@
     color: var(--color-gray-dark);
     font-weight: 600;
     font-size: 14px;
-    line-height: 21px;
+    margin-top: var(--desktop-spacing);
 }
 
-.MintWindow .StepNav .StepButton {
-    cursor: pointer;
-}
-
-.MintWindow .StepNav span{
+.MintWindow .StepNav span {
     margin: 0 14px;
 }

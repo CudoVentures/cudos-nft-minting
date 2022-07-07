@@ -3,10 +3,11 @@
     position: relative;
 }
 
-.HorizontalLine{
-    border-top: 3px solid var(--color-purple);
-    position: relative;
-    top: 21px;
+.MintStepNav .HorizontalLine {
+    width: 100%; height: 3px;
+    position: absolute;
+    left: 0; top: 21px;
+    background: var(--color-gray-light-02);
     z-index: 0;
 }
 
@@ -14,8 +15,8 @@
     align-items: center;
     background: #fff;
     position: relative;
-    color: var(--color-primary);
-    font-weight: bold;
+    color: var(--color-secondary);
+    font-weight: 600;
     font-size: 14px;
     line-height: 21px;
 }
@@ -55,8 +56,12 @@
 }
 
 
-.MintStepNav .MintStep.BlueStep .NumberBox{
+.MintStepNav .MintStep.BlueStep .NumberBox {
     color: #fff;
     fill: #fff;
     background-color: var(--color-primary);
+}
+
+.MintStepNav .MintStep.CurrentStep .StageName {
+    color: var(--color-dark);
 }

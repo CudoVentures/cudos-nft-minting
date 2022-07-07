@@ -30,7 +30,7 @@ class SideMenu extends React.Component<Props> {
                         <div
                             key={menuItem.pageKey}
                             className={`MenuItem FlexRow Transition ${S.CSS.getActiveClassName(this.props.navStore.nftPage === menuItem.pageKey)}`}
-                            onClick={this.props.navStore.onSelectNftPage.bind(this.props.navStore, menuItem.pageKey)} >
+                            onClick={this.props.navStore.selectNftPage.bind(this.props.navStore, menuItem.pageKey)} >
 
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: menuItem.svg }}></div>
                             {NavStore.getNftPageName(menuItem.pageKey)}
