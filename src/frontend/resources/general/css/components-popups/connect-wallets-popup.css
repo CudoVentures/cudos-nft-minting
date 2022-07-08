@@ -12,8 +12,21 @@
     margin-right: 10px;
 }
 
-.ConnectWalletsPopup .StatusLabel {
+.ConnectWalletsPopup .WalletConnection {
+    display: flex; flex-direction: column;
+    position: relative;
+    align-items: center;
+}
+
+.ConnectWalletsPopup .WalletConnectionStatus {
     font-size: 25px; font-weight: 700;
+}
+
+.ConnectWalletsPopup .WalletConnectionInfo {
+    color: var(--color-secondary);
+    text-align: center;
+    font-size: 16px; font-weight: 500;
+    margin: 15px 0 62px 0;
 }
 
 .ConnectWalletsPopup .WalletAddress {
@@ -90,40 +103,26 @@ html:not(.Touchable) .ConnectWalletsPopup .StatusUnavailable .WalletOptions .Con
 }
 
 /* status connecting */
-.ConnectWalletsPopup .StatusConnecting {
-    display: flex; flex-direction: column;
-    position: relative;
-    align-items: center;
-}
-
 .ConnectWalletsPopup .StatusConnecting .IconWaves {
     top: 64px;
 }
 
-.ConnectWalletsPopup .StatusConnecting .ConnectingSubLabel {
-    color: var(--color-secondary);
-    text-align: center;
-    font-size: 16px; font-weight: 500;
-    margin: 15px 0 62px 0;
-}
-
-/* status connected */
-.ConnectWalletsPopup .StatusConnected {
-    display: flex; flex-direction: column;
-    position: relative;
-    align-items: center;
-}
-
-.ConnectWalletsPopup .StatusConnected .IconWaves {
+/* status connected successfully */
+.ConnectWalletsPopup .StatusConnectedSuccessfully .IconWaves {
     top: -4px;
 }
 
-.ConnectWalletsPopup .ConnectingTimer {
+.ConnectWalletsPopup .StatusConnectedSuccessfully .ConnectingTimer {
     color: var(--color-secondary);
     font-weight: 500;
     margin-top: 48px;
 }
 
-.ConnectWalletsPopup .ConnectingTimer span {
+.ConnectWalletsPopup .StatusConnectedSuccessfully .ConnectingTimer span {
     color: var(--color-primary);
+}
+
+/* status connected with error */
+.ConnectWalletsPopup .StatusConnectedWithError .IconWaves {
+    top: -4px;
 }

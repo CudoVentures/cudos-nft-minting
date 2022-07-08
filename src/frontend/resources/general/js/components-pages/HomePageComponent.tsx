@@ -6,6 +6,7 @@ import { inject, observer } from 'mobx-react';
 import PagesGeneral from '../../../../../../builds/dev-generated/PagesGeneral';
 import Config from '../../../../../../builds/dev-generated/Config';
 import AlertStore from '../../../common/js/stores/AlertStore';
+import WalletStore from '../../../common/js/stores/WalletStore';
 
 import PageComponent from '../../../common/js/components-pages/PageComponent';
 import ContextPageComponent, { ContextPageComponentProps } from './common/ContextPageComponent';
@@ -15,17 +16,22 @@ import MeshBackground from '../../../common/js/components-inc/MeshBackground';
 import PageHeader from '../components-inc/PageHeader';
 import PageFooter from '../components-inc/PageFooter';
 
-import './../../css/components-pages/page-home-component.css';
 import ConnectWalletsPopup from '../../js/components-popups/ConnectWalletsPopup';
+
+import './../../css/components-pages/page-home-component.css';
+import PopupConnectWalletsStore from '../../../common/js/stores/PopupConnectWalletsStore';
+import ProjectUtils from '../../../common/js/ProjectUtils';
 
 interface Props extends ContextPageComponentProps {
     alertStore: AlertStore,
+    walletStore: WalletStore,
+    popupConnectWalletsStore: PopupConnectWalletsStore,
 }
 
 export default class PageHomeComponent extends ContextPageComponent<Props> {
 
     static layout() {
-        const MobXComponent = inject('appStore', 'alertStore')(observer(PageHomeComponent));
+        const MobXComponent = inject('appStore', 'alertStore', 'walletStore', 'popupConnectWalletsStore')(observer(PageHomeComponent));
         PageComponent.layout(<MobXComponent />);
     }
 
@@ -33,7 +39,15 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
         return 'PageHome';
     }
 
+    onClickStartMintingWithoutWallet = () => {
+        this.props.popupConnectWalletsStore.showSignal(() => {
+            ProjectUtils.redirectToUrl(PagesGeneral.NFT);
+        });
+    }
+
     renderContent() {
+        const walletStore = this.props.walletStore;
+
         return (
             <>
                 <MeshBackground />
@@ -46,7 +60,8 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
                             <Actions height = { Actions.HEIGHT_60 } layout = { Actions.LAYOUT_ROW_LEFT } >
                                 <Button
                                     className={'ButtonStartMinting'}
-                                    href={PagesGeneral.NFT}
+                                    href={walletStore.isKeplrConnected() === true ? PagesGeneral.NFT : undefined}
+                                    onClick={walletStore.isKeplrConnected() === true ? undefined : this.onClickStartMintingWithoutWallet}
                                     type={Button.TYPE_ROUNDED}
                                     padding = { Button.PADDING_48 }
                                     radius = { Button.RADIUS_MAX } >

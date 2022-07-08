@@ -15,6 +15,7 @@ import SvgPlanet from '../../../common/svg/planet.svg';
 import SvgWallet from '../../../common/svg/wallet.svg';
 import SvgMenuDots from '../../../common/svg/menu-dots.svg';
 import './../../css/components-inc/page-header.css';
+import PagesGeneral from '../../../../../../builds/dev-generated/PagesGeneral';
 
 interface Props {
     walletStore: WalletStore,
@@ -24,7 +25,6 @@ interface Props {
 class PageHeader extends React.Component < Props > {
 
     onClickToggleKeplr = () => {
-        // this.props.walletStore.onClickToggleKeplr();
         this.props.popupConnectWalletsStore.showSignal();
     }
 
@@ -33,10 +33,10 @@ class PageHeader extends React.Component < Props > {
 
         return (
             <header className={'PageHeader FlexRow FlexSplit'}>
-                <div className={'HeaderLogo FlexRow'}>
+                <a href = { PagesGeneral.HOME } className={'HeaderLogo FlexRow'}>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCudosLogoWithText }}></div>
                     <div className = { 'Slogan' }>NFT Mint</div>
-                </div>
+                </a>
                 <div className={'HeaderEnd FlexRow StartRight'}>
                     {keplrWallet.connected
                         ? <>

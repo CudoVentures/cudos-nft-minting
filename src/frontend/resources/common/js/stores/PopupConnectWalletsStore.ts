@@ -5,10 +5,12 @@ export default class PopupConnectWalletsStore extends PopupStore {
 
     static WALLET_UNAVAILABLE: number = 1;
     static WALLET_CONNECTING: number = 2;
-    static WALLET_CONNECTED: number = 3;
+    static WALLET_CONNECTED_SUCCESSFULLY: number = 3;
+    static WALLET_CONNECTED_WITH_ERROR: number = 4;
 
     @observable walletStatus: number;
     @observable closeInSeconds: number;
+    @observable onSave: () => void;
 
     intervalPointer: NodeJS.Timer
 
@@ -27,33 +29,41 @@ export default class PopupConnectWalletsStore extends PopupStore {
         return this.walletStatus === PopupConnectWalletsStore.WALLET_CONNECTING;
     }
 
-    isWalletStatusConnected(): boolean {
-        return this.walletStatus === PopupConnectWalletsStore.WALLET_CONNECTED;
+    isWalletStatusConnectedSuccessfully(): boolean {
+        return this.walletStatus === PopupConnectWalletsStore.WALLET_CONNECTED_SUCCESSFULLY;
+    }
+
+    isWalletStatusConnectedWithError(): boolean {
+        return this.walletStatus === PopupConnectWalletsStore.WALLET_CONNECTED_WITH_ERROR;
     }
 
     markWalletStatusAsConnecting() {
         this.walletStatus = PopupConnectWalletsStore.WALLET_CONNECTING;
     }
 
-    markWalletStatusAsConnected() {
-        this.walletStatus = PopupConnectWalletsStore.WALLET_CONNECTED;
+    markWalletStatusAsConnectedSuccessfully() {
+        this.walletStatus = PopupConnectWalletsStore.WALLET_CONNECTED_SUCCESSFULLY;
     }
 
-    startClosingTimer() {
+    markWalletStatusAsConnectedWithError() {
+        this.walletStatus = PopupConnectWalletsStore.WALLET_CONNECTED_WITH_ERROR;
+    }
+
+    startClosingTimer(onTimerEnd: () => void) {
         clearInterval(this.intervalPointer);
-        this.intervalPointer = setInterval(this.timer, 1000);
+        this.intervalPointer = setInterval(() => {
+            --this.closeInSeconds;
+            if (this.closeInSeconds === 0) {
+                onTimerEnd();
+            }
+        }, 1000);
     }
 
-    timer = () => {
-        --this.closeInSeconds;
-        if (this.closeInSeconds === 0) {
-            this.hide();
-        }
-    }
-
-    showSignal() {
+    showSignal(onSave: () => void = null) {
         this.walletStatus = PopupConnectWalletsStore.WALLET_UNAVAILABLE;
         this.closeInSeconds = 3;
+        this.onSave = onSave;
+
         clearInterval(this.intervalPointer);
         this.show();
     }

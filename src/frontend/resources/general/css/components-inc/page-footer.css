@@ -23,5 +23,6 @@ footer.PageFooter .FooterNav > a:not(:last-child) {
 }
 
 footer.PageFooter .IconSocial {
+    fill: var(--color-secondary);
     margin-left: 24px;
 }

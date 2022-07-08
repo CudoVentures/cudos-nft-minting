@@ -10,8 +10,11 @@ export default class GeneralFilter {
     static map: Map<string, Page>;
 
     static init() {
+        const pageHome = new PageHome();
+
         GeneralFilter.map = new Map();
-        GeneralFilter.map.set(`${Config.URL.ROOT}/`, new PageHome());
+        GeneralFilter.map.set(`${Config.URL.ROOT}/`, pageHome);
+        GeneralFilter.map.set(PageHome.URL, pageHome);
         GeneralFilter.map.set(PageNft.URL, new PageNft());
         GeneralFilter.map.set(PageNotFound.URL, new PageNotFound());
     }

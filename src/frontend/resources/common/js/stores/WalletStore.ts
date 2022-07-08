@@ -1,7 +1,6 @@
-import { makeAutoObservable, makeObservable, observable, observe } from 'mobx';
+import { makeAutoObservable, makeObservable, observable } from 'mobx';
 import { KeplrWallet } from 'cudosjs';
 import Config from '../../../../../../builds/dev-generated/Config';
-import S from '../utilities/Main';
 
 export default class WalletStore {
 
@@ -16,7 +15,7 @@ export default class WalletStore {
             STAKING: Config.CUDOS_NETWORK.STAKING,
             GAS_PRICE: Config.CUDOS_NETWORK.GAS_PRICE,
         });
-        
+
         makeAutoObservable(this);
         makeObservable(this.keplrWallet, {
             'connected': observable,

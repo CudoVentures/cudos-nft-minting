@@ -10,6 +10,7 @@ import PopupWindow, { PopupWindowProps } from '../../../common/js/components-cor
 
 import SvgLoadingWaves from '../../../common/svg/loading-waves.svg';
 import SvgFinishedWaves from '../../../common/svg/finished-waves.svg';
+import SvgSuccessfulWaves from '../../../common/svg/successful-waves.svg';
 import SvgWallet from '../../../common/svg/wallet.svg';
 import SvgLighting from '../../../common/svg/lighting.svg';
 import '../../css/components-popups/connect-wallets-popup.css';
@@ -26,16 +27,27 @@ class ConnectWalletsPopup extends PopupWindow < Props > {
     }
 
     hasClose(): boolean {
-        return this.props.popupStore.isWalletStatusUnavailable();
+        return this.props.popupStore.isWalletStatusUnavailable() || this.props.popupStore.isWalletStatusConnectedWithError();
     }
 
     onClickToggleKeplr = async () => {
         const popupStore = this.props.popupStore;
+        const walletStore = this.props.walletStore;
         popupStore.markWalletStatusAsConnecting();
 
-        await this.props.walletStore.onClickToggleKeplr();
-        popupStore.markWalletStatusAsConnected();
-        popupStore.startClosingTimer();
+        await walletStore.onClickToggleKeplr();
+
+        if (walletStore.isKeplrConnected() === true) {
+            popupStore.markWalletStatusAsConnectedSuccessfully();
+            popupStore.startClosingTimer(() => {
+                if (popupStore.onSave !== null) {
+                    popupStore.onSave();
+                }
+                popupStore.hide();
+            });
+        } else {
+            popupStore.markWalletStatusAsConnectedWithError();
+        }
     }
 
     renderContent() {
@@ -48,7 +60,8 @@ class ConnectWalletsPopup extends PopupWindow < Props > {
 
                 { this.renderWalletStatusUnavailable() }
                 { this.renderWalletStatusConnecting() }
-                { this.renderWalletStatusConnected() }
+                { this.renderWalletStatusConnectedSuccessfully() }
+                { this.renderWalletStatusConnectedWithError() }
             </div>
         )
     }
@@ -91,27 +104,43 @@ class ConnectWalletsPopup extends PopupWindow < Props > {
         }
 
         return (
-            <div className = { 'StatusConnecting' } >
+            <div className = { 'WalletConnection StatusConnecting' } >
                 <div className = { 'SVG IconWaves' } dangerouslySetInnerHTML = {{ __html: SvgLoadingWaves }} />
                 { this.renderWalletAddress() }
-                <div className = { 'StatusLabel' } >Connecting...</div>
-                <div className = { 'ConnectingSubLabel' } >Please don’t close this window.<br />It will be ready in a second.</div>
+                <div className = { 'WalletConnectionStatus' } >Connecting...</div>
+                <div className = { 'WalletConnectionInfo' } >Please don’t close this window.<br />It will be ready in a second.</div>
             </div>
         );
     }
 
-    renderWalletStatusConnected() {
+    renderWalletStatusConnectedSuccessfully() {
         const popupStore = this.props.popupStore;
-        if (popupStore.isWalletStatusConnected() !== true) {
+        if (popupStore.isWalletStatusConnectedSuccessfully() !== true) {
             return null;
         }
 
         return (
-            <div className = { 'StatusConnected' } >
+            <div className = { 'WalletConnection StatusConnectedSuccessfully' } >
                 <div className = { 'SVG IconWaves' } dangerouslySetInnerHTML = {{ __html: SvgFinishedWaves }} />
                 { this.renderWalletAddress() }
-                <div className = { 'StatusLabel' } >Wallet Connected!</div>
+                <div className = { 'WalletConnectionStatus' } >Wallet Connected!</div>
                 <div className = { 'ConnectingTimer' } >This windows will close in <span>{popupStore.closeInSeconds}</span></div>
+            </div>
+        );
+    }
+
+    renderWalletStatusConnectedWithError() {
+        const popupStore = this.props.popupStore;
+        if (popupStore.isWalletStatusConnectedWithError() !== true) {
+            return null;
+        }
+
+        return (
+            <div className = { 'WalletConnection StatusConnectedWithError' } >
+                <div className = { 'SVG IconWaves' } dangerouslySetInnerHTML = {{ __html: SvgSuccessfulWaves }} />
+                { this.renderWalletAddress() }
+                <div className = { 'WalletConnectionStatus' } >Wallet Not connected!</div>
+                <div className = { 'WalletConnectionInfo' } >Please, check your Keplr installation</div>
             </div>
         );
     }
@@ -122,7 +151,7 @@ class ConnectWalletsPopup extends PopupWindow < Props > {
         const walletAddress = walletStore.keplrWallet.accountAddress;
 
         return (
-            <div className = { `WalletAddress FlexRow ActiveVisibilityHidden ${S.CSS.getActiveClassName(popupStore.isWalletStatusConnected())}` } >
+            <div className = { `WalletAddress FlexRow ActiveVisibilityHidden ${S.CSS.getActiveClassName(popupStore.isWalletStatusConnectedSuccessfully())}` } >
                 <div className = { 'SVG WalletIcon' } dangerouslySetInnerHTML = {{ __html: SvgWallet }} />
                 <div className = { 'Dots' }>{ walletAddress }</div>
             </div>
