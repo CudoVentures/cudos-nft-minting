@@ -1,0 +1,78 @@
+.NftMintingDone {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.NftMintingDone .NftBoxRow {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.NftMintingDone .Background.SVG {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 220px;
+    z-index: 0;
+}
+
+.NftMintingDone .NftBoxRow .NftBox {
+    padding: 20px;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.NftMintingDone .NftBoxRow .NftBox .NftImageHolder {
+    width: 168px;
+}
+
+.NftMintingDone .NftBoxRow .NftBox .NftImageHolder .NftImage {
+    height: 0;
+    padding-bottom: 100%;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.NftMintingDone .NftBoxRow .NftBox .NftName  {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--color-dark);
+}
+
+.NftMintingDone .SVG svg {
+    width: 100%;
+}
+
+.NftMintingDone .Heading4 {
+    margin-bottom: 10px;
+}
+
+.NftMintingDone .Description {
+    font-size: 16px;
+    color: var(--color-secondary);
+    margin-bottom: 21px;
+}
+
+.NftMintingDone .TransactionLink {
+    font-size: 14px;
+    color: var(--color-dark);
+    margin-bottom: 32px;
+}
+
+.NftMintingDone .TransactionLink .SVG {
+    fill: var(--color-primary);
+    margin-left: 12px;
+}
+
+.NftMintingDone .ShareLink {
+    margin-top: 17px;
+    font-size: 14px;
+    color: var(--color-dark);
+}
+.NftMintingDone .ShareLink .SVG {
+    margin-right: 12px;
+    fill: var(--color-primary);
+}

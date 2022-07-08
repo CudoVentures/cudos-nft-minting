@@ -12,6 +12,9 @@ import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
 import '../../../css/components-inc/NftMint/mint-window.css';
 import NavStore from '../../../../common/js/stores/NavStore';
+import NftMinting from './NftMinting';
+import NftMintingDone from './NftMintingDone';
+import NftMintingFailed from './NftMintingFailed';
 
 interface Props {
     navStore: NavStore
@@ -24,7 +27,7 @@ class MintWindow extends React.Component<Props> {
             <div className={'MintWindow FlexColumn'}>
                 {this.renderMintStepNavMap()}
                 <div className={'MintStepPage'}>
-                    <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep}</span>
+                    {this.props.navStore.isInMintingStep() ? <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep}</span> : ''}
                     {this.renderStepChooseOption()}
                     {this.renderStepUploadFile()}
                     {this.renderStepDetails()}
@@ -34,7 +37,7 @@ class MintWindow extends React.Component<Props> {
                     {this.renderMintingFailed()}
                 </div>
                 <div className={'FlexSplit StepNav'}>
-                    {this.props.navStore.isFirstStep() === false && (
+                    {this.props.navStore.shouldShowBackStep() === true && (
                         <div
                             className={'FlexRow Clickable Active'}
                             onClick={this.props.navStore.selectPreviousStep} >
@@ -45,7 +48,7 @@ class MintWindow extends React.Component<Props> {
                     {this.props.navStore.shouldShowNextStep() === true && (
                         <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(this.props.navStore.isNextStepActive())}`}
                             onClick={this.props.navStore.getNextStepFunction()} >
-                            <span>this.props.navStore.getNextStepText()</span>
+                            <span>{this.props.navStore.getNextStepText()}</span>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>
                         </div>
                     )}
@@ -100,19 +103,31 @@ class MintWindow extends React.Component<Props> {
         )
     }
 
-    // TODO
     renderMintingInProgress() {
-        return (<></>);
+        const display = this.props.navStore.isMintStepMinting();
+        return (
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <NftMinting />}
+            </div>
+        )
     }
 
-    // TODO
     renderMintingDone() {
-        return (<></>);
+        const display = this.props.navStore.isMintStepDone();
+        return (
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <NftMintingDone />}
+            </div>
+        )
     }
 
-    // TODO
     renderMintingFailed() {
-        return (<></>);
+        const display = this.props.navStore.isMintStepFailed();
+        return (
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <NftMintingFailed />}
+            </div>
+        )
     }
 }
 

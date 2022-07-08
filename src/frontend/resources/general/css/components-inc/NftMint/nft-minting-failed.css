@@ -1,0 +1,39 @@
+.NftMintingFailed {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.NftMintingFailed .Background {
+    position: absolute;
+}
+
+.NftMintingFailed .Background.FrontImage {
+    width: 140px;
+    left: auto;
+    top: 80px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.NftMintingFailed .Background.Wave {
+    width: 100%;
+    left: 0;
+    top: 150px;
+    z-index: 0;
+}
+
+.NftMintingFailed .Heading4 {
+    margin-top: 100px;
+    margin-bottom: 10px;
+}
+
+.NftMintingFailed .Description {
+    font-size: 16px;
+    color: var(--color-secondary);
+    margin-bottom: 21px;
+}
+
+.NftMintingFailed .ButtonHolder {
+    width: 260px;
+}

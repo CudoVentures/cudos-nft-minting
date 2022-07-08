@@ -35,7 +35,7 @@ interface Props {
     className?: string;
     type?: Button.TYPE_ROUNDED | Button.TYPE_TEXT_INLINE;
     color?: Button.COLOR_SCHEME_1 | Button.COLOR_SCHEME_2 | Button.COLOR_SCHEME_3;
-    padding?: Button.PADDING_DEFAULT | Button.PADDING_24 | Button.PADDING_48 | Button.PADDING_96;
+    padding?: Button.PADDING_DEFAULT | Button.PADDING_24 | Button.PADDING_48 | Button.PADDING_82 | Button.PADDING_96;
     radius?: Button.RADIUS_DEFAULT | Button.RADIUS_MAX;
     href?: string,
     onClick?: () => void;
@@ -56,6 +56,7 @@ export default class Button extends React.Component<Props> {
     static PADDING_48: number = 2;
     static PADDING_96: number = 3;
     static PADDING_24: number = 4;
+    static PADDING_82: number = 5;
 
     static RADIUS_DEFAULT: number = 1;
     static RADIUS_MAX: number = 2;
@@ -97,6 +98,8 @@ export default class Button extends React.Component<Props> {
                 return 'Padding24';
             case Button.PADDING_48:
                 return 'Padding48';
+            case Button.PADDING_82:
+                return 'Padding82';
             case Button.PADDING_96:
                 return 'Padding96';
             default:

@@ -3,7 +3,6 @@
 }
 
 .MintWindow .MintStepPage {
-    margin-top: 40px;
     flex-grow: 1;
 }
 
@@ -11,6 +10,10 @@
     color: var(--color-primary);
     font-size: 12px; font-weight: 700;
     margin-bottom: 5px;
+}
+
+.MintWindow .MintStepPage .ActiveDisplayHidden {
+    height: 100%;
 }
 
 .MintWindow .StepNav {

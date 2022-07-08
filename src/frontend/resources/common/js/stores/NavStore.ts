@@ -27,7 +27,7 @@ export default class NavStore {
     nftMintStore: NftMintStore;
 
     constructor(nftMintStore: NftMintStore) {
-        this.nftPage = NavStore.MINT_PAGE_KEY;
+        this.nftPage = NavStore.MY_NFTS_PAGE_KEY;
         this.mintOption = S.NOT_EXISTS;
         this.mintStep = NavStore.STEP_CHOOSE_OPTION;
         this.nftMintStore = nftMintStore;
@@ -80,6 +80,14 @@ export default class NavStore {
         ++this.mintStep;
     }
 
+    selectFirstMintStep() {
+        this.mintStep = NavStore.STEP_CHOOSE_OPTION;
+    }
+
+    selectFinishStep() {
+        this.mintStep = NavStore.STEP_FINISH;
+    }
+
     isMintStepChooseOption(): boolean {
         return this.mintStep === NavStore.STEP_CHOOSE_OPTION;
     }
@@ -116,11 +124,20 @@ export default class NavStore {
         return this.isMintStepFinish();
     }
 
-    shouldShowNextStep(): boolean {
-        return !this.isMintStepFinish && !this.isMintStepMinting() && !this.isMintStepFailed();
-    }
-    shouldShowMintStepNavMap(): boolean {
+    isInMintingStep(): boolean {
         return this.mintStep <= NavStore.STEP_FINISH;
+    }
+
+    shouldShowBackStep(): boolean {
+        return !this.isFirstStep() && this.isInMintingStep();
+    }
+
+    shouldShowNextStep(): boolean {
+        return !this.isMintStepFinish() && !this.isMintStepMinting() && !this.isMintStepFailed();
+    }
+
+    shouldShowMintStepNavMap(): boolean {
+        return this.isInMintingStep();
     }
 
     getNextStepText(): string {

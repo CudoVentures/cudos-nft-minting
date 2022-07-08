@@ -1,6 +1,7 @@
 .MintStepNav {
     justify-content: space-between;
     position: relative;
+    margin-bottom: 40px;
 }
 
 .MintStepNav .HorizontalLine {

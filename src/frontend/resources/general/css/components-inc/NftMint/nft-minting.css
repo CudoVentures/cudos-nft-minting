@@ -1,0 +1,23 @@
+.NftMinting {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.NftMinting .Background {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.NftMinting .Heading4 {
+    margin-top: 300px;
+    margin-bottom: 10px;
+}
+
+.NftMinting .Description {
+    font-size: 16px;
+    color: var(--color-secondary);
+}

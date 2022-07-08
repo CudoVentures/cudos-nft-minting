@@ -18,6 +18,7 @@ export default class NftMintStore {
 
     @observable nftForm: NftModel;
     @observable nfts: NftModel[];
+    @observable mintedNfts: number[];
 
     constructor() {
         this.nftApi = new NftApi();
@@ -25,9 +26,18 @@ export default class NftMintStore {
         this.nfts = [];
         this.nftForm = new NftModel();
         this.nftImages = [];
+        this.mintedNfts = [];
         this.selectedImages = [];
         this.isAddressFieldActive = S.INT_FALSE;
         this.imageUrlInputValue = S.Strings.EMPTY;
+
+        const nft = NftModel.fromJSON({
+            uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png',
+            name: 'In Da Jungl',
+        })
+
+        this.nfts.push(nft);
+        this.mintedNfts.push(this.nfts.length - 1);
 
         makeObservable(this);
     }
@@ -50,6 +60,7 @@ export default class NftMintStore {
 
     async mintNft(): Promise<void> {
         console.log('MINT NFTTTTTT')
+
         // this.nftApi.mintNft(this.nftForm, (nft: NftModel) => {
         //     this.nfts.push(nft);
         // })
