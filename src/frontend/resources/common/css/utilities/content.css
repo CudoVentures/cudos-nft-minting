@@ -29,9 +29,9 @@
     --color-select-multi-delete-icon: #fff;
 
     --color-popover-text: var(--color-dark);
-    --color-popover-border: var(--color-gray-dark);
+    --color-popover-border: transparent;
     --color-popover-background: #fff;
-    --color-popover-shadow: rgba(27, 32, 49, 0.2);
+    --color-popover-shadow: rgba(27, 32, 49, 0.1);
     --color-tooltip-text: var(--color-gray-dark);
     --color-tooltip-border: var(--color-gray-dark);
     --color-tooltip-background: #fff;

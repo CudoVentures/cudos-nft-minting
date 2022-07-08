@@ -26,10 +26,12 @@ export default class WalletStore {
 
     async connectKeplr(): Promise < void > {
         await this.keplrWallet.connect();
+        sessionStorage.setItem('keplrWallet', S.Strings.TRUE);
     }
 
     async disconnectKeplr(): Promise < void > {
         await this.keplrWallet.disconnect();
+        sessionStorage.removeItem('keplrWallet');
     }
 
     async tryConnectKeplr(): Promise < void > {
@@ -46,10 +48,8 @@ export default class WalletStore {
     onClickToggleKeplr = async () => {
         if (this.isKeplrConnected() === true) {
             await this.disconnectKeplr();
-            sessionStorage.deleteItem('keplrWallet');
         } else {
             await this.connectKeplr();
-            sessionStorage.setItem('keplrWallet', S.Strings.TRUE);
         }
     }
 
