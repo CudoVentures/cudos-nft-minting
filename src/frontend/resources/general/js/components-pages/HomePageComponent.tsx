@@ -3,10 +3,11 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import ProjectUtils from '../../../common/js/ProjectUtils';
 import PagesGeneral from '../../../../../../builds/dev-generated/PagesGeneral';
 import Config from '../../../../../../builds/dev-generated/Config';
 import AlertStore from '../../../common/js/stores/AlertStore';
-import WalletStore from '../../../common/js/stores/WalletStore';
+import PopupConnectWalletsStore from '../../../common/js/stores/PopupConnectWalletsStore';
 
 import PageComponent from '../../../common/js/components-pages/PageComponent';
 import ContextPageComponent, { ContextPageComponentProps } from './common/ContextPageComponent';
@@ -19,12 +20,9 @@ import PageFooter from '../components-inc/PageFooter';
 import ConnectWalletsPopup from '../../js/components-popups/ConnectWalletsPopup';
 
 import './../../css/components-pages/page-home-component.css';
-import PopupConnectWalletsStore from '../../../common/js/stores/PopupConnectWalletsStore';
-import ProjectUtils from '../../../common/js/ProjectUtils';
 
 interface Props extends ContextPageComponentProps {
     alertStore: AlertStore,
-    walletStore: WalletStore,
     popupConnectWalletsStore: PopupConnectWalletsStore,
 }
 

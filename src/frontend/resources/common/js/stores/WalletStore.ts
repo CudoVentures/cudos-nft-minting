@@ -1,6 +1,7 @@
 import { makeAutoObservable, makeObservable, observable } from 'mobx';
 import { KeplrWallet } from 'cudosjs';
 import Config from '../../../../../../builds/dev-generated/Config';
+import S from '../utilities/Main';
 
 export default class WalletStore {
 
@@ -31,6 +32,13 @@ export default class WalletStore {
         await this.keplrWallet.disconnect();
     }
 
+    async tryConnectKeplr(): Promise < void > {
+        const connectedInSession = sessionStorage.getItem('keplrWallet');
+        if (connectedInSession !== null) {
+            await this.keplrWallet.connect();
+        }
+    }
+
     isKeplrConnected(): boolean {
         return this.keplrWallet.isConnected();
     }
@@ -38,8 +46,10 @@ export default class WalletStore {
     onClickToggleKeplr = async () => {
         if (this.isKeplrConnected() === true) {
             await this.disconnectKeplr();
+            sessionStorage.deleteItem('keplrWallet');
         } else {
             await this.connectKeplr();
+            sessionStorage.setItem('keplrWallet', S.Strings.TRUE);
         }
     }
 

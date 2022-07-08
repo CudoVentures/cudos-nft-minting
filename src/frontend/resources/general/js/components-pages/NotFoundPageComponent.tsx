@@ -25,7 +25,7 @@ interface Props extends ContextPageComponentProps {
 export default class PageNotFoundComponent extends ContextPageComponent < Props > {
 
     static layout() {
-        const MobXComponent = inject('appStore')(observer(PageNotFoundComponent));
+        const MobXComponent = inject('appStore', 'walletStore')(observer(PageNotFoundComponent));
         PageComponent.layout(<MobXComponent />);
     }
 

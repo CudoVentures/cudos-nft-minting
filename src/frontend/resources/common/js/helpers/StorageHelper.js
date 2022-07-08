@@ -1,15 +1,10 @@
-const LOCAL_STORAGE_KEY = 'mogul_storage';
-const VERSION = 17;
-
-const accountsJson = [
-    jsonAccount('1', 'admin@reactphp.com'),
-];
+const LOCAL_STORAGE_KEY = 'cudos_minting_ui_storage';
+const VERSION = 1;
 
 class StorageHelper {
 
     constructor() {
         this.version = VERSION;
-        this.accountsJson = accountsJson;
     }
 
     static open() {
@@ -34,10 +29,3 @@ class StorageHelper {
 
 const storageHelper = StorageHelper.open();
 export default storageHelper;
-
-function jsonAccount(accountId, email) {
-    return {
-        'accountId': accountId,
-        'email': email,
-    };
-}

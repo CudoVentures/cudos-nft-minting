@@ -33,19 +33,24 @@ class ConnectWalletsPopup extends PopupWindow < Props > {
     onClickToggleKeplr = async () => {
         const popupStore = this.props.popupStore;
         const walletStore = this.props.walletStore;
-        popupStore.markWalletStatusAsConnecting();
 
-        await walletStore.onClickToggleKeplr();
+        try {
+            popupStore.markWalletStatusAsConnecting();
+            await walletStore.onClickToggleKeplr();
 
-        if (walletStore.isKeplrConnected() === true) {
-            popupStore.markWalletStatusAsConnectedSuccessfully();
-            popupStore.startClosingTimer(() => {
-                if (popupStore.onSave !== null) {
-                    popupStore.onSave();
-                }
-                popupStore.hide();
-            });
-        } else {
+            if (walletStore.isKeplrConnected() === true) {
+                popupStore.markWalletStatusAsConnectedSuccessfully();
+                popupStore.startClosingTimer(() => {
+                    if (popupStore.onSave !== null) {
+                        popupStore.onSave();
+                    }
+                    popupStore.hide();
+                });
+            }
+        } catch (e) {
+        }
+
+        if (walletStore.isKeplrConnected() === false) {
             popupStore.markWalletStatusAsConnectedWithError();
         }
     }

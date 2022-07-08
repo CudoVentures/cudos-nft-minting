@@ -17,9 +17,9 @@ import MyNftsWindow from '../components-inc/MyNftsWindow/MyNftsWindow';
 import MeshBackground from '../../../common/js/components-inc/MeshBackground';
 
 import './../../css/components-pages/page-nft-component.css';
+import LoadingIndicator from '../../../common/js/components-core/LoadingIndicator';
 
 interface Props extends ContextPageComponentProps {
-    walletStore: WalletStore,
     nftMintStore: NftMintStore,
     alertStore: AlertStore,
     navStore: NavStore,
@@ -50,8 +50,17 @@ export default class NftPageComponent extends ContextPageComponent<Props> {
         return 'PageNft';
     }
 
+    isKeplrRequired() {
+        return true;
+    }
+
     renderContent() {
-        const navStore = this.props.navStore;
+        const { navStore, walletStore } = this.props;
+
+        // if (walletStore.isKeplrConnected() === false) {
+        return <LoadingIndicator margin = { 'auto' } />
+        // }
+
         return (
             <>
                 <MeshBackground />
