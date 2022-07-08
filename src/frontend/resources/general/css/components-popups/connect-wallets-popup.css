@@ -1,0 +1,129 @@
+.ConnectWalletsPopup .ConnectWalletLighting {
+    display: inline-flex;
+    color: #fff;
+    font-size: 12px; font-weight: 600;
+    padding: 8px 24px;
+    border-radius: 50px;
+    margin-bottom: 15px;
+    background: var(--color-dark);
+}
+
+.ConnectWalletsPopup .ConnectWalletLighting .IconLighting {
+    margin-right: 10px;
+}
+
+.ConnectWalletsPopup .StatusLabel {
+    font-size: 25px; font-weight: 700;
+}
+
+.ConnectWalletsPopup .WalletAddress {
+    width: 256px;
+    padding: 24px;
+    border-radius: 20px;
+    margin: 94px 0 77px 0;
+    box-shadow: 0px 2px 20px rgba(27, 32, 49, 0.1);
+    background-color: #fff;
+    z-index: 12;
+}
+
+.ConnectWalletsPopup .WalletAddress .WalletIcon {
+    margin-right: 10px;
+}
+
+.ConnectWalletsPopup .IconWaves {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 8;
+}
+
+/* status unavailable */
+.ConnectWalletsPopup .StatusUnavailable .Label {
+    font-size: 30px; font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.ConnectWalletsPopup .StatusUnavailable .Label span {
+    color: var(--color-primary)
+}
+
+.ConnectWalletsPopup .StatusUnavailable .SubLabel {
+    color: var(--color-gray-dark);
+    font-size: 16px; font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.ConnectWalletsPopup .StatusUnavailable .WalletOptions {
+    margin-bottom: 30px;
+}
+
+.ConnectWalletsPopup .StatusUnavailable .WalletOptions .ConnectButton {
+    font-size: 18px; font-weight: 600;
+    padding: 30px;
+    border: 2px solid var(--color-gray-light-02);
+    border-radius: 20px;
+    cursor: pointer;
+
+    transition-property: background-color, border-color;
+}
+
+.ConnectWalletsPopup .StatusUnavailable .WalletOptions .ConnectButton .WalletIcon {
+    margin-right: 26px;
+}
+
+.ConnectWalletsPopup .StatusUnavailable .WalletOptions .ConnectButton:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+html:not(.Touchable) .ConnectWalletsPopup .StatusUnavailable .WalletOptions .ConnectButton:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+}
+
+.ConnectWalletsPopup .StatusUnavailable .Footer {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.ConnectWalletsPopup .StatusUnavailable .Footer a {
+    color: var(--color-primary)
+}
+
+/* status connecting */
+.ConnectWalletsPopup .StatusConnecting {
+    display: flex; flex-direction: column;
+    position: relative;
+    align-items: center;
+}
+
+.ConnectWalletsPopup .StatusConnecting .IconWaves {
+    top: 64px;
+}
+
+.ConnectWalletsPopup .StatusConnecting .ConnectingSubLabel {
+    color: var(--color-secondary);
+    text-align: center;
+    font-size: 16px; font-weight: 500;
+    margin: 15px 0 62px 0;
+}
+
+/* status connected */
+.ConnectWalletsPopup .StatusConnected {
+    display: flex; flex-direction: column;
+    position: relative;
+    align-items: center;
+}
+
+.ConnectWalletsPopup .StatusConnected .IconWaves {
+    top: -4px;
+}
+
+.ConnectWalletsPopup .ConnectingTimer {
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin-top: 48px;
+}
+
+.ConnectWalletsPopup .ConnectingTimer span {
+    color: var(--color-primary);
+}

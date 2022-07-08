@@ -16,6 +16,7 @@ import PageHeader from '../components-inc/PageHeader';
 import PageFooter from '../components-inc/PageFooter';
 
 import './../../css/components-pages/page-home-component.css';
+import ConnectWalletsPopup from '../../js/components-popups/ConnectWalletsPopup';
 
 interface Props extends ContextPageComponentProps {
     alertStore: AlertStore,
@@ -65,5 +66,11 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
                 </div>
             </>
         )
+    }
+
+    renderPopups(): any[] {
+        return super.renderPopups().concat([
+            <ConnectWalletsPopup key = { 1 } />,
+        ])
     }
 }

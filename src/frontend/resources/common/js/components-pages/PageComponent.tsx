@@ -8,8 +8,7 @@ import Config from '../../../../../../builds/dev-generated/Config';
 import AppStore from '../stores/AppStore';
 import AlertStore from '../stores/AlertStore';
 import AccountSessionStore from '../stores/AcccountSessionStore';
-import PopupPasswordStore from '../stores/PopupPasswordStore';
-import Ajax from '../utilities/Ajax';
+import PopupConnectWalletsStore from '../stores/PopupConnectWalletsStore';
 import S from '../utilities/Main';
 
 import PageLayoutComponent from './PageLayoutComponent';
@@ -40,7 +39,7 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
                     appStore={new AppStore()}
                     accountSessionStore={new AccountSessionStore()}
                     alertStore={new AlertStore()}
-                    popupPasswordStore={new PopupPasswordStore()}
+                    popupConnectWalletsStore={new PopupConnectWalletsStore()}
                     walletStore={new WalletStore()}
                     nftMintStore={nftMintSroe}
                     navStore={navStore}
