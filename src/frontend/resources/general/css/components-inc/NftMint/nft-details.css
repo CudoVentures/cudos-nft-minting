@@ -32,6 +32,10 @@
     align-items: flex-start;
 }
 
+.Popover {
+    width: 220px;
+}
+
 .NftDetails .DetailsHolder .NftDetailsForm .Input {
     margin-bottom: 15px;
 }

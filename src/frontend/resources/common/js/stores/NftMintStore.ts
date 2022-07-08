@@ -142,10 +142,6 @@ export default class NftMintStore {
         this.nftForm.name = value;
     }
 
-    onChangeNftFormDescription(value: string): void {
-        this.nftForm.data = value;
-    }
-
     onChangeNftFormAddress(value: string): void {
         this.nftForm.owner = value;
     }
@@ -154,4 +150,7 @@ export default class NftMintStore {
         this.isAddressFieldActive = this.isAddressFieldActive === S.INT_TRUE ? S.INT_FALSE : S.INT_TRUE;
     }
 
+    isNftImagesEmpty(): boolean {
+        return this.nftImages.length !== 0;
+    }
 }

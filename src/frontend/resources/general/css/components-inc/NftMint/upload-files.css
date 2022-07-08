@@ -3,14 +3,45 @@
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
+    min-height: 80px;
+}
+
+/* here active stands for the oposite */
+.UploadFiles .FileAddRow.Active {
+    opacity: 0.5;
+}
+
+.UploadFiles .FilesUpload {
+    width: 50%;
 }
 
 .UploadFiles .FileAddRow .UploadFileBox {
     border: 2px dashed #2e2e2e;
     border-radius: 20px;
     padding: 27px 44px;
-    width: 40%;
     margin-right: 30px;
+}
+
+.UploadFiles .FileAddRow .Active .UploadFileBox {
+    border-color: var(--color-primary);
+    background-color: rgba(82, 166, 248, 0.1);
+    position: relative;
+}
+
+.UploadFiles .FileAddRow .UploadFileBox .BoxDragInfo{
+    position: absolute;
+    left: 100px;
+    display: none;
+}
+
+.UploadFiles .FileAddRow .Active .UploadFileBox .BoxText{
+    visibility: hidden;
+}
+
+.UploadFiles .FileAddRow .Active .UploadFileBox .BoxDragInfo{
+    display: block !important;
+    font-size: 16px;
+    color: var(--color-primary);
 }
 
 .UploadFiles .FileAddRow .UploadFileBox .SVG {
@@ -23,7 +54,6 @@
 .UploadFiles .FileAddRow .UploadFileBox .BoxHeading {
     font-weight: 600;
     font-size: 16px;
-    line-height: 24px;
     color: var(--color-dark);
     margin-bottom: 5px;
 }
@@ -31,7 +61,6 @@
 .UploadFiles .FileAddRow .UploadFileBox .BoxInfo {
     font-weight: 500;
     font-size: 12px;
-    line-height: 18px;
     color: var(--color-secondary);
 }
 
@@ -40,13 +69,12 @@
 }
 
 .UploadFiles .FileAddRow .FileFromLink {
-    flex-grow: 1;
+    width: 50%;
 }
 
 .UploadFiles .FileAddRow .FileFromLink .BoxHeading {
     font-weight: 600;
     font-size: 14px;
-    line-height: 21px;
     color: var(--color-secondary);
     margin-bottom: 5px;
 }

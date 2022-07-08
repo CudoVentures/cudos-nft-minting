@@ -28,10 +28,10 @@
     --color-select-multi-item-background: #9FB0C5;
     --color-select-multi-delete-icon: #fff;
 
-    --color-popover-text: var(--color-gray-dark);
+    --color-popover-text: var(--color-dark);
     --color-popover-border: var(--color-gray-dark);
     --color-popover-background: #fff;
-
+    --color-popover-shadow: rgba(27, 32, 49, 0.2);
     --color-tooltip-text: var(--color-gray-dark);
     --color-tooltip-border: var(--color-gray-dark);
     --color-tooltip-background: #fff;

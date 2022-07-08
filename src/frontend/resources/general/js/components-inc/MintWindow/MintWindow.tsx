@@ -27,7 +27,7 @@ class MintWindow extends React.Component<Props> {
             <div className={'MintWindow FlexColumn'}>
                 {this.renderMintStepNavMap()}
                 <div className={'MintStepPage'}>
-                    {this.props.navStore.isInMintingStep() ? <span className={'SmallStepSign'}>STEP {this.props.navStore.mintStep}</span> : ''}
+                    {this.props.navStore.isInMintingStep() ? <span className={'SmallStepSign'}>STEP {this.props.navStore.getMintStepShowNumber()}</span> : ''}
                     {this.renderStepChooseOption()}
                     {this.renderStepUploadFile()}
                     {this.renderStepDetails()}
@@ -40,7 +40,7 @@ class MintWindow extends React.Component<Props> {
                     {this.props.navStore.shouldShowBackStep() === true && (
                         <div
                             className={'FlexRow Clickable Active'}
-                            onClick={this.props.navStore.selectPreviousStep} >
+                            onClick={this.props.navStore.getPreviousStepFunction()} >
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowLeft }}></div>
                             <span>Back</span>
                         </div>
