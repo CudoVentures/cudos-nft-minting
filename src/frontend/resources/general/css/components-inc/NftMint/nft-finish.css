@@ -46,3 +46,7 @@
     line-height: 21px;
     color: var(--color-dark);
 }
+
+.NftFinish .NftFinishHolder .MintNftButton {
+    margin-top: 30px;
+}

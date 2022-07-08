@@ -78,14 +78,14 @@ class UploadFiles extends React.Component<Props> {
         return (
             <div className={'UploadFiles'}>
                 <div className={'Heading3'}>Upload File</div>
-                <div className={'FileAddRow FlexRow'}>
-                    <div className={'UploadFileBox FlexRow'}>
-                        <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadFile }}></div>
-                        <FileUpload
-                            uploadId={'OptionChoosePage'}
-                            uploadParams={this.makeImageUploadParams()}
-                        >
-                            <div className={'BoxInfo FlexColumn'}>
+                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(this.props.nftMintStore.isNftImagesEmpty())}`}>
+                    <FileUpload
+                        uploadId={'OptionChoosePage'}
+                        uploadParams={this.makeImageUploadParams()}
+                    >
+                        <div className={'UploadFileBox FlexRow'}>
+                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadFile }}></div>
+                            <div className={'BoxText FlexColumn'}>
                                 <div className={'BoxHeading'}>
                                     Drop image here or <span className={'BrowseButton'}>Browse</span>
                                 </div>
@@ -93,8 +93,12 @@ class UploadFiles extends React.Component<Props> {
                                     Supported files: JPEG, JPG, PNG, GIF, SVG, MP4, WEBM, WEBP, MP3, WAV, OGG, GLTF, GLB
                                 </div>
                             </div>
-                        </FileUpload>
-                    </div>
+                            <div className={'BoxDragInfo'}>
+                                Drop file here
+                            </div>
+                        </div>
+
+                    </FileUpload>
                     <div className={'FileFromLink FlexColumn'}>
                         <div className={'BoxHeading'}>Add file from link</div>
                         <div className={'FlexRow'}>
@@ -142,15 +146,19 @@ class UploadFiles extends React.Component<Props> {
     }
 
     renderRows() {
+        return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => {
+            let cells = [];
 
-        return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => Table.row(
-            [
-                Table.cell(
+            if (this.props.navStore.isMintOptionMultiple()) {
+                cells.push(Table.cell(
                     <Checkbox
                         value={this.props.nftMintStore.isNftImageSelected(index)}
                         onChange={() => this.props.nftMintStore.onSelectImage(index)}
                     />,
-                ),
+                ));
+            }
+
+            cells = cells.concat([
                 Table.cell(
                     <div className={'FlexRow'}>
                         <img className={'Image'} src={image.imageUrl} />
@@ -162,31 +170,52 @@ class UploadFiles extends React.Component<Props> {
                 Table.cell(
                     <div className={'SVG Icon Remove'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNftImage(index)}></div>,
                 ),
-            ],
-        ))
+            ]);
 
+            return Table.row(cells);
+        })
     }
 
     getTableLegend() {
-        return [
-            (<Checkbox
+        let legends = [];
+
+        if (this.props.navStore.isMintOptionMultiple()) {
+            legends.push((<Checkbox
                 value={this.props.nftMintStore.areAllImagesSelected()}
                 onChange={() => this.props.nftMintStore.onSelectAllImages()}
-            />),
+            />));
+        }
+
+        legends = legends.concat([
             'File Name',
             'Type',
             'Size',
             'Action',
-        ];
+        ]);
+
+        return legends;
     }
 
     getTableWidths() {
-        return ['5%', '30%', '20%', '15%', '35%'];
+        if (this.props.navStore.isMintOptionMultiple()) {
+            return ['5%', '30%', '20%', '15%', '35%']
+        }
+
+        return ['35%', '20%', '15%', '35%'];
     }
 
     getTableAligns() {
+        if (this.props.navStore.isMintOptionMultiple()) {
+            return [
+                TableDesktop.ALIGN_CENTER,
+                TableDesktop.ALIGN_LEFT,
+                TableDesktop.ALIGN_CENTER,
+                TableDesktop.ALIGN_CENTER,
+                TableDesktop.ALIGN_RIGHT,
+            ]
+        }
+
         return [
-            TableDesktop.ALIGN_CENTER,
             TableDesktop.ALIGN_LEFT,
             TableDesktop.ALIGN_CENTER,
             TableDesktop.ALIGN_CENTER,

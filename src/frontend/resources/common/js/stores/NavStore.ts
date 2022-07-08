@@ -14,12 +14,13 @@ export default class NavStore {
     // order matters up to STEP_FINISH
     static STEP_CHOOSE_OPTION: number = 1;
     static STEP_UPLOAD_FILE: number = 2;
-    static STEP_NFT_DETAILS: number = 3;
-    static STEP_FINISH: number = 4;
+    static STEP_COLLECTION_DETAILS: number = 3;
+    static STEP_NFT_DETAILS: number = 4;
+    static STEP_FINISH: number = 5;
     // these numbers can change and new ones can be added
-    static STEP_MINTING_IN_PROGRESS: number = 5;
-    static STEP_MINTING_DONE: number = 6;
-    static STEP_MINTING_FAILED: number = 7;
+    static STEP_MINTING_IN_PROGRESS: number = 6;
+    static STEP_MINTING_DONE: number = 7;
+    static STEP_MINTING_FAILED: number = 8;
 
     nftPage: number;
     mintOption: number;
@@ -31,6 +32,11 @@ export default class NavStore {
         this.mintOption = S.NOT_EXISTS;
         this.mintStep = NavStore.STEP_CHOOSE_OPTION;
         this.nftMintStore = nftMintStore;
+
+        // for test
+        // this.nftPage = NavStore.MINT_PAGE_KEY;
+        // this.mintOption = NavStore.MINT_OPTION_SINGLE;
+        // this.mintStep = NavStore.STEP_UPLOAD_FILE;
 
         makeAutoObservable(this);
     }
@@ -96,6 +102,10 @@ export default class NavStore {
         return this.mintStep === NavStore.STEP_UPLOAD_FILE;
     }
 
+    isMintStepCollectionDetails(): boolean {
+        return this.mintStep === NavStore.STEP_COLLECTION_DETAILS;
+    }
+
     isMintStepDetails(): boolean {
         return this.mintStep === NavStore.STEP_NFT_DETAILS;
     }
@@ -144,26 +154,58 @@ export default class NavStore {
         return this.isMintStepDone() ? 'Go to My NFTs' : 'Next Step';
     }
 
+    getPreviousStepFunction() {
+        if (this.isMintStepDetails() && this.isMintOptionSingle()) {
+            return () => this.mintStep = NavStore.STEP_UPLOAD_FILE;
+        }
+
+        return () => this.selectPreviousStep();
+    }
+
     getNextStepFunction() {
         if (this.isNextStepActive()) {
-            if (this.isMintStepFinish()) {
-                return () => {
-                    this.nftMintStore.mintNft();
-                    this.mintStep = NavStore.STEP_MINTING_IN_PROGRESS;
-                }
+            // for these cases return standard ++step
+            if (this.isMintStepChooseOption()
+                || (this.isMintStepUploadFile() && this.isMintOptionMultiple())
+                || this.isMintStepCollectionDetails()
+                || this.isMintStepDetails()) {
+                return () => this.selectNextStep();
             }
 
+            // if collection mint, this should jump to nft details
+            if (this.isMintStepUploadFile() && this.isMintOptionSingle()) {
+                return () => this.mintStep = NavStore.STEP_NFT_DETAILS;
+            }
+
+            // if success page text sais go to my nfts page, so do that
             if (this.isMintStepDone()) {
                 return () => this.selectMyNftPage();
             }
-
-            return () => this.selectNextStep();
         }
 
         return null;
     }
 
     // option
+
+    isMintOptionSingle(): boolean {
+        return this.mintOption === NavStore.MINT_OPTION_SINGLE;
+    }
+
+    isMintOptionMultiple(): boolean {
+        return this.mintOption === NavStore.MINT_OPTION_MULTIPLE;
+    }
+
+    getMintStepShowNumber(): number {
+        let showNumber = this.mintStep;
+
+        if (this.isMintOptionSingle() && this.mintStep > NavStore.STEP_UPLOAD_FILE) {
+            showNumber--;
+        }
+
+        return showNumber;
+    }
+
     selectMintOption(option: number): void {
         this.mintOption = option;
     }
@@ -189,7 +231,7 @@ export default class NavStore {
             && this.mintOption !== S.NOT_EXISTS)
             // on second step a file should be selected to continue
             || (this.isMintStepUploadFile()
-                && this.nftMintStore.selectedImages.length > 0)
+                && this.nftMintStore.nftImages.length > 0)
             // on third step nft name should be entered
             || (this.isMintStepDetails()
                 && this.nftMintStore.nftForm.name !== S.Strings.EMPTY)

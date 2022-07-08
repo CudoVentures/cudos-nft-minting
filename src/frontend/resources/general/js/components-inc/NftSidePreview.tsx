@@ -4,7 +4,6 @@ import '../../css/components-inc/nft-side-preview.css';
 interface Props {
     imageUrl: string;
     name: string;
-    description: string;
 }
 
 interface State {
@@ -17,7 +16,6 @@ export default class NftSidePreview extends React.Component<Props, State> {
             <div className={'FlexColumn NftPreview'}>
                 <img src={this.props.imageUrl} className={'NftImage'} />
                 <div className={'NftName'}>{this.props.name === '' ? 'No name' : this.props.name}</div>
-                <div className={'NftDescription'}>{this.props.description === '' ? 'No description' : this.props.description}</div>
             </div>
         )
     }
