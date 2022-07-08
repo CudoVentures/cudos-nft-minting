@@ -2,7 +2,6 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import S from '../../../common/js/utilities/Main';
-import WalletStore from '../../../common/js/stores/WalletStore';
 import NftMintStore from '../../../common/js/stores/NftMintStore';
 import AlertStore from '../../../common/js/stores/AlertStore';
 import NavStore from '../../../common/js/stores/NavStore';
@@ -15,9 +14,9 @@ import SideMenu from '../components-inc/SideMenu';
 import MintWindow from '../components-inc/MintWindow/MintWindow';
 import MyNftsWindow from '../components-inc/MyNftsWindow/MyNftsWindow';
 import MeshBackground from '../../../common/js/components-inc/MeshBackground';
+import LoadingIndicator from '../../../common/js/components-core/LoadingIndicator';
 
 import './../../css/components-pages/page-nft-component.css';
-import LoadingIndicator from '../../../common/js/components-core/LoadingIndicator';
 
 interface Props extends ContextPageComponentProps {
     nftMintStore: NftMintStore,
@@ -28,7 +27,7 @@ interface Props extends ContextPageComponentProps {
 export default class NftPageComponent extends ContextPageComponent<Props> {
 
     static layout() {
-        const MobXComponent = inject('appStore', 'walletStore', 'nftMintStore', 'alertStore', 'navStore')(observer(NftPageComponent));
+        const MobXComponent = inject('appStore', 'alertStore', 'walletStore', 'nftMintStore', 'navStore')(observer(NftPageComponent));
         PageComponent.layout(<MobXComponent />);
     }
 
@@ -57,9 +56,9 @@ export default class NftPageComponent extends ContextPageComponent<Props> {
     renderContent() {
         const { navStore, walletStore } = this.props;
 
-        // if (walletStore.isKeplrConnected() === false) {
-        return <LoadingIndicator margin = { 'auto' } />
-        // }
+        if (walletStore.isKeplrConnected() === false) {
+            return <LoadingIndicator margin = { 'auto' } />
+        }
 
         return (
             <>

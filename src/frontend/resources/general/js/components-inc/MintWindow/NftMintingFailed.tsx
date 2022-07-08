@@ -4,7 +4,7 @@ import Config from '../../../../../../../builds/dev-generated/Config';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 import NavStore from '../../../../common/js/stores/NavStore';
-import SvgSuccessfullWaves from '../../../../common/svg/successful-waves.svg';
+import SvgSuccessfullWaves from '../../../../common/svg/unsuccessful-waves.svg';
 import '../../../css/components-inc/NftMint/nft-minting-failed.css';
 
 interface Props {

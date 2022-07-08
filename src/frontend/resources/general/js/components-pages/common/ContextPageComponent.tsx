@@ -14,12 +14,17 @@ export default class ContextPageComponent < Pr extends ContextPageComponentProps
     }
 
     async loadData() {
+        this.props.appStore.incrementLoading();
+
         const walletStore = this.props.walletStore;
         await walletStore.tryConnectKeplr();
 
         if (this.isKeplrRequired() === true && walletStore.isKeplrConnected() === false) {
             ProjectUtils.redirectToUrl(PagesGeneral.HOME);
+            return;
         }
+
+        this.props.appStore.decrementLoading();
     }
 
 }

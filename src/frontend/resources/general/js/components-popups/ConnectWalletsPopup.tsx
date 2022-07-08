@@ -10,7 +10,7 @@ import PopupWindow, { PopupWindowProps } from '../../../common/js/components-cor
 
 import SvgLoadingWaves from '../../../common/svg/loading-waves.svg';
 import SvgFinishedWaves from '../../../common/svg/finished-waves.svg';
-import SvgSuccessfulWaves from '../../../common/svg/successful-waves.svg';
+import SvgSuccessfulWaves from '../../../common/svg/unsuccessful-waves.svg';
 import SvgWallet from '../../../common/svg/wallet.svg';
 import SvgLighting from '../../../common/svg/lighting.svg';
 import '../../css/components-popups/connect-wallets-popup.css';
