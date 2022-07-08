@@ -4,6 +4,8 @@ import { inject, observer } from 'mobx-react';
 import { WEBSITE } from '../../../common/js/utilities/Links';
 
 import WalletStore from '../../../common/js/stores/WalletStore';
+import PopupConnectWalletsStore from '../../../common/js/stores/PopupConnectWalletsStore';
+
 import Actions from '../../../common/js/components-inc/Actions';
 import Button from '../../../common/js/components-inc/Button';
 
@@ -15,16 +17,15 @@ import SvgMenuDots from '../../../common/svg/menu-dots.svg';
 import './../../css/components-inc/page-header.css';
 
 interface Props {
-    walletStore: WalletStore;
+    walletStore: WalletStore,
+    popupConnectWalletsStore: PopupConnectWalletsStore,
 }
 
-interface State {
-}
-
-class PageHeader extends React.Component < Props, State > {
+class PageHeader extends React.Component < Props > {
 
     onClickToggleKeplr = () => {
-        this.props.walletStore.onClickToggleKeplr();
+        // this.props.walletStore.onClickToggleKeplr();
+        this.props.popupConnectWalletsStore.showSignal();
     }
 
     render() {
@@ -52,10 +53,10 @@ class PageHeader extends React.Component < Props, State > {
                             </div>
                         </>
                         : <>
-                            <a href={ WEBSITE } className={'NetworkLink FlexRow'} target="_blank" rel="noreferrer">
+                            {/* <a href={ WEBSITE } className={'NetworkLink FlexRow'} target="_blank" rel="noreferrer">
                                 Check <span className = { 'Link' }>cudos.org</span>
                                 <div className={'SVG IconOpenUrl'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
-                            </a>
+                            </a> */}
                             <Actions height = { Actions.HEIGHT_60 }>
                                 <Button
                                     onClick = { this.onClickToggleKeplr }
@@ -74,4 +75,4 @@ class PageHeader extends React.Component < Props, State > {
     }
 }
 
-export default inject('walletStore')(observer(PageHeader));
+export default inject('walletStore', 'popupConnectWalletsStore')(observer(PageHeader));

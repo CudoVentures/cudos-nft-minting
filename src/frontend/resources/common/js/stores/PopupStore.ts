@@ -6,9 +6,14 @@ export default class PopupStore {
 
     constructor() {
         makeObservable(this);
+        this.hide = this.hide.bind(this);
     }
 
-    hide = () => {
+    show = () => {
+        this.visible = true;
+    }
+
+    hide() {
         this.visible = false;
     }
 

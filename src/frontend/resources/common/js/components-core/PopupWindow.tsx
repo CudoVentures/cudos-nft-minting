@@ -8,7 +8,7 @@ import PopupStore from '../stores/PopupStore';
 import SvgClose from '!!raw-loader!../../svg/close-btn.svg';
 import '../../css/components-core/popup-window.css';
 
-const outerClose = true;
+const outerClose = false;
 let popupCounter = 0;
 
 export interface PopupWindowProps {
@@ -42,9 +42,11 @@ export default class PopupWindowComponent < Pr extends PopupWindowProps = PopupW
         if (this.visibleFlag === true) {
             if (++popupCounter === 1) {
                 S.CSS.addClass(document.documentElement, 'OverflowHiddenPopup');
+                S.CSS.addClass(document.documentElement.querySelector('.ReactBody > .Page'), 'BlurPopup');
             }
         } else if (--popupCounter === 0) {
             S.CSS.removeClass(document.documentElement, 'OverflowHiddenPopup');
+            S.CSS.removeClass(document.documentElement.querySelector('.ReactBody > .Page'), 'BlurPopup');
         }
     }
 

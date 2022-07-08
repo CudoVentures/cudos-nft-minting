@@ -190,13 +190,13 @@ html.OverflowHidden {
     margin-top:112px;
 }
 
-/* .Page {
+.Page {
     transition-property:filter;
-} */
+} 
 
-/* .Page.BlurPopup, .Page.BlurAlert {
-    filter:blur(8px);
-} */
+.Page.BlurPopup, .Page.BlurAlert {
+    filter: blur(6px);
+}
 
 /* Scrolls */
 .Scrolls {
