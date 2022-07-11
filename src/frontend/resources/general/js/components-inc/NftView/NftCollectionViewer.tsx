@@ -32,7 +32,7 @@ class NftCollectionViewer extends React.Component < Props > {
                     Back to My NFTs
                 </div>
                 <NftViewer
-                    img = { '' }
+                    img = { nftModels[0].uri }
                     collection = { 'collection' }
                     name = { nftCollectionModel.name }
                     txHash = { '0x123123' }

@@ -30,6 +30,10 @@ class ConnectWalletsPopup extends PopupWindow < Props > {
         return this.props.popupStore.isWalletStatusUnavailable() || this.props.popupStore.isWalletStatusConnectedWithError();
     }
 
+    isRemovable(): boolean {
+        return false;
+    }
+
     onClickToggleKeplr = async () => {
         const popupStore = this.props.popupStore;
         const walletStore = this.props.walletStore;

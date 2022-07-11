@@ -5,9 +5,9 @@ import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 
 import NoNfts from './NoNfts';
 import ListNfts from './ListNfts';
+import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
 import '../../../css/components-inc/MyNftsWindow/my-nfts-window.css';
-import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
 interface Props {
     myNftsStore: MyNftsStore;

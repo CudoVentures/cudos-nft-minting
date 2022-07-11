@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react';
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 
 import NftModel from '../../../../common/js/models/NftModel';
+import NftCollectionModel from '../../../../common/js/models/NftCollectionModel';
 import NftViewer from './NftViewer';
 
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
@@ -12,9 +13,12 @@ import '../../../css/components-inc/NftView/nft-model-viewer.css'
 interface Props {
     myNftsStore: MyNftsStore;
     nftModel: NftModel;
+    nftCollectionModel: NftCollectionModel | null;
 }
 
 class NftModelViewer extends React.Component < Props > {
+
+    static defaultProps: any;
 
     onClickBack = () => {
         this.props.myNftsStore.markNft(null);
@@ -31,7 +35,7 @@ class NftModelViewer extends React.Component < Props > {
                 </div>
                 <NftViewer
                     img = { nftModel.uri }
-                    collection = { 'collection' }
+                    collection = { this.props.nftCollectionModel === null ? 'CUDOS ONE COLLECTION' : this.props.nftCollectionModel.name }
                     name = { nftModel.name }
                     txHash = { '0x123123' }
                     tokenId = { nftModel.tokenId } />
@@ -40,5 +44,9 @@ class NftModelViewer extends React.Component < Props > {
     }
 
 }
+
+NftModelViewer.defaultProps = {
+    nftCollectionModel: null,
+};
 
 export default inject('myNftsStore')(observer(NftModelViewer));

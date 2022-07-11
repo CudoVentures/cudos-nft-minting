@@ -18,6 +18,10 @@ interface Props {
 
 export default class NftViewer extends React.Component < Props > {
 
+    componentDidMount(): void {
+        // TO DO: get the tx hash
+    }
+
     render() {
         return (
             <div className = { 'NftViewer' } >
@@ -38,7 +42,7 @@ export default class NftViewer extends React.Component < Props > {
                     <div className = { 'TxInfo FlexColumn' } >
                         <div className = { 'TxInfoRow FlexSplit' } >
                             <label>Transation Hash</label>
-                            <div className = { 'TxInfoBlue StartRight' } > { this.props.txHash } </div>
+                            <a href = { '#' } className = { 'TxInfoBlue StartRight' } > { this.props.txHash } </a>
                         </div>
                         <div className = { 'TxInfoRow FlexSplit' } >
                             <label>Token Standart</label>
@@ -46,12 +50,18 @@ export default class NftViewer extends React.Component < Props > {
                         </div>
                         <div className = { 'TxInfoRow FlexSplit' } >
                             <label>Collection ID</label>
-                            <div className = { 'TxInfoBlue StartRight' } > { this.props.tokenId } </div>
+                            <div className = { 'StartRight' } > { this.props.tokenId } </div>
                         </div>
                     </div>
                     <Actions
                         height = { Actions.HEIGHT_60 }
                         layout = { Actions.LAYOUT_ROW_RIGHT } >
+                        <Button
+                            radius = { Button.RADIUS_MAX }
+                            padding = { Button.PADDING_48 }
+                            color = { Button.COLOR_SCHEME_3 } >
+                            Send as a gift
+                        </Button>
                         <Button
                             radius = { Button.RADIUS_MAX }
                             padding = { Button.PADDING_48 } >

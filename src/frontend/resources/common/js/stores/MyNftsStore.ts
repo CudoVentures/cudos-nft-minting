@@ -6,6 +6,8 @@ import NftCollectionModel from '../models/NftCollectionModel';
 import NftModel from '../models/NftModel';
 import S from '../utilities/Main';
 
+const emptyStore = false;
+
 export default class MyNftsStore {
 
     static PAGE_SINGLE_NFTS: number = 1;
@@ -101,7 +103,7 @@ export default class MyNftsStore {
     }
 
     async fetchNfts() {
-        const singleNfts = [
+        const singleNfts = emptyStore === true ? [] : [
             {
                 'id': '1',
                 'name': 'In Da Jungl',
@@ -140,7 +142,7 @@ export default class MyNftsStore {
             },
         ];
 
-        const collections = [
+        const collections = emptyStore === true ? [] : [
             {
                 'denomId': 'C1',
                 'name': 'AI generated witches',

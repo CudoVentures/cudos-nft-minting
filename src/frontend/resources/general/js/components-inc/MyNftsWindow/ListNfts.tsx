@@ -80,7 +80,7 @@ class ListNfts extends React.Component < Props > {
 
         return (
             <div className = { `ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}` } >
-                { display === true && <NftModelViewer nftModel = { myNftsStore.viewNftModel } /> }
+                { display === true && <NftModelViewer nftModel = { myNftsStore.viewNftModel } nftCollectionModel = { myNftsStore.viewNftCollectionModel } /> }
             </div>
         )
     }
