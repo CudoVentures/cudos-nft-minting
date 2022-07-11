@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
-import { WEBSITE } from '../../../common/js/utilities/Links';
+import { WEBSITE, EXPLORER } from '../../../common/js/utilities/Links';
 
 import PagesGeneral from '../../../../../../builds/dev-generated/PagesGeneral';
 import WalletStore from '../../../common/js/stores/WalletStore';
@@ -18,8 +18,10 @@ import SvgWallet from '../../../common/svg/wallet.svg';
 import SvgMenuDots from '../../../common/svg/menu-dots.svg';
 import SvgCopy from '../../../common/svg/copy.svg';
 import SvgOpenUrl from '../../../common/svg/open-url.svg';
+import SvgClose from '../../../common/svg/close.svg';
 import './../../css/components-inc/page-header.css';
 import ProjectUtils from '../../../common/js/ProjectUtils';
+import S from '../../../common/js/utilities/Main';
 
 interface Props {
     walletStore: WalletStore,
@@ -91,8 +93,13 @@ class PageHeader extends React.Component < Props, State > {
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgWallet }} />
                                 <div className = { 'WalletAddress Dots' } title = { keplrWallet.accountAddress }>{keplrWallet.accountAddress}</div>
                             </div>
-                            <div ref = { this.nodes.walletMenuAnchor } className={'InfoBlock FlexRow Clickable'} onClick = { this.onClickOpenWalletMenu }>
-                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgMenuDots }} />
+                            <div ref = { this.nodes.walletMenuAnchor } className={`InfoBlock InfoBlockOptions FlexRow Clickable ${S.CSS.getActiveClassName(this.state.walletMenuOpen)}`} onClick = { this.onClickOpenWalletMenu }>
+                                { this.state.walletMenuOpen === false && (
+                                    <div className={'SVG Icon IconOptions'} dangerouslySetInnerHTML={{ __html: SvgMenuDots }} />
+                                ) }
+                                { this.state.walletMenuOpen === true && (
+                                    <div className={'SVG Icon IconOptions'} dangerouslySetInnerHTML={{ __html: SvgClose }} />
+                                ) }
                             </div>
                             <Popover
                                 anchorEl = { this.nodes.walletMenuAnchor.current }
@@ -107,7 +114,11 @@ class PageHeader extends React.Component < Props, State > {
                                     <div className = { 'WalletAddress Dots' } > { keplrWallet.accountAddress } </div>
                                     <div className = { 'WalletActions' } >
                                         <div className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgCopy }} onClick = { this.onClickCopeWalletAddress } />
-                                        <div className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
+                                        <a
+                                            href = { `${EXPLORER}/address/${keplrWallet.accountAddress}` }
+                                            target = '_blank'
+                                            rel = 'noreferrer'
+                                            className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
                                     </div>
                                     <Actions height = { Actions.HEIGHT_52 } layout = { Actions.LAYOUT_COLUMN_FULL } >
                                         <Button

@@ -5,7 +5,7 @@ import S from '../utilities/Main';
 
 import PopupStore from '../stores/PopupStore';
 
-import SvgClose from '!!raw-loader!../../svg/close-btn.svg';
+import SvgClose from '!!raw-loader!../../svg/close-btn-outlined.svg';
 import '../../css/components-core/popup-window.css';
 
 const outerClose = false;
