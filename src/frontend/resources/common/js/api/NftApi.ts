@@ -18,7 +18,7 @@ export default class NftApi extends AbsApi {
     constructor() {
         super();
 
-        this.denomId = Config.CUDOS_NETWORK.DENOM_ID;
+        this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
         this.api = new Api(Apis.NFT, this.enableActions, this.disableActions);
     }
 

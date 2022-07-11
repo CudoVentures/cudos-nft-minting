@@ -4,11 +4,15 @@ import NftApi from '../api/NftApi';
 import NftImageModel from '../models/NftImageModel';
 import NftModel from '../models/NftModel';
 import S from '../utilities/Main';
+import { GasPrice, SigningStargateClient, StargateClient } from 'cudosjs';
+import WalletStore from './WalletStore';
+import Config from '../../../../../../builds/dev-generated/Config';
 
 export default class NftMintStore {
 
     nftApi: NftApi;
     infuraApi: InfuraApi;
+    walletStore: WalletStore;
 
     @observable nftImages: NftImageModel[];
     @observable selectedImages: number[];
@@ -16,15 +20,19 @@ export default class NftMintStore {
     @observable imageUrlInputValue: string;
     @observable isAddressFieldActive: number;
 
+    @observable collectionName: string;
     @observable nftForm: NftModel;
     @observable nfts: NftModel[];
     @observable mintedNfts: number[];
 
-    constructor() {
+    constructor(walletStore: WalletStore) {
         this.nftApi = new NftApi();
         this.infuraApi = new InfuraApi();
+        this.walletStore = walletStore;
+
         this.nfts = [];
         this.nftForm = new NftModel();
+        this.collectionName = '';
         this.nftImages = [];
         this.mintedNfts = [];
         this.selectedImages = [];
@@ -56,6 +64,26 @@ export default class NftMintStore {
         this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
             this.nfts = nfts.filter((nft: NftModel) => nft.owner === owner);
         })
+    }
+
+    async mintCollection(callBefore: () => void, callback: () => void) {
+        callBefore();
+        // TODO: check if denom id exists
+        // const queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
+        // await queryClient.getNftDenom(this.collectionName);
+
+        const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
+
+        await client.nftIssueDenom(
+            this.walletStore.keplrWallet.accountAddress,
+            this.collectionName,
+            this.collectionName,
+            this.collectionName,
+            this.collectionName,
+            GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
+        );
+
+        callback();
     }
 
     async mintNft(): Promise<void> {
@@ -136,6 +164,10 @@ export default class NftMintStore {
 
     isNftImageSelected(index: number): number {
         return this.selectedImages.find((i: number) => i === index) !== undefined ? S.INT_TRUE : S.INT_FALSE;
+    }
+
+    onChangeCollectionName(value: string): void {
+        this.collectionName = value;
     }
 
     onChangeNftFormName(value: string): void {

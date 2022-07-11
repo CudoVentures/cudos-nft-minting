@@ -9,6 +9,7 @@
 /* here active stands for the oposite */
 .UploadFiles .FileAddRow.Active {
     opacity: 0.5;
+    pointer-events: none;
 }
 
 .UploadFiles .FilesUpload {

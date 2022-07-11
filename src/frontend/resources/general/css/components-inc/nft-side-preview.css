@@ -1,12 +1,33 @@
 .NftPreview{
     width: 30%;
     margin-right: 30px;
+    height: 100%;
 }
 
+.NftPreview .SquareHolder {
+    height: 0;
+    padding-bottom: 100%;
+    border-radius: 10px;
+    background: var(--color-gray-light);
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.NftPreview .Center {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.NftPreview .SVG {
+    fill: var(--color-primary);
+}
 .NftPreview .NftImage {
     border-radius: 10px;
-    margin-bottom: 20px;
-
+    width: 100%;
+    height: 100%;
 }
 
 .NftPreview .NftName {
@@ -14,12 +35,4 @@
     font-size: 18px;
     line-height: 27px;
     color: var(--color-dark);
-    margin-bottom: 5px;
-}
-
-.NftPreview .NftDescription {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    color: var(--color-secondary);
 }

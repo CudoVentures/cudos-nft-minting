@@ -22,28 +22,33 @@ class MintStepNav extends React.Component<Props> {
         const menuItems = [
             {
                 name: MintStepNav.TEXT_CHOOSE_OPTION,
-                key: NavStore.STEP_CHOOSE_OPTION,
+                showNumber: NavStore.STEP_CHOOSE_OPTION,
+                step: NavStore.STEP_CHOOSE_OPTION,
             },
             {
                 name: MintStepNav.TEXT_UPLOAD_FILE,
-                key: NavStore.STEP_UPLOAD_FILE,
+                showNumber: NavStore.STEP_UPLOAD_FILE,
+                step: NavStore.STEP_UPLOAD_FILE,
             }];
 
         if (this.props.navStore.isMintOptionMultiple()) {
             menuItems.push({
                 name: MintStepNav.TEXT_COLLECTION_DETAILS,
-                key: NavStore.STEP_COLLECTION_DETAILS,
+                showNumber: NavStore.STEP_COLLECTION_DETAILS,
+                step: NavStore.STEP_COLLECTION_DETAILS,
             });
         }
 
         menuItems.push({
             name: MintStepNav.TEXT_NFT_DETAILS,
-            key: this.props.navStore.isMintOptionMultiple() ? NavStore.STEP_NFT_DETAILS : NavStore.STEP_NFT_DETAILS - 1,
+            showNumber: this.props.navStore.isMintOptionMultiple() ? NavStore.STEP_NFT_DETAILS : NavStore.STEP_NFT_DETAILS - 1,
+            step: NavStore.STEP_NFT_DETAILS,
         })
 
         menuItems.push({
             name: MintStepNav.TEXT_FINISH,
-            key: this.props.navStore.isMintOptionMultiple() ? NavStore.STEP_FINISH : NavStore.STEP_FINISH - 1,
+            showNumber: this.props.navStore.isMintOptionMultiple() ? NavStore.STEP_FINISH : NavStore.STEP_FINISH - 1,
+            step: NavStore.STEP_FINISH,
         })
 
         return menuItems;
@@ -55,12 +60,12 @@ class MintStepNav extends React.Component<Props> {
                 <div className={'HorizontalLine'} />
                 {this.getMenuItems().map((step: any) => (
                     <div
-                        key={step.key}
-                        className={`MintStep FlexColumn ${S.CSS.getClassName(step.key <= this.props.navStore.mintStep, 'BlueStep')} ${S.CSS.getClassName(step.key === this.props.navStore.mintStep, 'CurrentStep')}`}>
+                        key={step.step}
+                        className={`MintStep FlexColumn ${S.CSS.getClassName(step.step <= this.props.navStore.mintStep, 'BlueStep')} ${S.CSS.getClassName(step.showNumber === this.props.navStore.mintStep, 'CurrentStep')}`}>
                         <div className={'NumberBox'} >
-                            {step.key < this.props.navStore.mintStep
+                            {step.step < this.props.navStore.mintStep
                                 ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
-                                : step.key
+                                : step.showNumber
                             }
                         </div>
                         <div className={'StageName'}>{step.name}</div>

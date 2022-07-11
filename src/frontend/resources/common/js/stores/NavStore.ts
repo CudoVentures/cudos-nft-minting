@@ -34,9 +34,9 @@ export default class NavStore {
         this.nftMintStore = nftMintStore;
 
         // for test
-        // this.nftPage = NavStore.MINT_PAGE_KEY;
-        // this.mintOption = NavStore.MINT_OPTION_SINGLE;
-        // this.mintStep = NavStore.STEP_UPLOAD_FILE;
+        this.nftPage = NavStore.MINT_PAGE_KEY;
+        this.mintOption = NavStore.MINT_OPTION_MULTIPLE;
+        this.mintStep = NavStore.STEP_UPLOAD_FILE;
 
         makeAutoObservable(this);
     }
@@ -229,10 +229,13 @@ export default class NavStore {
         // on first step a mint option should be selected to continue
         return (this.isMintStepChooseOption()
             && this.mintOption !== S.NOT_EXISTS)
-            // on second step a file should be selected to continue
+            // on upload file step a file should be present to continue
             || (this.isMintStepUploadFile()
                 && this.nftMintStore.nftImages.length > 0)
-            // on third step nft name should be entered
+            // on collection details step a colletion name should be entered
+            || (this.isMintStepCollectionDetails()
+                && this.nftMintStore.collectionName !== S.Strings.EMPTY)
+            // on nft details step nft name should be entered
             || (this.isMintStepDetails()
                 && this.nftMintStore.nftForm.name !== S.Strings.EMPTY)
             // on fourth step always active

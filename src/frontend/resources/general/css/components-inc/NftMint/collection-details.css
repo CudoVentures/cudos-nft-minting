@@ -1,0 +1,37 @@
+.CollectionDetails .DetailsForm {
+    flex-grow: 1;
+}
+
+.CollectionDetails .DetailsHolder {
+    align-items: flex-start;
+}
+
+.Popover {
+    width: 220px;
+}
+
+.CollectionDetails .DetailsHolder .DetailsForm .Input {
+    margin-bottom: 15px;
+}
+
+.CollectionDetails .DetailsHolder .DetailsForm .MuiFormLabel-root {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-dark);
+    margin-right: 10px;
+}
+
+.CollectionDetails .DetailsHolder .DetailsForm .Info {
+    background-color: var(--color-gray-light);
+    fill: var(--color-primary);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-dark);
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.CollectionDetails .DetailsHolder .DetailsForm .Info .SVG {
+    margin-right: 28px;
+}

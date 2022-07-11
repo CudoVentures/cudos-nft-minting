@@ -26,7 +26,7 @@ const envVariables = [
     'API',
     'GAS_PRICE',
     'STAKING',
-    'DENOM_ID',
+    'NFT_DENOM_ID',
     'SIGNER_MNEMONIC',
     'INFURA_HOST',
     'INFURA_ID',
@@ -202,8 +202,9 @@ const Config = {
         RPC: process.env.RPC,
         API: process.env.API,
         GAS_PRICE: process.env.GAS_PRICE,
+        DENOM: 'acudos',
         STAKING: process.env.STAKING,
-        DENOM_ID: process.env.DENOM_ID,
+        NFT_DENOM_ID: process.env.NFT_DENOM_ID,
     },
     CUDOS_SIGNER: {
         MNEMONIC: process.env.SIGNER_MNEMONIC,
@@ -219,7 +220,7 @@ const Config = {
         TELEGRAM: process.env.TELEGRAM,
         TWITTER: process.env.TWITTER,
         GITHUB: process.env.GITHUB,
-    }
+    },
 };
 
 module.exports = Config;

@@ -41,7 +41,6 @@ class NftDetails extends React.Component<Props, State> {
                     <NftSidePreview
                         imageUrl={nftImage.imageUrl}
                         name={nftForm.name}
-                        description={nftForm.data}
                     />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
                         <Input

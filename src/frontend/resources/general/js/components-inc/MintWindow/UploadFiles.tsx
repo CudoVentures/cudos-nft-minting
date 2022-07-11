@@ -78,7 +78,7 @@ class UploadFiles extends React.Component<Props> {
         return (
             <div className={'UploadFiles'}>
                 <div className={'Heading3'}>Upload File</div>
-                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(this.props.nftMintStore.isNftImagesEmpty())}`}>
+                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(this.props.nftMintStore.isNftImagesEmpty() && this.props.navStore.isMintOptionSingle())}`}>
                     <FileUpload
                         uploadId={'OptionChoosePage'}
                         uploadParams={this.makeImageUploadParams()}
@@ -132,7 +132,7 @@ class UploadFiles extends React.Component<Props> {
                     rows={this.renderRows()}
                     noRowsContent={this.noRowsContent()}
                 />
-            </div>
+            </div >
         )
     }
 

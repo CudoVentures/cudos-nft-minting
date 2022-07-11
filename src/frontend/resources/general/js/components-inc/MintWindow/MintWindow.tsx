@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 
 import S from '../../../../common/js/utilities/Main';
 import OptionChoose from './OptionChoose';
+import CollectionDetails from './CollectionDetails';
 import NftDetails from './NftDetails';
 import NftFinish from './NftFinish';
 import UploadFiles from './UploadFiles';
@@ -30,6 +31,7 @@ class MintWindow extends React.Component<Props> {
                     {this.props.navStore.isInMintingStep() ? <span className={'SmallStepSign'}>STEP {this.props.navStore.getMintStepShowNumber()}</span> : ''}
                     {this.renderStepChooseOption()}
                     {this.renderStepUploadFile()}
+                    {this.renderStepCollectionDetails()}
                     {this.renderStepDetails()}
                     {this.renderStepFinish()}
                     {this.renderMintingInProgress()}
@@ -56,7 +58,6 @@ class MintWindow extends React.Component<Props> {
             </div>
         );
     }
-
     renderMintStepNavMap() {
         const display = this.props.navStore.shouldShowMintStepNavMap();
 
@@ -85,6 +86,14 @@ class MintWindow extends React.Component<Props> {
         )
     }
 
+    renderStepCollectionDetails() {
+        const display = this.props.navStore.isMintStepCollectionDetails();
+        return (
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <CollectionDetails />}
+            </div>
+        )
+    }
     renderStepDetails() {
         const display = this.props.navStore.isMintStepDetails();
         return (

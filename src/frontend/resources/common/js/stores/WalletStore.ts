@@ -24,17 +24,17 @@ export default class WalletStore {
         });
     }
 
-    async connectKeplr(): Promise < void > {
+    async connectKeplr(): Promise<void> {
         await this.keplrWallet.connect();
         sessionStorage.setItem('keplrWallet', S.Strings.TRUE);
     }
 
-    async disconnectKeplr(): Promise < void > {
+    async disconnectKeplr(): Promise<void> {
         await this.keplrWallet.disconnect();
         sessionStorage.removeItem('keplrWallet');
     }
 
-    async tryConnectKeplr(): Promise < void > {
+    async tryConnectKeplr(): Promise<void> {
         const connectedInSession = sessionStorage.getItem('keplrWallet');
         if (connectedInSession !== null) {
             await this.keplrWallet.connect();

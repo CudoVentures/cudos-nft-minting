@@ -1,29 +1,3 @@
-.NftDetails .NftPreview{
-    width: 30%;
-    margin-right: 30px;
-}
-
-.NftDetails .NftPreview .NftImage {
-    border-radius: 10px;
-    margin-bottom: 20px;
-
-}
-
-.NftDetails .NftPreview .NftName {
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 27px;
-    color: var(--color-dark);
-    margin-bottom: 5px;
-}
-
-.NftDetails .NftPreview .NftDescription {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    color: var(--color-secondary);
-}
-
 .NftDetails .NftDetailsForm {
     flex-grow: 1;
 }

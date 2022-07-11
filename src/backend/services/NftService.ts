@@ -12,8 +12,8 @@ export default class NftService {
     gasPrice: GasPrice;
 
     constructor() {
-        this.denomId = Config.CUDOS_NETWORK.DENOM_ID;
-        this.gasPrice = GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE);
+        this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+        this.gasPrice = GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
     }
 
     async mintNft(nftModel: NftModel): Promise<NftModel> {
@@ -87,7 +87,6 @@ export default class NftService {
             console.error('IPFS error ', error);
         }
 
-        // TODO: upload to infura;
         return nftImageModel;
     }
 }
