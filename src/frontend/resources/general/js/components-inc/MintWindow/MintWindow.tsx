@@ -58,6 +58,7 @@ class MintWindow extends React.Component<Props> {
             </div>
         );
     }
+
     renderMintStepNavMap() {
         const display = this.props.navStore.shouldShowMintStepNavMap();
 

@@ -53,7 +53,7 @@
     font-weight: 600;
     font-size: 14px;
     line-height: 21px;
-    background: var(--color-light-gray);
+    background: var(--color-gray-light);
 }
 
 /* .TableDesktop .TableRow:not(.Legend):hover {

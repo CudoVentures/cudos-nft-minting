@@ -33,11 +33,6 @@ export default class NavStore {
         this.mintStep = NavStore.STEP_CHOOSE_OPTION;
         this.nftMintStore = nftMintStore;
 
-        // for test
-        this.nftPage = NavStore.MINT_PAGE_KEY;
-        this.mintOption = NavStore.MINT_OPTION_MULTIPLE;
-        this.mintStep = NavStore.STEP_UPLOAD_FILE;
-
         makeAutoObservable(this);
     }
 

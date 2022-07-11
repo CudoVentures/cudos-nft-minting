@@ -1,11 +1,11 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import S from '../../../../common/js/utilities/Main';
 import NavStore from '../../../../common/js/stores/NavStore';
 
 import SvgTick from '../../../../common/svg/tick.svg';
 import '../../../css/components-inc/NftMint/mint-step-nav.css';
-import S from '../../../../common/js/utilities/Main';
 
 interface Props {
     navStore: NavStore
@@ -14,7 +14,7 @@ interface Props {
 class MintStepNav extends React.Component<Props> {
     static TEXT_CHOOSE_OPTION = 'Choose Option';
     static TEXT_UPLOAD_FILE = 'Upload File';
-    static TEXT_COLLECTION_DETAILS = 'Colection Details';
+    static TEXT_COLLECTION_DETAILS = 'Collection Details';
     static TEXT_NFT_DETAILS = 'NFTs Details';
     static TEXT_FINISH = 'Finish';
 

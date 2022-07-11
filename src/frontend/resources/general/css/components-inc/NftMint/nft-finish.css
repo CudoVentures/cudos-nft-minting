@@ -3,7 +3,7 @@
 }
 
 .NftFinish .NftFinishHolder .SummaryDetails {
-    background: var(--color-light-gray);
+    background: var(--color-gray-light);
     border: 2px solid var(--color-primary);
     border-radius: 20px;
     padding: 30px;

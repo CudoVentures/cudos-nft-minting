@@ -61,7 +61,7 @@ header.PageHeader .HeaderEnd .InfoBlock .SVG.Icon {
 }
 
 header.PageHeader .HeaderEnd .InfoBlock .SVG.Icon:not(:last-child) {
-    margin-right: 24px;
+    margin-right: 10px;
 }
 
 header.PageHeader .HeaderEnd .InfoBlock .SVG.Icon.IconOptions {
