@@ -115,7 +115,7 @@ class PageHeader extends React.Component < Props, State > {
                                     <div className = { 'WalletActions' } >
                                         <div className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgCopy }} onClick = { this.onClickCopeWalletAddress } />
                                         <a
-                                            href = { `${EXPLORER}/address/${keplrWallet.accountAddress}` }
+                                            href = { `${EXPLORER}/accounts/${keplrWallet.accountAddress}` }
                                             target = '_blank'
                                             rel = 'noreferrer'
                                             className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
