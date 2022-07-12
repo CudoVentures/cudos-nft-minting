@@ -28,7 +28,7 @@ class NftFinish extends React.Component<Props, State> {
 
     render() {
         const nftImage: NftImageModel = this.props.nftMintStore.nftImages[0];
-        const nftForm: NftModel = this.props.nftMintStore.nftForm;
+        const nftForm: NftModel = this.props.nftMintStore.nftForms[0];
 
         return (
             <div className={'NftFinish'}>

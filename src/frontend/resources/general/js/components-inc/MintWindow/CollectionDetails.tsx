@@ -8,6 +8,9 @@ import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import '../../../css/components-inc/NftMint/collection-details.css';
 import SvgInfo from '../../../../common/svg/info.svg';
+import SvgTickCircle from '../../../../common/svg/tick-circle.svg';
+import SvgLinkBox from '../../../../common/svg/link-box.svg';
+
 import NftSidePreview from '../NftSidePreview';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
@@ -31,9 +34,6 @@ class CollectionDetails extends React.Component<Props, State> {
     }
 
     render() {
-        const nftImage: NftImageModel = this.props.nftMintStore.nftImages[0];
-        const nftForm: NftModel = this.props.nftMintStore.nftForm;
-
         return (
             <div className={'CollectionDetails'}>
                 <div className={'Heading3'}>Collection Details</div>
@@ -48,7 +48,8 @@ class CollectionDetails extends React.Component<Props, State> {
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={this.props.nftMintStore.collectionName}
-                            onChange={(e: string) => this.props.nftMintStore.onChangeCollectionName(e)}
+                            onChange={this.props.nftMintStore.onChangeCollectionName.bind(this.props.nftMintStore)}
+                            readOnly={this.props.navStore.isCollectionMinted()}
                         />
 
                         <div className={'Info FlexRow'}>
@@ -56,20 +57,31 @@ class CollectionDetails extends React.Component<Props, State> {
                             <div className={'Text'}>The cover image of the collection will be randomly selected from the uploaded NFTs in it.</div>
                         </div>
 
-                        <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
-                            <Button
-                                type={Button.TYPE_ROUNDED}
-                                radius={Button.RADIUS_MAX}
-                                color={Button.COLOR_SCHEME_1}
-                                padding={Button.PADDING_24}
-                                onClick={this.props.nftMintStore.mintCollection.bind(
-                                    this.props.nftMintStore,
-                                    () => this.props.navStore.mintStep = NavStore.STEP_MINTING_IN_PROGRESS,
-                                    () => this.props.navStore.mintStep = NavStore.STEP_COLLECTION_DETAILS,
-                                )
-                                }
-                            >Mint Collection</Button>
-                        </Actions>
+                        {this.props.navStore.collectionMinted
+                            ? <div className={'SuccessMessage FlexColumn'}>
+                                <div className={'Heading FlexRow'}>
+                                    <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
+                                    <div className={'SuccessMessageText'}>Collection Was Minted Successfully!</div>
+                                </div>
+                                <div className={'FlexRow TransacionInfo'}>
+                                    <div className={'InfoMessage'}>Check transaction details in Explorer</div>
+                                    <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
+                                </div>
+                            </div>
+                            : <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
+                                <Button
+                                    type={Button.TYPE_ROUNDED}
+                                    radius={Button.RADIUS_MAX}
+                                    color={Button.COLOR_SCHEME_1}
+                                    padding={Button.PADDING_24}
+                                    onClick={this.props.nftMintStore.mintCollection.bind(
+                                        this.props.nftMintStore,
+                                        this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
+                                        this.props.navStore.finishMintingCollection.bind(this.props.navStore),
+                                    )}
+                                >Mint Collection</Button>
+                            </Actions>
+                        }
                     </LayoutBlock>
                 </div >
             </div >

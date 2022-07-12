@@ -10,7 +10,7 @@ interface Props {
     layout?: number;
 }
 
-export default class Actions extends React.Component < Props > {
+export default class Actions extends React.Component<Props> {
 
     static LAYOUT_ROW_LEFT: number = 1;
     static LAYOUT_ROW_CENTER: number = 2;
@@ -26,6 +26,7 @@ export default class Actions extends React.Component < Props > {
     static HEIGHT_48: number = 4;
     static HEIGHT_52: number = 5;
     static HEIGHT_60: number = 6;
+    static HEIGHT_75: number = 7;
 
     cssClassHeight() {
         switch (this.props.height) {
@@ -42,6 +43,8 @@ export default class Actions extends React.Component < Props > {
                 return 'H52';
             case Actions.HEIGHT_60:
                 return 'H60';
+            case Actions.HEIGHT_75:
+                return 'H75';
         }
     }
 
@@ -67,8 +70,8 @@ export default class Actions extends React.Component < Props > {
 
     render() {
         return (
-            <div className = { `Actions ${this.cssClassHeight()} ${this.cssClassLayout()} ${this.props.className}` } >
-                { this.props.children }
+            <div className={`Actions ${this.cssClassHeight()} ${this.cssClassLayout()} ${this.props.className}`} >
+                {this.props.children}
             </div>
         );
     }

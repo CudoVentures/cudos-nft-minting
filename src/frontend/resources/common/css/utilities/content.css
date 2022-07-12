@@ -8,6 +8,7 @@
     --color-gray-dark: #999FB1;
     --color-purple: rgba(99, 109, 143, 0.2);
     --color-red: #EA6161;
+    --color-green: #65B48F;
 
     --color-body-background: linear-gradient(296.82deg, rgba(246, 249, 254, 0) 0%, rgba(246, 249, 254, 0.86) 63.54%, #F6F9FE 100%);
 
@@ -192,7 +193,7 @@ html.OverflowHidden {
 
 .Page {
     transition-property:filter;
-} 
+}
 
 .Page.BlurPopup, .Page.BlurAlert {
     filter: blur(6px);

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import NftModel from '../models/NftModel';
 import ProjectUtils from '../ProjectUtils';
 import S from '../utilities/Main';
 import NftMintStore from './NftMintStore';
@@ -26,12 +27,14 @@ export default class NavStore {
     mintOption: number;
     mintStep: number;
     nftMintStore: NftMintStore;
+    collectionMinted: boolean;
 
     constructor(nftMintStore: NftMintStore) {
         this.nftPage = NavStore.MY_NFTS_PAGE_KEY;
         this.mintOption = S.NOT_EXISTS;
         this.mintStep = NavStore.STEP_CHOOSE_OPTION;
         this.nftMintStore = nftMintStore;
+        this.collectionMinted = false;
 
         // for test
         this.nftPage = NavStore.MINT_PAGE_KEY;
@@ -92,6 +95,10 @@ export default class NavStore {
 
     selectFinishStep() {
         this.mintStep = NavStore.STEP_FINISH;
+    }
+
+    selectStepMintingInProgress() {
+        this.mintStep = NavStore.STEP_MINTING_IN_PROGRESS;
     }
 
     isMintStepChooseOption(): boolean {
@@ -186,6 +193,11 @@ export default class NavStore {
         return null;
     }
 
+    finishMintingCollection() {
+        this.collectionMinted = true;
+        this.mintStep = NavStore.STEP_COLLECTION_DETAILS;
+    }
+
     // option
 
     isMintOptionSingle(): boolean {
@@ -194,6 +206,10 @@ export default class NavStore {
 
     isMintOptionMultiple(): boolean {
         return this.mintOption === NavStore.MINT_OPTION_MULTIPLE;
+    }
+
+    isCollectionMinted(): boolean {
+        return this.collectionMinted;
     }
 
     getMintStepShowNumber(): number {
@@ -231,13 +247,19 @@ export default class NavStore {
             && this.mintOption !== S.NOT_EXISTS)
             // on upload file step a file should be present to continue
             || (this.isMintStepUploadFile()
-                && this.nftMintStore.nftImages.length > 0)
-            // on collection details step a colletion name should be entered
+                && !this.nftMintStore.isNftsEmpty())
+            // on collection details step a colletion should be minted
             || (this.isMintStepCollectionDetails()
-                && this.nftMintStore.collectionName !== S.Strings.EMPTY)
-            // on nft details step nft name should be entered
+                && this.collectionMinted)
+            // on nft details step nft name should be entered for all pictures
             || (this.isMintStepDetails()
-                && this.nftMintStore.nftForm.name !== S.Strings.EMPTY)
+                && (
+                    (this.isMintOptionSingle()
+                        && this.nftMintStore.nfts[0].name !== S.Strings.EMPTY)
+                    || (this.isMintOptionMultiple()
+                        && this.nftMintStore.nfts.find((nft: NftModel) => nft.name === S.Strings.EMPTY) === undefined)
+                )
+            )
             // on fourth step always active
             || this.isMintStepFinish()
             // on step minting done button is always active as well

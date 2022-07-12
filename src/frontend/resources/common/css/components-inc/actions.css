@@ -47,6 +47,9 @@
 .Actions.Row.H60 {
     height:60px;
 }
+.Actions.Row.H75 {
+    height:75px;
+}
 
 /* .Actions.Row.Auto {
     padding-top:7px;
@@ -87,7 +90,11 @@
 }
 
 .Actions.Column.H60 > .Button, .Actions.Column.H60 .InheritActions > .Button {
-    height:52px;
+    height:60px;
+}
+
+.Actions.Column.H75 > .Button, .Actions.Column.H75 .InheritActions > .Button {
+    height:75px;
 }
 
 /* .Actions.Column.Auto > .Button, .Actions.Column.Auto .InheritActions > .Button {

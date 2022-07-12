@@ -1,3 +1,8 @@
+.UploadFiles {
+    height: 100%;
+    position: relative;
+}
+
 .UploadFiles .FileAddRow {
     position: relative;
     justify-content: space-between;
@@ -110,4 +115,22 @@
     font-size: 14px;
     line-height: 21px;
     color: var(--color-secondary);
+}
+
+.UploadFiles .TableDesktop {
+    margin-bottom: 37px;
+}
+
+.UploadFiles .DeleteFilesButton {
+    position: absolute;
+    background: #fff;
+    bottom: 0;
+    transform: translateY(50%);
+    z-index: 1;
+    color: var(--color-primary);
+    fill: var(--color-primary);
+}
+
+.UploadFiles .DeleteFilesButton .SVG {
+    margin-right: 11px;
 }

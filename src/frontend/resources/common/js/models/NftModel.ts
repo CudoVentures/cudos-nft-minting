@@ -1,12 +1,13 @@
 import { makeAutoObservable } from 'mobx';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
+import NftImageModel from './NftImageModel';
 
 export default class NftModel implements Filterable {
 
     tokenId: string;
     name: string;
-    uri: string;
+    nftImage: NftImageModel;
     data: string;
     owner: string;
     approvedAddresses: string[];
@@ -14,7 +15,7 @@ export default class NftModel implements Filterable {
     constructor() {
         this.tokenId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
-        this.uri = S.Strings.EMPTY;
+        this.nftImage = new NftImageModel();
         this.data = S.Strings.EMPTY;
         this.owner = S.Strings.EMPTY;
         this.approvedAddresses = [];
@@ -33,7 +34,7 @@ export default class NftModel implements Filterable {
         return {
             'id': this.tokenId,
             'name': this.name,
-            'uri': this.uri,
+            'nftImage': this.nftImage.toJSON(),
             'data': this.data,
             'owner': this.owner,
             'approvedAddresses': this.approvedAddresses,
@@ -49,7 +50,7 @@ export default class NftModel implements Filterable {
 
         model.tokenId = json.id ?? model.tokenId;
         model.name = json.name ?? model.name;
-        model.uri = json.uri ?? model.uri;
+        model.nftImage = json.nftImage ? NftImageModel.fromJSON(json.nftImage) : model.nftImage;
         model.data = json.data ?? model.data;
         model.owner = json.owner ?? model.owner;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;

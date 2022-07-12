@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import Checkbox from '../../../../common/js/components-inc/Checkbox';
-import Input from '../../../../common/js/components-inc/Input';
+import Input, { InputMargin, InputType } from '../../../../common/js/components-inc/Input';
 import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import NftImageModel from '../../../../common/js/models/NftImageModel';
 import NftModel from '../../../../common/js/models/NftModel';
@@ -12,9 +12,11 @@ import '../../../css/components-inc/NftMint/nft-details.css';
 import SvgInfo from '../../../../common/svg/info.svg';
 import NftSidePreview from '../NftSidePreview';
 import Popover from '../../../../common/js/components-inc/Popover';
+import ProjectUtils from '../../../../common/js/ProjectUtils';
 
 interface Props {
     nftMintStore: NftMintStore;
+    navStore: NavStore;
 }
 
 interface State {
@@ -31,57 +33,90 @@ class NftDetails extends React.Component<Props, State> {
     }
 
     render() {
-        const nftImage: NftImageModel = this.props.nftMintStore.nftImages[0];
-        const nftForm: NftModel = this.props.nftMintStore.nftForm;
-
         return (
             <div className={'NftDetails'}>
-                <div className={'Heading3'}>NFT Details</div>
-                <div className={'FlexRow DetailsHolder'}>
-                    <NftSidePreview
-                        imageUrl={nftImage.imageUrl}
-                        name={nftForm.name}
-                    />
-                    <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
-                        <Input
-                            className={'NftName'}
-                            label={'Nft Name'}
-                            placeholder={'E.g. Cool NFT'}
-                            value={nftForm.name}
-                            onChange={(e: string) => this.props.nftMintStore.onChangeNftFormName(e)}
-                        />
-                        <div className={'FlexRow'}>
-                            <Checkbox
-                                value={this.props.nftMintStore.isAddressFieldActive}
-                                onChange={() => this.props.nftMintStore.toggleAddressFieldActive()}
-                                label={'I want to send this NFT as a gift'}
-                            />
-                            <div className={'SVG Icon'}
-                                dangerouslySetInnerHTML={{ __html: SvgInfo }}
-                                onClick={(e) => { this.anchorEl = e.target; this.setState({}); }}
-                            ></div>
-                            <Popover
-                                anchorEl={this.anchorEl}
-                                open={this.anchorEl !== null}
-                                onClose={() => { this.anchorEl = null; this.setState({}) }} >
-                                This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
-                            </Popover>
-                        </div>
-                        {this.props.nftMintStore.isAddressFieldActive === S.INT_TRUE
-                            && (<Input
-                                className={'NftRecepient'}
-                                label={'Recipient Address'}
-                                placeholder={'cudos1...'}
-                                value={nftForm.owner}
-                                onChange={(e: string) => this.props.nftMintStore.onChangeNftFormAddress(e)}
-                            />
-                            )
-                        }
-                    </LayoutBlock>
-                </div >
+                {this.props.navStore.isMintOptionSingle()
+                    ? this.renderSingleNftDetails()
+                    : this.renderMultipleNftDetails()}
             </div >
         )
     }
+
+    renderMultipleNftDetails() {
+        const nfts: NftModel[] = this.props.nftMintStore.nfts;
+
+        <div className={'CollectionModels'} >
+            {nfts.map((nft: NftModel, i: number) => {
+                return (
+                    <div
+                        key={i}
+                        className={'NftModel'}>
+                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.nftImage.imageUrl)} />
+                        <Input
+                            className={'NameInput'}
+                            inputType={InputType.TEXT}
+                            placeholder={'Cool NFT Name'}
+                            value={nft.name}
+                            margin={InputMargin.NORMAL}
+                            onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)}
+                        />
+                    </div>
+                )
+            })}
+        </div>
+
+    }
+
+    renderSingleNftDetails() {
+        const nft: NftModel = this.props.nftMintStore.nfts[0];
+
+        return (<>
+            <div className={'Heading3'}>NFT Details</div>
+            <div className={'FlexRow DetailsHolder'}>
+                <NftSidePreview
+                    imageUrl={nft.nftImage.imageUrl}
+                    name={nft.name}
+                />
+                <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
+                    <Input
+                        className={'NftName'}
+                        label={'Nft Name'}
+                        placeholder={'E.g. Cool NFT'}
+                        value={nft.name}
+                        onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)}
+                    />
+                    <div className={'FlexRow'}>
+                        <Checkbox
+                            value={this.props.nftMintStore.isAddressFieldActive}
+                            onChange={this.props.nftMintStore.toggleAddressFieldActive.bind(this.props.nftMintStore)}
+                            label={'I want to send this NFT as a gift'}
+                        />
+                        <div className={'SVG Icon'}
+                            dangerouslySetInnerHTML={{ __html: SvgInfo }}
+                            onClick={(e) => { this.anchorEl = e.target; this.setState({}); }}
+                        ></div>
+                        <Popover
+                            anchorEl={this.anchorEl}
+                            open={this.anchorEl !== null}
+                            onClose={() => { this.anchorEl = null; this.setState({}) }} >
+                            This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
+                        </Popover>
+                    </div>
+                    {this.props.nftMintStore.isAddressFieldActive === S.INT_TRUE
+                        && (<Input
+                            className={'NftRecepient'}
+                            label={'Recipient Address'}
+                            placeholder={'cudos1...'}
+                            value={nft.owner}
+                            onChange={this.props.nftMintStore.onChangeNftFormAddress.bind(this.props.nftMintStore, nft)}
+                        />
+                        )
+                    }
+                </LayoutBlock>
+            </div >
+        </>)
+
+    }
 }
 
-export default inject('nftMintStore')((observer(NftDetails)));
+export default inject('navStore', 'nftMintStore')((observer(NftDetails)));

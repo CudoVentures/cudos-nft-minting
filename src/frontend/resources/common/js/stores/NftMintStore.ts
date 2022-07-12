@@ -14,16 +14,16 @@ export default class NftMintStore {
     infuraApi: InfuraApi;
     walletStore: WalletStore;
 
-    @observable nftImages: NftImageModel[];
-    @observable selectedImages: number[];
     @observable isImageLinkValid: boolean;
     @observable imageUrlInputValue: string;
     @observable isAddressFieldActive: number;
 
     @observable collectionName: string;
-    @observable nftForm: NftModel;
     @observable nfts: NftModel[];
     @observable mintedNfts: number[];
+    @observable selectedNfts: number[];
+
+    @observable transactionHash: string;
 
     constructor(walletStore: WalletStore) {
         this.nftApi = new NftApi();
@@ -31,21 +31,12 @@ export default class NftMintStore {
         this.walletStore = walletStore;
 
         this.nfts = [];
-        this.nftForm = new NftModel();
-        this.collectionName = '';
-        this.nftImages = [];
+        this.collectionName = S.Strings.EMPTY;
         this.mintedNfts = [];
-        this.selectedImages = [];
+        this.selectedNfts = [];
         this.isAddressFieldActive = S.INT_FALSE;
         this.imageUrlInputValue = S.Strings.EMPTY;
-
-        const nft = NftModel.fromJSON({
-            uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png',
-            name: 'In Da Jungl',
-        })
-
-        this.nfts.push(nft);
-        this.mintedNfts.push(this.nfts.length - 1);
+        this.transactionHash = S.Strings.EMPTY;
 
         makeObservable(this);
     }
@@ -68,13 +59,10 @@ export default class NftMintStore {
 
     async mintCollection(callBefore: () => void, callback: () => void) {
         callBefore();
-        // TODO: check if denom id exists
-        // const queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
-        // await queryClient.getNftDenom(this.collectionName);
 
         const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
-
-        await client.nftIssueDenom(
+        // TODO: check if denom id exists
+        const txRes = await client.nftIssueDenom(
             this.walletStore.keplrWallet.accountAddress,
             this.collectionName,
             this.collectionName,
@@ -82,6 +70,8 @@ export default class NftMintStore {
             this.collectionName,
             GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
         );
+
+        this.transactionHash = txRes.transactionHash;
 
         callback();
     }
@@ -94,10 +84,22 @@ export default class NftMintStore {
         // })
     }
 
+    getTxHashLink(): string {
+        return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
+    }
+
     nftImageStartUpload(): NftImageModel {
-        const nftImage = new NftImageModel();
-        this.nftImages.push(nftImage);
-        return nftImage;
+        const nft = new NftModel();
+        nft.nftImage = new NftImageModel();
+        this.nfts.push(nft);
+
+        return nft.nftImage;
+    }
+
+    addNewImageModel(nftImageModel: NftImageModel): void {
+        const nft = new NftModel();
+        nft.nftImage = nftImageModel;
+        this.nfts.push(nft);
     }
 
     onImageUrlChange(value: string): void {
@@ -131,58 +133,69 @@ export default class NftMintStore {
 
     }
 
-    removeNftImage(indexToRemove: number): void {
-        this.nftImages = this.nftImages.filter((image: NftImageModel, index: number) => index !== indexToRemove);
-        this.selectedImages = this.selectedImages.filter((i: number) => i !== indexToRemove);
+    removeNft(indexToRemove: number): void {
+        this.nfts = this.nfts.filter((image: NftModel, index: number) => index !== indexToRemove);
+        this.selectedNfts = [];
     }
 
-    onSelectImage(index: number): void {
-        if (this.isNftImageSelected(index) === S.INT_TRUE) {
-            this.selectedImages = this.selectedImages.filter((i: number) => i !== index);
+    removeSelectedNfts(): void {
+        this.nfts = this.nfts.filter(
+            (v: NftModel, i: number) => this.selectedNfts.find((value: number) => value === i) === undefined,
+        );
+        this.selectedNfts = [];
+    }
+
+    onSelectNft(index: number): void {
+        if (this.isNftSelected(index) === S.INT_TRUE) {
+            this.selectedNfts = this.selectedNfts.filter((i: number) => i !== index);
         } else {
-            this.selectedImages.push(index);
+            this.selectedNfts.push(index);
         }
     }
 
-    onSelectAllImages(): void {
+    onSelectAllNfts(): void {
         const result = [];
 
-        if (this.areAllImagesSelected() === S.INT_FALSE) {
-            for (let i = 0; i < this.nftImages.length; i++) {
+        if (this.areAllNftsSelected() === S.INT_FALSE) {
+            for (let i = 0; i < this.nfts.length; i++) {
                 result.push(i);
             }
         }
 
-        this.selectedImages = result;
+        this.selectedNfts = result;
     }
 
-    areAllImagesSelected(): number {
-        return this.nftImages.length === this.selectedImages.length
-            && this.nftImages.length !== 0
+    areAnyNftsSelected(): boolean {
+        return this.selectedNfts.length > 0;
+    }
+
+    areAllNftsSelected(): number {
+        return this.nfts.length === this.selectedNfts.length
+            && this.nfts.length !== 0
             ? S.INT_TRUE : S.INT_FALSE;
     }
 
-    isNftImageSelected(index: number): number {
-        return this.selectedImages.find((i: number) => i === index) !== undefined ? S.INT_TRUE : S.INT_FALSE;
+    isNftSelected(index: number): number {
+        return this.selectedNfts.find((i: number) => i === index) !== undefined ? S.INT_TRUE : S.INT_FALSE;
+    }
+
+    isNftsEmpty(): boolean {
+        return this.nfts.length === 0;
     }
 
     onChangeCollectionName(value: string): void {
         this.collectionName = value;
     }
 
-    onChangeNftFormName(value: string): void {
-        this.nftForm.name = value;
+    onChangeNftFormName(nft: NftModel, value: string): void {
+        nft.name = value;
     }
 
-    onChangeNftFormAddress(value: string): void {
-        this.nftForm.owner = value;
+    onChangeNftFormAddress(nft: NftModel, value: string): void {
+        nft.owner = value;
     }
 
     toggleAddressFieldActive(): void {
         this.isAddressFieldActive = this.isAddressFieldActive === S.INT_TRUE ? S.INT_FALSE : S.INT_TRUE;
-    }
-
-    isNftImagesEmpty(): boolean {
-        return this.nftImages.length !== 0;
     }
 }

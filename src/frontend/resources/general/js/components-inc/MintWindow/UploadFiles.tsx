@@ -1,13 +1,11 @@
 import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import Button from '../../../../common/js/components-inc/Button';
 import Input, { InputType, InputMargin } from '../../../../common/js/components-inc/Input';
 import Table from '../../../../common/js/components-inc/Table';
 import NftImageModel from '../../../../common/js/models/NftImageModel';
 import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
-import SvgUploadFile from '../../../../common/svg/upload-file.svg';
-import SvgTrash from '../../../../common/svg/trash.svg';
 import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
 import TableHelper from '../../../../common/js/helpers/TableHelper';
 import S from '../../../../common/js/utilities/Main';
@@ -17,6 +15,10 @@ import Actions from '../../../../common/js/components-inc/Actions';
 import AlertStore from '../../../../common/js/stores/AlertStore';
 import Checkbox from '../../../../common/js/components-inc/Checkbox';
 import FileUpload from '../../../../common/js/components-inc/FileUpload';
+import NftModel from '../../../../common/js/models/NftModel';
+
+import SvgUploadFile from '../../../../common/svg/upload-file.svg';
+import SvgTrash from '../../../../common/svg/trash.svg';
 
 interface Props {
     navStore: NavStore
@@ -60,8 +62,7 @@ class UploadFiles extends React.Component<Props> {
                 // console.log(JSON.parse(response).obj.nftImageModel);
                 // console.log(files[i]);
                 // const res = new NftImageUploadRes(JSON.parse(response).obj.nftImageModel);
-                this.props.nftMintStore.nftImages.push(nftImageModel);
-                console.log(this.props.nftMintStore.nftImages);
+                this.props.nftMintStore.addNewImageModel(nftImageModel);
             },
         }
     }
@@ -78,7 +79,7 @@ class UploadFiles extends React.Component<Props> {
         return (
             <div className={'UploadFiles'}>
                 <div className={'Heading3'}>Upload File</div>
-                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(this.props.nftMintStore.isNftImagesEmpty() && this.props.navStore.isMintOptionSingle())}`}>
+                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(this.props.nftMintStore.isNftsEmpty() && this.props.navStore.isMintOptionSingle())}`}>
                     <FileUpload
                         uploadId={'OptionChoosePage'}
                         uploadParams={this.makeImageUploadParams()}
@@ -132,6 +133,24 @@ class UploadFiles extends React.Component<Props> {
                     rows={this.renderRows()}
                     noRowsContent={this.noRowsContent()}
                 />
+                {this.props.nftMintStore.areAnyNftsSelected()
+                    && <Actions
+                        className={'DeleteFilesButton'}
+                        height={Actions.HEIGHT_75}
+                        layout={Actions.LAYOUT_COLUMN_FULL}
+                    >
+                        <Button
+                            color={Button.COLOR_SCHEME_3}
+                            radius={Button.RADIUS_MAX}
+                            type={Button.TYPE_ROUNDED}
+                            padding={Button.PADDING_24}
+                            onClick={this.props.nftMintStore.removeSelectedNfts.bind(this.props.nftMintStore)}
+                        >
+                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTrash }} />
+                            Delete Selected Items ({this.props.nftMintStore.selectedNfts.length})
+                        </Button>
+                    </Actions>
+                }
             </div >
         )
     }
@@ -146,14 +165,14 @@ class UploadFiles extends React.Component<Props> {
     }
 
     renderRows() {
-        return this.props.nftMintStore.nftImages.map((image: NftImageModel, index: number) => {
+        return this.props.nftMintStore.nfts.map((nft: NftModel, index: number) => {
             let cells = [];
 
             if (this.props.navStore.isMintOptionMultiple()) {
                 cells.push(Table.cell(
                     <Checkbox
-                        value={this.props.nftMintStore.isNftImageSelected(index)}
-                        onChange={() => this.props.nftMintStore.onSelectImage(index)}
+                        value={this.props.nftMintStore.isNftSelected(index)}
+                        onChange={() => this.props.nftMintStore.onSelectNft(index)}
                     />,
                 ));
             }
@@ -161,14 +180,14 @@ class UploadFiles extends React.Component<Props> {
             cells = cells.concat([
                 Table.cell(
                     <div className={'FlexRow'}>
-                        <img className={'Image'} src={image.imageUrl} />
-                        {image.fileName}
+                        <img className={'Image'} src={nft.nftImage.imageUrl} />
+                        {nft.nftImage.fileName}
                     </div>,
                 ),
-                Table.cellString(image.type),
-                Table.cellString(NftImageModel.getImageSizeString(image)),
+                Table.cellString(nft.nftImage.type),
+                Table.cellString(NftImageModel.getImageSizeString(nft.nftImage)),
                 Table.cell(
-                    <div className={'SVG Icon Remove'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNftImage(index)}></div>,
+                    <div className={'SVG Icon Remove'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNft(index)}></div>,
                 ),
             ]);
 
@@ -181,8 +200,8 @@ class UploadFiles extends React.Component<Props> {
 
         if (this.props.navStore.isMintOptionMultiple()) {
             legends.push((<Checkbox
-                value={this.props.nftMintStore.areAllImagesSelected()}
-                onChange={() => this.props.nftMintStore.onSelectAllImages()}
+                value={this.props.nftMintStore.areAllNftsSelected()}
+                onChange={() => this.props.nftMintStore.onSelectAllNfts()}
             />));
         }
 

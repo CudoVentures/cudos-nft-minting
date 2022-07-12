@@ -35,3 +35,34 @@
 .CollectionDetails .DetailsHolder .DetailsForm .Info .SVG {
     margin-right: 28px;
 }
+
+.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage {
+    border: 2px solid var(--color-green);
+    border-radius: 20px;
+    padding: 20px;
+    color: var(--color-dark);
+    align-items: center;
+}
+
+.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .Heading {
+    fill: var(--color-green);
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 19px;
+}
+
+.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .Heading .SVG {
+    margin-right: 12px;
+}
+
+
+.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .TransacionInfo {
+    fill: var(--color-primary);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .TransacionInfo .SVG {
+    margin-left: 12px;
+    cursor: pointer;
+}
