@@ -2,20 +2,21 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import S from '../../../../common/js/utilities/Main';
+import NavStore from '../../../../common/js/stores/NavStore';
+
 import OptionChoose from './OptionChoose';
 import CollectionDetails from './CollectionDetails';
 import NftDetails from './NftDetails';
 import NftFinish from './NftFinish';
 import UploadFiles from './UploadFiles';
 import MintStepNav from './MintStepNav';
+import NftMinting from './NftMinting';
+import NftMintingDone from './NftMintingDone';
+import NftMintingFailed from './NftMintingFailed';
 
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
 import '../../../css/components-inc/NftMint/mint-window.css';
-import NavStore from '../../../../common/js/stores/NavStore';
-import NftMinting from './NftMinting';
-import NftMintingDone from './NftMintingDone';
-import NftMintingFailed from './NftMintingFailed';
 
 interface Props {
     navStore: NavStore
@@ -28,7 +29,7 @@ class MintWindow extends React.Component<Props> {
             <div className={'MintWindow FlexColumn'}>
                 {this.renderMintStepNavMap()}
                 <div className={'MintStepPage'}>
-                    {this.props.navStore.isInMintingStep() ? <span className={'SmallStepSign'}>STEP {this.props.navStore.getMintStepShowNumber()}</span> : ''}
+                    {/* {this.props.navStore.isInMintingStep() ? <span className={'SmallStepSign'}>STEP {this.props.navStore.getMintStepShowNumber()}</span> : ''} */}
                     {this.renderStepChooseOption()}
                     {this.renderStepUploadFile()}
                     {this.renderStepCollectionDetails()}
