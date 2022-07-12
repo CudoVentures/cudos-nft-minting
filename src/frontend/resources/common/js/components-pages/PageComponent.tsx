@@ -16,6 +16,7 @@ import WalletStore from '../stores/WalletStore';
 import NftMintStore from '../stores/NftMintStore';
 import NavStore from '../stores/NavStore';
 import MyNftsStore from '../stores/MyNftsStore';
+import PopupSendAsGiftStore from '../stores/PopupSendAsGiftStore';
 
 configure({
     enforceActions: 'never',
@@ -31,8 +32,8 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
     static layout(componentNode: React.ReactNode) {
         const walletStore = new WalletStore();
         const myNftsStore = new MyNftsStore();
-        const nftMintSroe = new NftMintStore(walletStore);
-        const navStore = new NavStore(nftMintSroe);
+        const nftMintStore = new NftMintStore(walletStore);
+        const navStore = new NavStore(nftMintStore);
 
         ReactDOM.render(
             (
@@ -41,8 +42,9 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
                     accountSessionStore={new AccountSessionStore()}
                     alertStore={new AlertStore()}
                     popupConnectWalletsStore={new PopupConnectWalletsStore()}
+                    popupSendAsGiftStore = { new PopupSendAsGiftStore() }
                     walletStore={walletStore}
-                    nftMintStore={nftMintSroe}
+                    nftMintStore={nftMintStore}
                     navStore={navStore}
                     myNftsStore={myNftsStore} >
 

@@ -17,6 +17,7 @@ import MeshBackground from '../../../common/js/components-inc/MeshBackground';
 import LoadingIndicator from '../../../common/js/components-core/LoadingIndicator';
 
 import './../../css/components-pages/page-nft-component.css';
+import SendAsGiftPopup from '../components-popups/SendAsGiftPopup';
 
 interface Props extends ContextPageComponentProps {
     nftMintStore: NftMintStore,
@@ -84,5 +85,11 @@ export default class NftPageComponent extends ContextPageComponent<Props> {
                 </div>
             </>
         )
+    }
+
+    renderPopups(): any[] {
+        return super.renderPopups().concat([
+            <SendAsGiftPopup key = { 1 } />,
+        ]);
     }
 }

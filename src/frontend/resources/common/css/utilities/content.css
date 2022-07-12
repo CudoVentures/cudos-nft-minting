@@ -199,6 +199,11 @@ html.OverflowHidden {
     filter: blur(6px);
 }
 
+.PrimaryColor {
+    color: var(--color-primary);
+    fill: var(--color-primary);
+}
+
 /* Scrolls */
 .Scrolls {
     scrollbar-color:var(--color-primary) transparent;

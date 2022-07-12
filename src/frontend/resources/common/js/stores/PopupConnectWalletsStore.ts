@@ -68,4 +68,11 @@ export default class PopupConnectWalletsStore extends PopupStore {
         this.show();
     }
 
+    hide = () => {
+        super.hide();
+        this.walletStatus = PopupConnectWalletsStore.WALLET_UNAVAILABLE;
+        this.closeInSeconds = 3;
+        this.onSave = null;
+    }
+
 }

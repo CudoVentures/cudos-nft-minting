@@ -62,7 +62,7 @@
 
 /* Input background on error */
 .Input .MuiInputBase-root.Mui-error:not(.Mui-focused) {
-    background: var(--color-red);
+    /* background: var(--color-red); */
 }
 
 /* label color default */

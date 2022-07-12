@@ -51,11 +51,11 @@ class NftMintingDone extends React.Component<Props> {
                         Mint Another
                     </Button>
                 </Actions>
-                <div className={'ShareLink FlexRow'}>
+                {/* <div className={'ShareLink FlexRow'}>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTwitter }}></div>
                     <div>Share on Twitter</div>
-                </div>
-            </div >
+                </div> */}
+            </div>
         )
     }
 }

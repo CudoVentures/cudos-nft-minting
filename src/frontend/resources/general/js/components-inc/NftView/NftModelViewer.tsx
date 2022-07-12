@@ -34,11 +34,8 @@ class NftModelViewer extends React.Component < Props > {
                     Back to My NFTs
                 </div>
                 <NftViewer
-                    img = { nftModel.uri }
-                    collection = { this.props.nftCollectionModel === null ? 'CUDOS ONE COLLECTION' : this.props.nftCollectionModel.name }
-                    name = { nftModel.name }
-                    txHash = { '0x123123' }
-                    tokenId = { nftModel.tokenId } />
+                    nftModel = { nftModel }
+                    nftCollectionModel = { this.props.nftCollectionModel } />
             </div>
         )
     }
