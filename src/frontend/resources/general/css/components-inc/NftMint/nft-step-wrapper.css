@@ -1,0 +1,10 @@
+.NftStepWrapper .NftStepNumber {
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.NftStepWrapper .NftStepName {
+    margin-bottom: 20px;
+}

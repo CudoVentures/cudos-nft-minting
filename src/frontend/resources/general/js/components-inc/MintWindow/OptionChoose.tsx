@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 
 import S from '../../../../common/js/utilities/Main';
 import NavStore from '../../../../common/js/stores/NavStore';
+import NftStepWrapper from './NftStepWrapper';
 
 import SvgUploadSingle from '../../../../common/svg/upload-single.svg';
 import SvgUploadMultiple from '../../../../common/svg/upload-multiple.svg';
@@ -29,9 +30,10 @@ class OptionChoose extends React.Component<Props> {
 
     render() {
         return (
-            <div className={'OptionChoose'}>
-                <div className={'Heading3'}>Choose Option</div>
-
+            <NftStepWrapper
+                className = { 'OptionChoose' }
+                stepNumber = { `Step ${this.props.navStore.getMintStepShowNumber()}` }
+                stepName = { 'Choose Option' } >
                 <div className={'OptionHolder FlexRow'}>
                     {
                         OptionChoose.OPTIONS.map((option: any) => {
@@ -49,7 +51,7 @@ class OptionChoose extends React.Component<Props> {
                             )
                         })}
                 </div>
-            </div>
+            </NftStepWrapper>
         )
     }
 }
