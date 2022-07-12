@@ -3,7 +3,6 @@ import React from 'react';
 import Button from '../../../../common/js/components-inc/Button';
 import Input, { InputType, InputMargin } from '../../../../common/js/components-inc/Input';
 import Table from '../../../../common/js/components-inc/Table';
-import NftImageModel from '../../../../common/js/models/NftImageModel';
 import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
@@ -40,7 +39,6 @@ class UploadFiles extends React.Component<Props> {
     }
 
     makeImageUploadParams() {
-        // let nftImageModel: NftImageModel = null;
         return {
             'maxSize': 1 << 20, // 1MB
             'controller': '#',
@@ -48,21 +46,8 @@ class UploadFiles extends React.Component<Props> {
             'onExceedLimit': () => {
                 this.props.alertStore.show('Max files size is 1MB');
             },
-            onBeforeStart: () => {
-                // nftImageModel = this.props.nftMintStore.nftImageStartUpload();
-            },
             onUpload: (base64File, response, files: any[], i: number) => {
-                const nftImageModel = NftImageModel.fromJSON({
-                    imageUrl: base64File,
-                    fileName: files[i].name,
-                    type: files[i].type,
-                    sizeBytes: files[i].size,
-                })
-
-                // console.log(JSON.parse(response).obj.nftImageModel);
-                // console.log(files[i]);
-                // const res = new NftImageUploadRes(JSON.parse(response).obj.nftImageModel);
-                this.props.nftMintStore.addNewImageModel(nftImageModel);
+                this.props.nftMintStore.addNewImage(base64File, files[i].name, files[i].type, files[i].size);
             },
         }
     }
@@ -180,12 +165,12 @@ class UploadFiles extends React.Component<Props> {
             cells = cells.concat([
                 Table.cell(
                     <div className={'FlexRow'}>
-                        <img className={'Image'} src={nft.nftImage.imageUrl} />
-                        {nft.nftImage.fileName}
+                        <img className={'Image'} src={nft.uri} />
+                        {nft.fileName}
                     </div>,
                 ),
-                Table.cellString(nft.nftImage.type),
-                Table.cellString(NftImageModel.getImageSizeString(nft.nftImage)),
+                Table.cellString(nft.type),
+                Table.cellString(NftModel.getImageSizeString(nft)),
                 Table.cell(
                     <div className={'SVG Icon Remove'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNft(index)}></div>,
                 ),

@@ -39,13 +39,13 @@ class NftFinish extends React.Component<Props, State> {
 
     async componentDidMount(): Promise<void> {
         const estimate = await this.props.nftMintStore.esimateMintFees();
-        const estimateInDollars = 0;
+        let feeEstimateInDollars = 0;
         if (this.props.navStore.isMintOptionMultiple()) {
             // TODO: make real estimation
-            estimateInDollars = 1;
+            feeEstimateInDollars = 1;
         }
 
-        this.setState({ feeEstimate: estimate });
+        this.setState({ feeEstimate: estimate, feeEstimateInDollars });
 
     }
 
@@ -57,7 +57,7 @@ class NftFinish extends React.Component<Props, State> {
                 <div className={'Heading3'}>Summarised Details</div>
                 <div className={'FlexRow NftFinishHolder'}>
                     <NftSidePreview
-                        imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].nftImage.imageUrl : ''}
+                        imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].uri : ''}
                         name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName}
                     />
                     <div className={'FlexColumn FlexGrow'}>
@@ -108,7 +108,7 @@ class NftFinish extends React.Component<Props, State> {
                             {this.props.navStore.isMintOptionSingle()
                                 && <div className={'FlexColumnt DetailColumn'}>
                                     <div className={'DetailHeading'}>Recipient</div>
-                                    <div className={'DetailData'}>{nfts[0].owner !== S.Strings.EMPTY ? nfts[0].owner : this.props.walletStore.keplrWallet.accountAddress}</div>
+                                    <div className={'DetailData'}>{nfts[0].recipient !== S.Strings.EMPTY ? nfts[0].recipient : this.props.walletStore.keplrWallet.accountAddress}</div>
                                 </div>}
                         </div>
                         <Actions className={'MintNftButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
@@ -117,7 +117,12 @@ class NftFinish extends React.Component<Props, State> {
                                 radius={Button.RADIUS_MAX}
                                 color={Button.COLOR_SCHEME_1}
                                 padding={Button.PADDING_24}
-                                onClick={this.props.nftMintStore.mintNfts.bind(this.props.nftMintStore)}
+                                onClick={this.props.nftMintStore.mintNfts.bind(
+                                    this.props.nftMintStore,
+                                    this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
+                                    this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
+                                    this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
+                                )}
                             >{this.props.navStore.isMintOptionSingle() ? 'Mint NFT' : 'Mint Collection NFTs'}</Button>
                         </Actions>
                     </div>

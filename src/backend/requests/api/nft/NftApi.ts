@@ -16,9 +16,6 @@ export default class NftApi extends NftApiH {
             case NftApiH.Actions.MINT:
                 await this.nftController.mintNft(context);
                 break;
-            case NftApiH.Actions.IMAGE_UPLOAD:
-                await this.nftController.imageUpload(context);
-                break;
             default:
                 break;
         }

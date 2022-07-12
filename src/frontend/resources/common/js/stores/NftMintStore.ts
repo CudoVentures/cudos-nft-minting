@@ -1,7 +1,6 @@
 import { makeObservable, observable } from 'mobx';
 import InfuraApi from '../api/InfuraApi';
 import NftApi from '../api/NftApi';
-import NftImageModel from '../models/NftImageModel';
 import NftModel from '../models/NftModel';
 import S from '../utilities/Main';
 import { GasPrice, SigningStargateClient, StargateClient } from 'cudosjs';
@@ -51,13 +50,13 @@ export default class NftMintStore {
         });
     }
 
-    async getUserNfts(owner: string): Promise<void> {
+    async getUserNfts(recipient: string): Promise<void> {
         this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
-            this.nfts = nfts.filter((nft: NftModel) => nft.owner === owner);
+            this.nfts = nfts.filter((nft: NftModel) => nft.recipient === recipient);
         })
     }
 
-    async mintCollection(callBefore: () => void, callback: () => void) {
+    async mintCollection(callBefore: () => void, success: () => void) {
         callBefore();
 
         const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
@@ -73,13 +72,39 @@ export default class NftMintStore {
 
         this.transactionHash = txRes.transactionHash;
 
-        callback();
+        success();
     }
 
-    async mintNfts(): Promise<void> {
-        this.nftApi.mintNfts(this.nfts, (nfts: NftModel[]) => {
-            this.nfts = nfts
+    async mintNfts(
+        callBefore: () => void,
+        success: () => void,
+        error: () => void,
+    ): Promise<void> {
+        callBefore();
+        this.nfts.forEach((nft: NftModel) => {
+            if (nft.recipient === S.Strings.EMPTY) {
+                nft.recipient = this.walletStore.keplrWallet.accountAddress;
+            }
+
+            if (nft.denomId === S.Strings.EMPTY) {
+                nft.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+            }
+
+            // TODO: get real checksum
+            nft.data = 'some checksum'
         })
+
+        try {
+            await this.nftApi.mintNfts(this.nfts, (nfts: NftModel[], txHash: string) => {
+                this.nfts = nfts
+                this.transactionHash = txHash;
+
+                success();
+            })
+
+        } catch (e) {
+            error();
+        }
     }
 
     async esimateMintFees(): Promise<number> {
@@ -91,17 +116,14 @@ export default class NftMintStore {
         return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
     }
 
-    nftImageStartUpload(): NftImageModel {
+    addNewImage(uri: string, fileName: string, type: string, sizeBytes: number): void {
         const nft = new NftModel();
-        nft.nftImage = new NftImageModel();
-        this.nfts.push(nft);
 
-        return nft.nftImage;
-    }
+        nft.uri = uri;
+        nft.fileName = fileName;
+        nft.type = type;
+        nft.sizeBytes = sizeBytes;
 
-    addNewImageModel(nftImageModel: NftImageModel): void {
-        const nft = new NftModel();
-        nft.nftImage = nftImageModel;
         this.nfts.push(nft);
     }
 
@@ -121,14 +143,16 @@ export default class NftMintStore {
             const imageRes = await fetch(url);
             let contentType = imageRes.headers.get('Content-Type');
             contentType = contentType.slice(contentType.indexOf('/') + 1);
-            const contentLength = imageRes.headers.get('Content-Length');
-            const nftImage = NftImageModel.fromJSON({
-                imageUrl: url,
-                fileName: 'linkedImage',
-                type: contentType,
-                sizeBytes: contentLength,
-            })
-            this.nftImages.push(nftImage);
+            const contentLength = Number(imageRes.headers.get('Content-Length'));
+
+            const nft = new NftModel();
+
+            nft.uri = url;
+            nft.fileName = 'linkedImage';
+            nft.type = contentType;
+            nft.sizeBytes = contentLength;
+
+            this.nfts.push(nft);
 
         } catch (e) {
             throw Error('Could not fetch file.');
@@ -195,7 +219,7 @@ export default class NftMintStore {
     }
 
     onChangeNftFormAddress(nft: NftModel, value: string): void {
-        nft.owner = value;
+        nft.recipient = value;
     }
 
     toggleAddressFieldActive(): void {

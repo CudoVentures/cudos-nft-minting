@@ -1,25 +1,55 @@
 import { makeAutoObservable } from 'mobx';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
-import NftImageModel from './NftImageModel';
 
 export default class NftModel implements Filterable {
 
+    denomId: string;
     tokenId: string;
     name: string;
-    nftImage: NftImageModel;
+    uri: string;
+    fileName: string;
+    type: string;
+    sizeBytes: number;
     data: string;
-    owner: string;
+    recipient: string;
     approvedAddresses: string[];
 
     constructor() {
+        this.denomId = S.Strings.EMPTY;
         this.tokenId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
-        this.nftImage = new NftImageModel();
+        this.uri = S.Strings.EMPTY;
+        this.fileName = S.Strings.EMPTY;
+        this.type = S.Strings.EMPTY;
+        this.sizeBytes = S.NOT_EXISTS;
         this.data = S.Strings.EMPTY;
-        this.owner = S.Strings.EMPTY;
+        this.recipient = S.Strings.EMPTY;
         this.approvedAddresses = [];
+
         makeAutoObservable(this);
+    }
+
+    static getImageSizeString(nftModel: NftModel): string {
+        const size = nftModel.sizeBytes;
+
+        const kilo = 2 << 10;
+        const mega = 2 << 20;
+
+        if (size < kilo) {
+            return `${size} B`;
+        }
+
+        if (Math.floor(size / kilo) < kilo) {
+            return `${(size / kilo).toFixed(2)} KB`
+        }
+
+        if (Math.floor(size / mega) < kilo) {
+            return `${(size / mega).toFixed(2)} MB`
+        }
+
+        return 'File too big.'
+
     }
 
     getFilterableString(): string {
@@ -32,11 +62,12 @@ export default class NftModel implements Filterable {
 
     toJSON(): any {
         return {
-            'id': this.tokenId,
+            'denomId': this.denomId,
+            'tokenId': this.tokenId,
             'name': this.name,
-            'nftImage': this.nftImage.toJSON(),
+            'uri': this.uri,
             'data': this.data,
-            'owner': this.owner,
+            'recipient': this.recipient,
             'approvedAddresses': this.approvedAddresses,
         }
     }
@@ -48,11 +79,12 @@ export default class NftModel implements Filterable {
 
         const model = new NftModel();
 
-        model.tokenId = json.id ?? model.tokenId;
+        model.denomId = json.denomId ?? model.denomId;
+        model.tokenId = json.tokenId ?? model.tokenId;
         model.name = json.name ?? model.name;
-        model.nftImage = json.nftImage ? NftImageModel.fromJSON(json.nftImage) : model.nftImage;
+        model.uri = json.uri ?? model.uri;
         model.data = json.data ?? model.data;
-        model.owner = json.owner ?? model.owner;
+        model.recipient = json.recipient ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
 
         return model;

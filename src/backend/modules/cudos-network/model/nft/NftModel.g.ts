@@ -6,21 +6,23 @@ export default class NftModelG extends NftModelH {
 
     constructor() {
         super();
+        this.denomId = SV.Strings.EMPTY;
         this.tokenId = SV.Strings.EMPTY;
         this.name = SV.Strings.EMPTY;
         this.uri = SV.Strings.EMPTY;
         this.data = SV.Strings.EMPTY;
-        this.owner = SV.Strings.EMPTY;
+        this.recipient = SV.Strings.EMPTY;
         this.approvedAddresses = [];
     }
 
     toNetwork(): any {
         return {
-            'id': this.tokenId,
+            'denomId': this.denomId,
+            'tokenId': this.tokenId,
             'name': this.name,
             'uri': this.uri,
             'data': this.data,
-            'owner': this.owner,
+            'recipient': this.recipient,
             'approvedAddresses': this.approvedAddresses,
         }
     }
@@ -32,11 +34,12 @@ export default class NftModelG extends NftModelH {
 
         const model = new NftModel();
 
-        model.tokenId = json.id ?? model.tokenId;
+        model.denomId = json.denomId ?? model.denomId;
+        model.tokenId = json.tokenId ?? model.tokenId;
         model.name = json.name ?? model.name;
         model.uri = json.uri ?? model.uri;
         model.data = json.data ?? model.data;
-        model.owner = json.owner ?? model.owner;
+        model.recipient = json.recipient ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
 
         return model;

@@ -1,5 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React from 'react';
+import Config from '../../../../../../../builds/dev-generated/Config';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 import ProjectUtils from '../../../../common/js/ProjectUtils';
@@ -21,7 +22,6 @@ class NftMintingDone extends React.Component<Props> {
             <div className={'NftMintingDone FlexColumn FlexGrow'}>
                 <div className={'SVG Icon Size Background'} dangerouslySetInnerHTML={{ __html: SvgMintingWaves }}></div>
                 <div className={'NftBoxRow FlexRow'}>
-
                     {this.props.nftMintStore.mintedNfts.map((index) => {
                         const nft = this.props.nftMintStore.nfts[index];
                         return (
@@ -36,10 +36,11 @@ class NftMintingDone extends React.Component<Props> {
                 </div>
                 <div className={'Heading4'} >Minting is Done!</div>
                 <div className={'Description'}>Minting was successful! Check the details from the link below.</div>
-                <div className={'TransactionLink FlexRow'}>
+                {/* // TODO: fix undefined link */}
+                <a href={`${Config.CUDOS_NETWORK.EXPLORER}/trabsactions/${this.props.nftMintStore.transactionHash}`} className={'TransactionLink FlexRow'}>
                     <div>Check transaction details in Explorer</div>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
-                </div>
+                </a>
                 <Actions height={Actions.HEIGHT_60}>
                     <Button
                         type={Button.TYPE_ROUNDED}

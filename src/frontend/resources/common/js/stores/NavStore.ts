@@ -96,6 +96,14 @@ export default class NavStore {
         this.mintStep = NavStore.STEP_MINTING_IN_PROGRESS;
     }
 
+    selectStepMintingSucceeeded() {
+        this.mintStep = NavStore.STEP_MINTING_DONE;
+    }
+
+    selectStepMintingFailed() {
+        this.mintStep = NavStore.STEP_MINTING_FAILED;
+    }
+
     isMintStepChooseOption(): boolean {
         return this.mintStep === NavStore.STEP_CHOOSE_OPTION;
     }
