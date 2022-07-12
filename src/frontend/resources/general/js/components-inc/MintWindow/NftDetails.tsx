@@ -44,10 +44,9 @@ class NftDetails extends React.Component<Props, State> {
 
     renderMultipleNftDetails() {
         const nfts: NftModel[] = this.props.nftMintStore.nfts;
-
-        <div className={'CollectionModels'} >
-            {nfts.map((nft: NftModel, i: number) => {
-                return (
+        return (
+            <div className={'CollectionModels'} >
+                {nfts.map((nft: NftModel, i: number) => (
                     <div
                         key={i}
                         className={'NftModel'}>
@@ -55,16 +54,15 @@ class NftDetails extends React.Component<Props, State> {
                         <Input
                             className={'NameInput'}
                             inputType={InputType.TEXT}
-                            placeholder={'Cool NFT Name'}
+                            placeholder={'Add name...'}
                             value={nft.name}
-                            margin={InputMargin.NORMAL}
+                            margin={InputMargin.DENSE}
                             onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)}
                         />
-                    </div>
-                )
-            })}
-        </div>
-
+                    </div>))
+                }
+            </div>
+        )
     }
 
     renderSingleNftDetails() {

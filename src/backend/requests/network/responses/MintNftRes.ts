@@ -2,9 +2,9 @@ import NftModel from '../../../modules/cudos-network/model/nft/NftModel';
 
 export default class MintNftRes {
 
-    nftModel: NftModel;
+    nftModels: NftModel[];
 
-    constructor(nftModel_: NftModel) {
-        this.nftModel = nftModel_.toNetwork();
+    constructor(nftModels_: NftModel[]) {
+        this.nftModels = nftModels_.map((nftModel: NftModel) => nftModel.toNetwork());
     }
 }

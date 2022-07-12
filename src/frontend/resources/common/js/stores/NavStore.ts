@@ -226,7 +226,18 @@ export default class NavStore {
             case NavStore.MINT_OPTION_SINGLE:
                 return 'Single Mint';
             case NavStore.MINT_OPTION_MULTIPLE:
-                return 'Multiple Mint';
+                return 'Create Collection';
+            default:
+                return '';
+        }
+    }
+
+    static getMintTypeText(mintOption: number): string {
+        switch (mintOption) {
+            case NavStore.MINT_OPTION_SINGLE:
+                return 'Single Mint';
+            case NavStore.MINT_OPTION_MULTIPLE:
+                return 'Collection';
             default:
                 return '';
         }

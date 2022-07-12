@@ -1,4 +1,3 @@
-
 import MintNftReq from '../requests/network/requests/MintNftReq';
 import NftImageUploadReq from '../requests/network/requests/NftImageUploadReq';
 import MintNftRes from '../requests/network/responses/MintNftRes';
@@ -11,12 +10,13 @@ export default class NftController {
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
 
-        const req = new MintNftReq(payload.params.nftModel);
+        console.log(payload.params);
+        const req = new MintNftReq(payload.params.nftModels);
 
         const nftService = servicesFactory.getNftService();
-        const productModel = await nftService.mintNft(req.nftModel);
+        const nftModels = await nftService.mintNft(req.nftModels);
 
-        context.res.set(new MintNftRes(productModel));
+        context.res.set(new MintNftRes(nftModels));
     }
 
     async imageUpload(context: Context) {

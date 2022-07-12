@@ -76,12 +76,15 @@ export default class NftMintStore {
         callback();
     }
 
-    async mintNft(): Promise<void> {
-        console.log('MINT NFTTTTTT')
+    async mintNfts(): Promise<void> {
+        this.nftApi.mintNfts(this.nfts, (nfts: NftModel[]) => {
+            this.nfts = nfts
+        })
+    }
 
-        // this.nftApi.mintNft(this.nftForm, (nft: NftModel) => {
-        //     this.nfts.push(nft);
-        // })
+    async esimateMintFees(): Promise<number> {
+        // TODO: estimate fees correctly
+        return 1;
     }
 
     getTxHashLink(): string {

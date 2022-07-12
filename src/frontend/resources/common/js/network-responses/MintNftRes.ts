@@ -2,10 +2,10 @@ import NftModel from '../models/NftModel';
 
 export default class MintNftRes {
 
-    nft: NftModel;
+    nfts: NftModel[];
 
     constructor(json) {
-        this.nft = NftModel.fromJSON(json);
+        this.nfts = json.map((modelJson: any) => NftModel.fromJSON(modelJson));
     }
 
 }
