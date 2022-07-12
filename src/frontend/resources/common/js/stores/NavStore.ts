@@ -96,6 +96,14 @@ export default class NavStore {
         this.mintStep = NavStore.STEP_MINTING_IN_PROGRESS;
     }
 
+    selectStepMintingSucceeeded() {
+        this.mintStep = NavStore.STEP_MINTING_DONE;
+    }
+
+    selectStepMintingFailed() {
+        this.mintStep = NavStore.STEP_MINTING_FAILED;
+    }
+
     isMintStepChooseOption(): boolean {
         return this.mintStep === NavStore.STEP_CHOOSE_OPTION;
     }
@@ -226,7 +234,18 @@ export default class NavStore {
             case NavStore.MINT_OPTION_SINGLE:
                 return 'Single Mint';
             case NavStore.MINT_OPTION_MULTIPLE:
-                return 'Multiple Mint';
+                return 'Create Collection';
+            default:
+                return '';
+        }
+    }
+
+    static getMintTypeText(mintOption: number): string {
+        switch (mintOption) {
+            case NavStore.MINT_OPTION_SINGLE:
+                return 'Single Mint';
+            case NavStore.MINT_OPTION_MULTIPLE:
+                return 'Collection';
             default:
                 return '';
         }

@@ -3,7 +3,6 @@ import React, { ChangeEvent } from 'react';
 import Checkbox from '../../../../common/js/components-inc/Checkbox';
 import Input, { InputMargin, InputType } from '../../../../common/js/components-inc/Input';
 import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
-import NftImageModel from '../../../../common/js/models/NftImageModel';
 import NftModel from '../../../../common/js/models/NftModel';
 import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
@@ -44,27 +43,25 @@ class NftDetails extends React.Component<Props, State> {
 
     renderMultipleNftDetails() {
         const nfts: NftModel[] = this.props.nftMintStore.nfts;
-
-        <div className={'CollectionModels'} >
-            {nfts.map((nft: NftModel, i: number) => {
-                return (
+        return (
+            <div className={'CollectionModels'} >
+                {nfts.map((nft: NftModel, i: number) => (
                     <div
                         key={i}
                         className={'NftModel'}>
-                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.nftImage.imageUrl)} />
+                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.uri)} />
                         <Input
                             className={'NameInput'}
                             inputType={InputType.TEXT}
-                            placeholder={'Cool NFT Name'}
+                            placeholder={'Add name...'}
                             value={nft.name}
-                            margin={InputMargin.NORMAL}
+                            margin={InputMargin.DENSE}
                             onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)}
                         />
-                    </div>
-                )
-            })}
-        </div>
-
+                    </div>))
+                }
+            </div>
+        )
     }
 
     renderSingleNftDetails() {
@@ -74,7 +71,7 @@ class NftDetails extends React.Component<Props, State> {
             <div className={'Heading3'}>NFT Details</div>
             <div className={'FlexRow DetailsHolder'}>
                 <NftSidePreview
-                    imageUrl={nft.nftImage.imageUrl}
+                    imageUrl={nft.uri}
                     name={nft.name}
                 />
                 <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
@@ -107,7 +104,7 @@ class NftDetails extends React.Component<Props, State> {
                             className={'NftRecepient'}
                             label={'Recipient Address'}
                             placeholder={'cudos1...'}
-                            value={nft.owner}
+                            value={nft.recipient}
                             onChange={this.props.nftMintStore.onChangeNftFormAddress.bind(this.props.nftMintStore, nft)}
                         />
                         )

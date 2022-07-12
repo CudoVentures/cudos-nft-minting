@@ -2,8 +2,6 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import Input from '../../../../common/js/components-inc/Input';
 import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
-import NftImageModel from '../../../../common/js/models/NftImageModel';
-import NftModel from '../../../../common/js/models/NftModel';
 import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import '../../../css/components-inc/NftMint/collection-details.css';

@@ -60,6 +60,7 @@
     font-size: 14px;
     color: var(--color-dark);
     margin-bottom: 32px;
+    cursor: pointer;
 }
 
 .NftMintingDone .TransactionLink .SVG {
@@ -75,4 +76,12 @@
 .NftMintingDone .ShareLink .SVG {
     margin-right: 12px;
     fill: var(--color-primary);
+}
+
+.NftMintingDone .NftBoxRow,
+.NftMintingDone .Heading4,
+.NftMintingDone .Description,
+.NftMintingDone .TransactionLink {
+    position: relative;
+    z-index: 2;
 }

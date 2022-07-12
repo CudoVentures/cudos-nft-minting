@@ -33,7 +33,6 @@
 .NftDetails .CollectionModels .NftModel {
     display: flex;
     flex-direction: column;
-    cursor: pointer;
 }
 
 .NftDetails .CollectionModels .NftModel .NftImg {

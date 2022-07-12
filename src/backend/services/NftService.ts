@@ -1,9 +1,7 @@
 import NftModel from '../modules/cudos-network/model/nft/NftModel';
 import { GasPrice, DirectSecp256k1HdWallet, SigningStargateClient } from 'cudosjs';
 import Config from '../../../config/config';
-import NftImageModel from '../modules/cudos-network/model/nftImage/NftImageModel';
-import { create, CID, IPFSHTTPClient } from 'ipfs-http-client';
-import SV from '../utilities/SV';
+import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 
 const MEMO = 'Minted by Cudos NFT Minter';
 
@@ -16,7 +14,7 @@ export default class NftService {
         this.gasPrice = GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
     }
 
-    async mintNft(nftModel: NftModel): Promise<NftModel> {
+    async mintNft(nftModels: NftModel[]): Promise<any> {
         const wallet = await DirectSecp256k1HdWallet.fromMnemonic(Config.CUDOS_SIGNER.MNEMONIC);
         const sender = (await wallet.getAccounts())[0].address;
         let client: SigningStargateClient;
@@ -26,16 +24,17 @@ export default class NftService {
         } catch (e) {
             throw Error('Failed to connect to Cudos node.');
         }
+
         let mintRes: any;
 
+        // TODO: upload images first
+
+        const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.uri, nftModel.data, nftModel.recipient));
+
         try {
-            mintRes = await client.nftMintToken(
+            mintRes = await client.nftMintMultipleTokens(
+                nftInfos,
                 sender,
-                this.denomId,
-                nftModel.name,
-                nftModel.uri,
-                nftModel.data,
-                nftModel.owner,
                 this.gasPrice,
                 MEMO,
             )
@@ -44,49 +43,50 @@ export default class NftService {
         }
 
         const log = JSON.parse(mintRes.rawLog);
-        const attributeEvent = log[0].events.find((event: any) => event.type === 'mint_nft');
+        // TODO: get token ids
+        // const attributeEvent = log[0].events.find((event: any) => event.type === 'mint_nft');
 
-        if (attributeEvent === undefined) {
-            throw Error('Failed to get event from tx response');
-        }
+        // if (attributeEvent === undefined) {
+        //     throw Error('Failed to get event from tx response');
+        // }
 
-        const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'token_id');
-        if (tokenIdAttr === undefined) {
-            throw Error('Failed to get token id attribute from attribute event.');
-        }
+        // const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'token_id');
+        // if (tokenIdAttr === undefined) {
+        //     throw Error('Failed to get token id attribute from attribute event.');
+        // }
 
-        const tokenId = tokenIdAttr.value;
-        nftModel.tokenId = tokenId;
+        // const tokenId = tokenIdAttr.value;
+        // nftModel.tokenId = tokenId;
 
-        return nftModel;
+        return { nftModels, txHash: mintRes.transactionHash };
     }
 
-    async imageUpload(nftImageModel: NftImageModel): Promise<NftImageModel> {
-        const base64Buffer = nftImageModel.file.substring(nftImageModel.file.indexOf(',') + 1);
-        const documentBuffer = Buffer.from(base64Buffer, 'base64');
-        const fileSize = documentBuffer.length;
-        const authorization = `Basic ${Buffer.from(`${Config.INFURA.ID}:${Config.INFURA.SECRET}`).toString('base64')}`;
+    // async imageUpload(nftImageModel: NftImageModel): Promise<NftImageModel> {
+    //     const base64Buffer = nftImageModel.file.substring(nftImageModel.file.indexOf(',') + 1);
+    //     const documentBuffer = Buffer.from(base64Buffer, 'base64');
+    //     const fileSize = documentBuffer.length;
+    //     const authorization = `Basic ${Buffer.from(`${Config.INFURA.ID}:${Config.INFURA.SECRET}`).toString('base64')}`;
 
-        try {
-            const ipfs: IPFSHTTPClient = create({
-                url: Config.INFURA.HOST,
-            });
+    //     try {
+    //         const ipfs: IPFSHTTPClient = create({
+    //             url: Config.INFURA.HOST,
+    //         });
 
-            const added = await ipfs.add(documentBuffer, {
-                pin: true,
-                headers: {
-                    authorization,
-                },
-            });
+    //         const added = await ipfs.add(documentBuffer, {
+    //             pin: true,
+    //             headers: {
+    //                 authorization,
+    //             },
+    //         });
 
-            const url = `https://ipfs.infura.io/ipfs/${added.path}`
-            nftImageModel.imageUrl = url;
-            nftImageModel.file = SV.Strings.EMPTY;
-            nftImageModel.sizeBytes = fileSize;
-        } catch (error) {
-            console.error('IPFS error ', error);
-        }
+    //         const url = `https://ipfs.infura.io/ipfs/${added.path}`
+    //         nftImageModel.imageUrl = url;
+    //         nftImageModel.file = SV.Strings.EMPTY;
+    //         nftImageModel.sizeBytes = fileSize;
+    //     } catch (error) {
+    //         console.error('IPFS error ', error);
+    //     }
 
-        return nftImageModel;
-    }
+    //     return nftImageModel;
+    // }
 }

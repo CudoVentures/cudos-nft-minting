@@ -47,12 +47,12 @@ export default class NftApi extends AbsApi {
         }
     }
 
-    async mintNft(nftModel: NftModel, callback: (nft: NftModel) => void) {
-        const req = new MintNftReq(nftModel);
+    async mintNfts(nftModels: NftModel[], callback: (nfts: NftModel[], txhash: string) => void) {
+        const req = new MintNftReq(nftModels);
 
         this.api.req(Actions.NFT.MINT, req, (json: any) => {
-            const res = new MintNftRes(json.obj.nftModel);
-            callback(res.nft);
+            const res = new MintNftRes(json.obj);
+            callback(res.nfts, res.txHash);
         });
     }
 

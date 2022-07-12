@@ -47,6 +47,20 @@
     color: var(--color-dark);
 }
 
+.NftFinish .NftFinishHolder .SummaryDetails .DetailData .FeeEstimate.Crossed {
+    text-decoration: line-through;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailData .RealPrice {
+    margin-left: 10px;
+    color: var(--color-primary);
+    fill: var(--color-primary);
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailData .RealPrice .SVG {
+    margin-left: 7px;
+}
+
 .NftFinish .NftFinishHolder .MintNftButton {
     margin-top: 30px;
 }
