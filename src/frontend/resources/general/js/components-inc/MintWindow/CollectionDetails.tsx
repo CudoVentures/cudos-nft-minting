@@ -61,7 +61,7 @@ class CollectionDetails extends React.Component<Props> {
                         </div>
 
                         {!this.props.navStore.isCollectionMintedNone()
-                            ? <div className={'SuccessMessage FlexColumn'}>
+                            ? <div className={`SuccessMessage FlexColumn ${this.props.navStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
                                 <div className={'Heading FlexRow'}>
 
                                     {this.props.navStore.isCollectionMintedFail()

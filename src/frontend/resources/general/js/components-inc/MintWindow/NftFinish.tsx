@@ -87,12 +87,12 @@ class NftFinish extends React.Component<Props, State> {
                 <div className={'FlexColumn FlexGrow'}>
                     <div className={'FlexColumn SummaryDetails'}>
                         <div className={'SummaryHeading'}>Minting details</div>
-                        { this.props.navStore.isMintOptionMultiple() === true && (
+                        {this.props.navStore.isMintOptionMultiple() === true && (
                             <div className={'FlexColumn DetailsRow'}>
                                 <div className={'DetailHeading'}>Collection Name</div>
                                 <div className={'DetailData'}>{this.props.nftMintStore.collectionName}</div>
                             </div>
-                        ) }
+                        )}
                         <div className={'FlexRow DetailsRow'}>
                             <div className={'FlexColumnt DetailColumn'}>
                                 <div className={'DetailHeading'}>Items</div>
@@ -118,7 +118,7 @@ class NftFinish extends React.Component<Props, State> {
                                                     anchorEl={this.state.anchorEl}
                                                     open={this.state.anchorEl !== null}
                                                     onClose={this.onHideFreeInfo}
-                                                    transformOrigin = {{
+                                                    transformOrigin={{
                                                         'vertical': 'top',
                                                         'horizontal': 'left',
                                                     }} >
@@ -128,9 +128,9 @@ class NftFinish extends React.Component<Props, State> {
                                             </>
                                         ) : (
                                             <>
-                                                {`&dollar; ${this.state.feeEstimateInDollars.toFixed(2)}`}
+                                                {`$ ${this.state.feeEstimateInDollars.toFixed(2)}`}
                                             </>
-                                        ) }
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@ class NftFinish extends React.Component<Props, State> {
                                 <div className={'DetailHeading'}>Recipient</div>
                                 <div className={'DetailData'}>{nfts[0].recipient !== S.Strings.EMPTY ? nfts[0].recipient : this.props.walletStore.keplrWallet.accountAddress}</div>
                             </div>
-                        ) }
+                        )}
                     </div>
                     <Actions className={'MintNftButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
                         <Button
@@ -150,6 +150,7 @@ class NftFinish extends React.Component<Props, State> {
                             padding={Button.PADDING_24}
                             onClick={this.props.nftMintStore.mintNfts.bind(
                                 this.props.nftMintStore,
+                                this.props.navStore.isMintOptionSingle() ? NftMintStore.MINT_MODE_BACKEND : NftMintStore.MINT_MODE_LOCAL,
                                 this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
                                 this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
                                 this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),

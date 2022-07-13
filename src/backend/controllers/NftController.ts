@@ -1,5 +1,7 @@
 import MintNftReq from '../requests/network/requests/MintNftReq';
+import UploadImagesReq from '../requests/network/requests/UploadImagesReq';
 import MintNftRes from '../requests/network/responses/MintNftRes';
+import UploadImagesRes from '../requests/network/responses/UploadImagesRes';
 import Context from '../utilities/network/Context';
 
 export default class NftController {
@@ -16,4 +18,21 @@ export default class NftController {
         context.res.set(new MintNftRes(nftModels, txHash));
     }
 
+    async imagesUpload(context: Context) {
+        const servicesFactory = context.servicesFactory;
+        const payload = context.payload;
+
+        const req = new UploadImagesReq(payload.params);
+
+        const nftService = servicesFactory.getNftService();
+
+        const urls = req.files;
+        for (let i = 0; i < urls.length; i++) {
+            if (urls[i].includes(';base64,')) {
+                urls[i] = await nftService.imageUpload(urls[i]);
+            }
+        }
+        console.log(`urls::: ${urls}`)
+        context.res.set(new UploadImagesRes(urls));
+    }
 }

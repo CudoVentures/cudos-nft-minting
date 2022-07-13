@@ -12,5 +12,5 @@ export default class NftApiH extends Api {
 NftApiH.URL = `${Config.URL.API}/nft`;
 NftApiH.Actions = {
     MINT: 'a',
-    IMAGE_UPLOAD: 'b',
+    IMAGES_UPLOAD: 'b',
 };
