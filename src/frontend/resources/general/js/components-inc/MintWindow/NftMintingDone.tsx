@@ -17,22 +17,20 @@ interface Props {
 }
 
 class NftMintingDone extends React.Component<Props> {
+
     render() {
+        const nftModel = this.props.nftMintStore.nfts[0];
+
         return (
             <div className={'NftMintingDone FlexColumn FlexGrow'}>
                 <div className={'SVG Icon Size Background'} dangerouslySetInnerHTML={{ __html: SvgMintingWaves }}></div>
                 <div className={'NftBoxRow FlexRow'}>
-                    {this.props.nftMintStore.mintedNfts.map((index) => {
-                        const nft = this.props.nftMintStore.nfts[index];
-                        return (
-                            <div key={nft.tokenId} className={'NftBox FlexColumn'}>
-                                <div className={'NftImageHolder'}>
-                                    <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl())} />
-                                </div>
-                                <div className={'NftName'}>{nft.name}</div>
-                            </div>
-                        )
-                    })}
+                    <div key={nftModel.tokenId} className={'NftBox FlexColumn'}>
+                        <div className={'NftImageHolder'}>
+                            <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl())} />
+                        </div>
+                        <div className={'NftName'}>{nftModel.name}</div>
+                    </div>
                 </div>
                 <div className={'Heading4'} >Minting is Done!</div>
                 <div className={'Description'}>Minting was successful! Check the details from the link below.</div>

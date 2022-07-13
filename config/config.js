@@ -201,6 +201,7 @@ const Config = {
         CHAIN_NAME: process.env.CHAIN_NAME,
         CHAIN_ID: process.env.CHAIN_ID,
         RPC: process.env.RPC,
+        RPC_BACKEND: process.env.RPC.replace('localhost', 'host.docker.internal'),
         API: process.env.API,
         GAS_PRICE: process.env.GAS_PRICE,
         DENOM: 'acudos',
