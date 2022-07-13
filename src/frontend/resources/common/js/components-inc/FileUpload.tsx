@@ -16,7 +16,7 @@ interface State {
     dragging: boolean;
 }
 
-class FilesUpload extends React.Component<Props, State> {
+class FilesUpload extends React.Component < React.PropsWithChildren < Props >, State > {
 
     dragTimeout: NodeJS.Timeout;
 
@@ -98,7 +98,7 @@ class FilesUpload extends React.Component<Props, State> {
             <div className={'FilesUpload'} >
                 <div className={`FileUploadField Transition ${S.CSS.getActiveClassName(this.state.dragging)}`} onDrop={this.onDrop} >
                     {this.props.children}
-                    < UploaderComponent
+                    <UploaderComponent
                         ref={this.nodes.uploader}
                         id={this.props.uploadId}
                         params={this.props.uploadParams} />

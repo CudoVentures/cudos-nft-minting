@@ -19,6 +19,8 @@ import NftModel from '../../../../common/js/models/NftModel';
 import SvgUploadFile from '../../../../common/svg/upload-file.svg';
 import SvgTrash from '../../../../common/svg/trash.svg';
 import NftStepWrapper from './NftStepWrapper';
+import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
+import InputStateHelper from '../../../../common/js/helpers/InputStateHelper';
 
 interface Props {
     navStore: NavStore
@@ -26,34 +28,51 @@ interface Props {
     alertStore: AlertStore
 }
 
+const FIELDS = ['link'];
+
 class UploadFiles extends React.Component<Props> {
+
     tableHelper: TableHelper;
+    uploadLinkInputStateHelper: InputStateHelper;
 
     constructor(props: Props) {
         super(props);
 
-        this.tableHelper = new TableHelper(
-            S.NOT_EXISTS,
-            [],
-            () => { },
-        );
+        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], () => { });
+
+        this.uploadLinkInputStateHelper = new InputStateHelper(FIELDS, (key, value) => {
+            switch (key) {
+                case FIELDS[0]:
+                    this.props.nftMintStore.imageUrlInputValue = value;
+                    break;
+                default:
+            }
+        });
     }
 
     makeImageUploadParams() {
         return {
             'maxSize': 1 << 20, // 1MB
+            'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .webp, webm, mp3, wav, ogg, gltf, glb',
             'controller': '#',
             'progressWindow': false,
             'onExceedLimit': () => {
                 this.props.alertStore.show('Max files size is 1MB');
             },
-            onUpload: (base64File, response, files: any[], i: number) => {
+            'onExtError': () => {
+                this.props.alertStore.show('You have selected an unsupported file type');
+            },
+            'onUpload': (base64File, response, files: any[], i: number) => {
                 this.props.nftMintStore.addNewImage(base64File, files[i].name, files[i].type, files[i].size);
             },
         }
     }
 
     onClickUploadFile = async () => {
+        if (this.uploadLinkInputStateHelper.getValues() === null) {
+            return;
+        }
+
         try {
             await this.props.nftMintStore.getImageFromUrl();
         } catch (e) {
@@ -61,7 +80,15 @@ class UploadFiles extends React.Component<Props> {
         }
     }
 
+    onChangeUploadUrl = (value: string) => {
+        this.props.nftMintStore.imageUrlInputValue = value;
+    }
+
     render() {
+        this.uploadLinkInputStateHelper.updateValues([
+            this.props.nftMintStore.imageUrlInputValue,
+        ]);
+
         return (
             <NftStepWrapper
                 className = { 'UploadFiles' }
@@ -85,31 +112,28 @@ class UploadFiles extends React.Component<Props> {
                                 Drop file here
                             </div>
                         </div>
-
                     </FileUpload>
-                    <div className={'FileFromLink FlexColumn'}>
-                        <div className={'BoxHeading'}>Add file from link</div>
-                        <div className={'FlexRow'}>
-                            <Input
-                                className={'LinkInput'}
-                                inputType={InputType.TEXT}
-                                placeholder={'www.mywebsite.com/item'}
-                                value={this.props.nftMintStore.imageUrlInputValue}
-                                margin={InputMargin.NORMAL}
-                                onChange={(event: string) => this.props.nftMintStore.onImageUrlChange(event)}
-                            />
-
-                            <Actions height={Actions.HEIGHT_52}>
-                                <Button
-                                    color={Button.COLOR_SCHEME_1}
-                                    radius={Button.RADIUS_MAX}
-                                    type={Button.TYPE_ROUNDED}
-                                    padding={Button.PADDING_24}
-                                    onClick={this.onClickUploadFile}
-                                >Upload File</Button>
-                            </Actions>
-                        </div>
-                    </div>
+                    <LayoutBlock className = { 'FileFromLink' } direction = { LayoutBlock.DIRECTION_ROW } >
+                        <Input
+                            label = { 'Add file from link' }
+                            className={'LinkInput'}
+                            inputType={InputType.TEXT}
+                            placeholder={'www.mywebsite.com/item'}
+                            value = { this.uploadLinkInputStateHelper.values.get(FIELDS[0]) }
+                            error = { this.uploadLinkInputStateHelper.errors.get(FIELDS[0]) }
+                            onChange = {this.uploadLinkInputStateHelper.onChanges.get(FIELDS[0])}
+                            margin={InputMargin.NORMAL}/>
+                        <Actions className = { 'UploadActions' } height={Actions.HEIGHT_42}>
+                            <Button
+                                color={Button.COLOR_SCHEME_1}
+                                radius={Button.RADIUS_MAX}
+                                type={Button.TYPE_ROUNDED}
+                                padding={Button.PADDING_24}
+                                onClick={this.onClickUploadFile}>
+                                Upload File
+                            </Button>
+                        </Actions>
+                    </LayoutBlock>
                 </div>
                 <Table
                     className={'ImageFilesTable'}
