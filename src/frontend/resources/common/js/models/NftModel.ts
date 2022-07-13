@@ -7,25 +7,29 @@ export default class NftModel implements Filterable {
     denomId: string;
     tokenId: string;
     name: string;
-    uri: string;
-    fileName: string;
-    type: string;
-    sizeBytes: number;
+    url: string;
     data: string;
     recipient: string;
     approvedAddresses: string[];
+
+    fileName: string;
+    type: string;
+    sizeBytes: number;
+    previewUrl: string;
 
     constructor() {
         this.denomId = S.Strings.EMPTY;
         this.tokenId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
-        this.uri = S.Strings.EMPTY;
-        this.fileName = S.Strings.EMPTY;
-        this.type = S.Strings.EMPTY;
-        this.sizeBytes = S.NOT_EXISTS;
+        this.url = S.Strings.EMPTY;
         this.data = S.Strings.EMPTY;
         this.recipient = S.Strings.EMPTY;
         this.approvedAddresses = [];
+
+        this.fileName = S.Strings.EMPTY;
+        this.type = S.Strings.EMPTY;
+        this.sizeBytes = S.NOT_EXISTS;
+        this.previewUrl = S.Strings.EMPTY;
 
         makeAutoObservable(this);
     }
@@ -56,6 +60,16 @@ export default class NftModel implements Filterable {
         return this.name;
     }
 
+    getPreviewUrl(): string {
+        if (this.previewUrl === S.Strings.EMPTY) {
+            fetch(this.url).then((res) => {
+                const contentType = res.headers.get('content-type');
+            })
+        }
+
+        return this.previewUrl;
+    }
+
     clone(): NftModel {
         return Object.assign(new NftModel(), this);
     }
@@ -65,7 +79,7 @@ export default class NftModel implements Filterable {
             'denomId': this.denomId,
             'tokenId': this.tokenId,
             'name': this.name,
-            'uri': this.uri,
+            'url': this.url,
             'data': this.data,
             'recipient': this.recipient,
             'approvedAddresses': this.approvedAddresses,
@@ -82,7 +96,7 @@ export default class NftModel implements Filterable {
         model.denomId = json.denomId ?? model.denomId;
         model.tokenId = json.tokenId ?? model.tokenId;
         model.name = json.name ?? model.name;
-        model.uri = json.uri ?? model.uri;
+        model.url = json.url ?? model.url;
         model.data = json.data ?? model.data;
         model.recipient = json.recipient ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;

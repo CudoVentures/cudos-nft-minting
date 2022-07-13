@@ -31,7 +31,7 @@ class NftCollectionsViewer extends React.Component < Props > {
                             key = { nftCollectionModel.denomId }
                             className = { 'NftCollectionModel' }
                             onClick = { this.onClickCollection.bind(this, nftCollectionModel) } >
-                            <div className = { 'NftCollectionImg ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModels[0].uri) } />
+                            <div className = { 'NftCollectionImg ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModels[0].url) } />
                             <div className = { 'NftCollectionName' } title = { nftCollectionModel.name } > { nftCollectionModel.name } </div>
                         </div>
                     )

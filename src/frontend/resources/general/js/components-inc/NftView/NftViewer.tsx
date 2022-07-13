@@ -133,7 +133,7 @@ class NftViewer extends React.Component < Props > {
         if (nftModel !== null) {
             return (
                 <div>
-                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.uri) } />
+                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.url) } />
                 </div>
             )
         }
@@ -142,7 +142,7 @@ class NftViewer extends React.Component < Props > {
             const nftModels = this.props.myNftsStore.getNftsInCollection(nftCollectionModel.denomId);
             return (
                 <div>
-                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModels[0].uri) } />
+                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModels[0].url) } />
                 </div>
             )
         }

@@ -167,7 +167,7 @@ class UploadFiles extends React.Component<Props> {
             cells = cells.concat([
                 Table.cell(
                     <div className={'FlexRow'}>
-                        <img className={'Image'} src={nft.uri} />
+                        <img className={'Image'} src={nft.url} />
                         {nft.fileName}
                     </div>,
                 ),
