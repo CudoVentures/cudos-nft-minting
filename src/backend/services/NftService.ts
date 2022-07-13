@@ -19,7 +19,6 @@ export default class NftService {
     }
 
     async mintNft(nftModels: NftModel[]): Promise<any> {
-        throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to mint nfts:');
         const missingUrl = nftModels.find((nft: NftModel) => nft.url === '' || !nft.url);
         const missingDenom = nftModels.find((nft: NftModel) => nft.denomId === '' || !nft.denomId);
         const missingName = nftModels.find((nft: NftModel) => nft.name === '' || !nft.name);

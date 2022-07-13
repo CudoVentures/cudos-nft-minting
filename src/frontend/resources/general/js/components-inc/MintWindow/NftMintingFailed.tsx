@@ -4,11 +4,13 @@ import Config from '../../../../../../../builds/dev-generated/Config';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 import NavStore from '../../../../common/js/stores/NavStore';
+import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import SvgSuccessfullWaves from '../../../../common/svg/unsuccessful-waves.svg';
 import '../../../css/components-inc/NftMint/nft-minting-failed.css';
 
 interface Props {
     navStore: NavStore;
+    nftMintStore: NftMintStore;
 }
 
 class NftMintingFailed extends React.Component<Props> {
@@ -26,7 +28,12 @@ class NftMintingFailed extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_1}
                         padding={Button.PADDING_82}
-                        onClick={this.props.navStore.selectFirstMintStep.bind(this.props.navStore)}
+                        onClick={this.props.nftMintStore.mintNfts.bind(
+                            this.props.nftMintStore,
+                            this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
+                            this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
+                            this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
+                        )}
                     >
                         Try Again
                     </Button>
@@ -40,9 +47,9 @@ class NftMintingFailed extends React.Component<Props> {
                         Go Back
                     </Button>
                 </Actions>
-            </div>
+            </div >
         )
     }
 }
 
-export default inject('navStore')((observer(NftMintingFailed)));
+export default inject('nftMintStore', 'navStore')((observer(NftMintingFailed)));
