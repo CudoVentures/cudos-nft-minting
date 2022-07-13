@@ -109,7 +109,7 @@ export default class MyNftsStore {
     }
 
     filter = () => {
-        this.filterredNftModels = FilterHelper.filter(this.nftModels, this.filterString) as NftModel[];
+        this.filterredNftModels = FilterHelper.filter(this.getNftsInCollection(Config.CUDOS_NETWORK.NFT_DENOM_ID), this.filterString) as NftModel[];
         this.filteredNftCollectionModels = FilterHelper.filter(this.nftCollectionModels, this.filterString) as NftCollectionModel[];
     }
 
