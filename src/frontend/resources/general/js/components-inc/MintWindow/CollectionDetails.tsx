@@ -12,6 +12,7 @@ import SvgLinkBox from '../../../../common/svg/link-box.svg';
 import NftSidePreview from '../NftSidePreview';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
+import NftStepWrapper from './NftStepWrapper';
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -33,8 +34,10 @@ class CollectionDetails extends React.Component<Props, State> {
 
     render() {
         return (
-            <div className={'CollectionDetails'}>
-                <div className={'Heading3'}>Collection Details</div>
+            <NftStepWrapper
+                className = { 'CollectionDetails' }
+                stepNumber = { `Step ${this.props.navStore.getMintStepShowNumber()}` }
+                stepName = { 'Collection Details' } >
                 <div className={'FlexRow DetailsHolder'}>
                     <NftSidePreview
                         imageUrl={''}
@@ -81,8 +84,8 @@ class CollectionDetails extends React.Component<Props, State> {
                             </Actions>
                         }
                     </LayoutBlock>
-                </div >
-            </div >
+                </div>
+            </NftStepWrapper>
         )
     }
 }

@@ -12,6 +12,7 @@ import Button from '../../../../common/js/components-inc/Button';
 import Popover from '../../../../common/js/components-inc/Popover';
 
 import SvgInfo from '../../../../common/svg/info.svg';
+import NftStepWrapper from './NftStepWrapper';
 
 interface Props {
     nftMintStore: NftMintStore
@@ -53,8 +54,10 @@ class NftFinish extends React.Component<Props, State> {
         const nfts: NftModel[] = this.props.nftMintStore.nfts;
 
         return (
-            <div className={'NftFinish'}>
-                <div className={'Heading3'}>Summarised Details</div>
+            <NftStepWrapper
+                className = { 'NftFinish' }
+                stepNumber = { `Step ${this.props.navStore.getMintStepShowNumber()}` }
+                stepName = { 'Summarised Details' } >
                 <div className={'FlexRow NftFinishHolder'}>
                     <NftSidePreview
                         imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].uri : ''}
@@ -126,8 +129,8 @@ class NftFinish extends React.Component<Props, State> {
                             >{this.props.navStore.isMintOptionSingle() ? 'Mint NFT' : 'Mint Collection NFTs'}</Button>
                         </Actions>
                     </div>
-                </div >
-            </div >
+                </div>
+            </NftStepWrapper>
         )
     }
 }

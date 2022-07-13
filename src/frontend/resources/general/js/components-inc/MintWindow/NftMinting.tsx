@@ -10,7 +10,7 @@ export default class NftMinting extends React.Component {
                 <div className={'SVG Icon Size Background'} dangerouslySetInnerHTML={{ __html: SvgMintingWaves }}></div>
                 <div className={'Heading4'} >Minting in progress...</div>
                 <div className={'Description'}>Please don’t close this window. It will be ready in a second.</div>
-            </div >
+            </div>
         )
     }
 }

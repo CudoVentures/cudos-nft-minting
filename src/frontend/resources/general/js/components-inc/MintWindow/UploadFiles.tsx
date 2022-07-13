@@ -18,6 +18,7 @@ import NftModel from '../../../../common/js/models/NftModel';
 
 import SvgUploadFile from '../../../../common/svg/upload-file.svg';
 import SvgTrash from '../../../../common/svg/trash.svg';
+import NftStepWrapper from './NftStepWrapper';
 
 interface Props {
     navStore: NavStore
@@ -62,13 +63,14 @@ class UploadFiles extends React.Component<Props> {
 
     render() {
         return (
-            <div className={'UploadFiles'}>
-                <div className={'Heading3'}>Upload File</div>
+            <NftStepWrapper
+                className = { 'UploadFiles' }
+                stepNumber = { `Step ${this.props.navStore.getMintStepShowNumber()}` }
+                stepName = { 'Upload File' } >
                 <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(!this.props.nftMintStore.isNftsEmpty() && this.props.navStore.isMintOptionSingle())}`}>
                     <FileUpload
                         uploadId={'OptionChoosePage'}
-                        uploadParams={this.makeImageUploadParams()}
-                    >
+                        uploadParams={this.makeImageUploadParams()}>
                         <div className={'UploadFileBox FlexRow'}>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadFile }}></div>
                             <div className={'BoxText FlexColumn'}>
@@ -136,7 +138,7 @@ class UploadFiles extends React.Component<Props> {
                         </Button>
                     </Actions>
                 }
-            </div >
+            </NftStepWrapper>
         )
     }
 

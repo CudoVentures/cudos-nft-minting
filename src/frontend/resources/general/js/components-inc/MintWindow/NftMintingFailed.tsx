@@ -40,7 +40,7 @@ class NftMintingFailed extends React.Component<Props> {
                         Go Back
                     </Button>
                 </Actions>
-            </div >
+            </div>
         )
     }
 }
