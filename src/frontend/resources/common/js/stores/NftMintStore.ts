@@ -11,6 +11,9 @@ import WalletStore from './WalletStore';
 
 export default class NftMintStore {
 
+    static MINT_MODE_LOCAL: number = 1;
+    static MINT_MODE_BACKEND: number = 2;
+
     nftApi: NftApi;
     infuraApi: InfuraApi;
     walletStore: WalletStore;
@@ -96,6 +99,7 @@ export default class NftMintStore {
     }
 
     async mintNfts(
+        local: number,
         callBefore: () => void,
         success: () => void,
         error: () => void,
@@ -105,13 +109,11 @@ export default class NftMintStore {
         const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
 
         if (missingUri !== undefined) {
-            console.log('in service: 1')
             error();
             return;
         }
 
         if (missingName !== undefined) {
-            console.log('in service: 4')
             error();
             return;
         }
@@ -122,14 +124,19 @@ export default class NftMintStore {
             }
 
             if (nft.denomId === S.Strings.EMPTY) {
-                nft.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+                if (local === NftMintStore.MINT_MODE_LOCAL) {
+                    nft.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+                } else if (local === NftMintStore.MINT_MODE_BACKEND) {
+                    nft.denomId = this.denomId;
+                }
             }
 
             // TODO: get real checksum
-            nft.data = 'some checksum'
+            // nft.data = 'some checksum'
         })
 
         try {
+
             await this.nftApi.mintNfts(
                 this.nfts,
                 (nfts: NftModel[], txHash: string) => {
@@ -140,13 +147,13 @@ export default class NftMintStore {
                 },
                 error,
             );
-
         } catch (e) {
             error();
         }
     }
 
-    async mintSingleNft() {
+    private async mintNftsFrontend() {
+        const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
 
     }
 

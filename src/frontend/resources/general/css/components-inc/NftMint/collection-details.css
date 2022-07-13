@@ -62,3 +62,10 @@
     margin-left: 12px;
     cursor: pointer;
 }
+
+.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage.Fail {
+    border-color: var(--color-red);
+}
+.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage.Fail .Heading .SVG {
+    fill: var(--color-red);
+}
