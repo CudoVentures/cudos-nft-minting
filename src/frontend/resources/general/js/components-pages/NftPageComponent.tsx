@@ -36,16 +36,6 @@ export default class NftPageComponent extends ContextPageComponent<Props> {
         super(props);
     }
 
-    async componentDidMount(): Promise<void> {
-        super.componentDidMount();
-
-        try {
-            await this.props.nftMintStore.init();
-        } catch (e) {
-            this.props.alertStore.show('Failed to connect to node.');
-        }
-    }
-
     getPageLayoutComponentCssClassName() {
         return 'PageNft';
     }

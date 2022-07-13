@@ -28,7 +28,7 @@ class NftModelsViewer extends React.Component<Props> {
                 {this.props.nftModels.map((nftModel: NftModel) => {
                     return (
                         <div
-                            key={nftModel.tokenId}
+                            key = { nftModel.getIdsUniquePair() }
                             className={'NftModel'}
                             onClick={this.onClickNft.bind(this, nftModel)} >
                             <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />

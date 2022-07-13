@@ -59,6 +59,7 @@ class UploadFiles extends React.Component<Props> {
             'maxSize': 1 << 20, // 1MB
             'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .webp, webm, mp3, wav, ogg, gltf, glb',
             'controller': '#',
+            'multi': this.props.navStore.isMintOptionMultiple(),
             'progressWindow': false,
             'onExceedLimit': () => {
                 this.props.alertStore.show('Max files size is 1MB');

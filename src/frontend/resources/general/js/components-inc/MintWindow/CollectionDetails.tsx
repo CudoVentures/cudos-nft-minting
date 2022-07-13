@@ -56,28 +56,30 @@ class CollectionDetails extends React.Component<Props> {
                             <div className={'Text'}>The cover image of the collection will be randomly selected from the uploaded NFTs in it.</div>
                         </div>
 
-                        {!this.props.navStore.isCollectionMintedNone()
-                            ? <div className={`SuccessMessage FlexColumn ${this.props.navStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
+                        {this.props.navStore.isCollectionMintedNone() === false ? (
+                            <div className={`ResultMessage FlexColumn ${this.props.navStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
                                 <div className={'Heading FlexRow'}>
-
-                                    {this.props.navStore.isCollectionMintedFail()
-                                        ? (<>
+                                    { this.props.navStore.isCollectionMintedFail() ? (
+                                        <>
                                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCloseBtnOutlined }} />
-                                            <div className={'ErrorMessageText'}>Collection minting failed!</div>
-                                        </>)
-                                        : (<>
+                                            <div>Collection minting failed!</div>
+                                        </>
+                                    ) : (
+                                        <>
                                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
-                                            <div className={'SuccessMessageText'}>Collection Was Minted Successfully!</div>
-                                        </>)
-                                    }
+                                            <div>Collection Was Minted Successfully!</div>
+                                        </>
+                                    ) }
                                 </div>
-                                {this.props.navStore.isCollectionMintedSuccess()
-                                    && <div className={'FlexRow TransacionInfo'}>
+                                { this.props.navStore.isCollectionMintedSuccess() && (
+                                    <div className={'FlexRow TransacionInfo'}>
                                         <div className={'InfoMessage'}>Check transaction details in Explorer</div>
                                         <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
-                                    </div>}
+                                    </div>
+                                ) }
                             </div>
-                            : <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
+                        ) : (
+                            <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
                                 <Button
                                     type={Button.TYPE_ROUNDED}
                                     radius={Button.RADIUS_MAX}
@@ -88,10 +90,11 @@ class CollectionDetails extends React.Component<Props> {
                                         this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
                                         this.props.navStore.collectionMintSuccess.bind(this.props.navStore),
                                         this.props.navStore.collectionMintFail.bind(this.props.navStore),
-                                    )}
-                                >Mint Collection</Button>
+                                    )}>
+                                    Mint Collection
+                                </Button>
                             </Actions>
-                        }
+                        ) }
                     </LayoutBlock>
                 </div>
             </NftStepWrapper >

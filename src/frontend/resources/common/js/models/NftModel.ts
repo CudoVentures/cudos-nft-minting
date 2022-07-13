@@ -68,6 +68,10 @@ export default class NftModel implements Filterable {
         return this.name;
     }
 
+    getIdsUniquePair() {
+        return `${this.denomId}-${this.tokenId}`;
+    }
+
     getPreviewUrl(workerQueueHelper: WorkerQueueHelper): string {
         if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
             workerQueueHelper.pushAndExecute(new Runnable(async () => {
@@ -76,11 +80,7 @@ export default class NftModel implements Filterable {
             }, (type: string) => {
                 this.type = type;
                 this.updatePreviewUrl();
-            }))
-            // fetch(this.url).then((res) => {
-            //     this.type = res.headers.get('content-type');
-            //     this.updatePreviewUrl();
-            // });
+            }));
         }
 
         return this.previewUrl;

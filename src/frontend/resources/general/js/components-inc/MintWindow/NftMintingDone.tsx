@@ -30,7 +30,7 @@ class NftMintingDone extends React.Component<Props> {
             <div className={'NftMintingDone FlexColumn FlexGrow'}>
                 <div className={'SVG Icon Size Background'} dangerouslySetInnerHTML={{ __html: SvgMintingWaves }}></div>
                 <div className={'NftBoxRow FlexRow'}>
-                    <div key={nftModel.tokenId} className={'NftBox FlexColumn'}>
+                    <div key = { nftModel.getIdsUniquePair() } className={'NftBox FlexColumn'}>
                         <div className={'NftImageHolder'}>
                             <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
                         </div>

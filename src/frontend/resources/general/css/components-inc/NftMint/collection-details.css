@@ -32,7 +32,7 @@
     margin-right: 28px;
 }
 
-.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage {
+.CollectionDetails .DetailsHolder .DetailsForm .ResultMessage {
     border: 2px solid var(--color-green);
     border-radius: 20px;
     padding: 20px;
@@ -40,32 +40,31 @@
     align-items: center;
 }
 
-.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .Heading {
-    fill: var(--color-green);
+.CollectionDetails .DetailsHolder .DetailsForm .ResultMessage .Heading {
     font-weight: 700;
     font-size: 20px;
-    margin-bottom: 19px;
 }
 
-.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .Heading .SVG {
+.CollectionDetails .DetailsHolder .DetailsForm .ResultMessage .Heading .SVG {
+    fill: var(--color-green);
     margin-right: 12px;
 }
 
-
-.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .TransacionInfo {
+.CollectionDetails .DetailsHolder .DetailsForm .ResultMessage .TransacionInfo {
     fill: var(--color-primary);
     font-weight: 600;
     font-size: 14px;
+    margin-top: 19px;
 }
 
-.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage .TransacionInfo .SVG {
+.CollectionDetails .DetailsHolder .DetailsForm .ResultMessage .TransacionInfo .SVG {
     margin-left: 12px;
     cursor: pointer;
 }
 
-.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage.Fail {
+.CollectionDetails .DetailsHolder .DetailsForm .ResultMessage.Fail {
     border-color: var(--color-red);
 }
-.CollectionDetails .DetailsHolder .DetailsForm .SuccessMessage.Fail .Heading .SVG {
+.CollectionDetails .DetailsHolder .DetailsForm .ResultMessage.Fail .Heading .SVG {
     fill: var(--color-red);
 }
