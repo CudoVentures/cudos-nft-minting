@@ -294,7 +294,8 @@ export default class NavStore {
             || (this.isMintStepDetails()
                 && (
                     (this.isMintOptionSingle()
-                        && this.nftMintStore.nfts[0].name !== S.Strings.EMPTY)
+                        && this.nftMintStore.nfts[0].name !== S.Strings.EMPTY
+                        && (this.nftMintStore.isRecipientFieldActive() === false || this.nftMintStore.nfts[0].recipient !== S.Strings.EMPTY))
                     || (this.isMintOptionMultiple()
                         && this.nftMintStore.nfts.find((nft: NftModel) => nft.name === S.Strings.EMPTY) === undefined)
                 )
