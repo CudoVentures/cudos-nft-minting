@@ -34,6 +34,19 @@ export default class NftCollectionModel implements Filterable {
 
         const model = new NftCollectionModel();
 
+        model.denomId = json.denomId ?? model.denomId;
+        model.name = json.name ?? model.name;
+
+        return model;
+    }
+
+    static fromChain(json: any): NftCollectionModel {
+        if (json === null) {
+            return null;
+        }
+
+        const model = new NftCollectionModel();
+
         model.denomId = json.id ?? model.denomId;
         model.name = json.name ?? model.name;
 

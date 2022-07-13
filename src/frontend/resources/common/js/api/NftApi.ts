@@ -32,7 +32,6 @@ export default class NftApi extends AbsApi {
     }
 
     async fetchNftCollection(denomId: string, callback: (a_: NftCollectionModel | null, b_: NftModel[] | null) => void): Promise < void > {
-        console.log('invoke', denomId);
         let nftCollectionModel = null;
         let nftModels = null;
 
@@ -44,10 +43,9 @@ export default class NftApi extends AbsApi {
             const resCollection = await this.queryClient.getNftCollection(denomId);
             if (resCollection.collection !== undefined) {
                 if (resCollection.collection.denom !== undefined) {
-                    console.log(resCollection.collection.denom);
-                    nftCollectionModel = NftCollectionModel.fromJson(resCollection.collection.denom);
+                    nftCollectionModel = NftCollectionModel.fromChain(resCollection.collection.denom);
                     nftModels = resCollection.collection.nfts.map((nftJson) => {
-                        const nftModel = NftModel.fromJSON(nftJson);
+                        const nftModel = NftModel.fromChain(nftJson);
                         nftModel.denomId = nftCollectionModel.denomId;
                         return nftModel;
                     });

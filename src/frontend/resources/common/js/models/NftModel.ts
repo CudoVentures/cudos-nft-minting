@@ -117,10 +117,27 @@ export default class NftModel implements Filterable {
 
         const model = new NftModel();
 
-        // model.denomId = json.denomId ?? model.denomId;
+        model.denomId = json.denomId ?? model.denomId;
         model.tokenId = json.id ?? model.tokenId;
         model.name = json.name ?? model.name;
         model.url = json.url ?? model.url;
+        model.data = json.data ?? model.data;
+        model.recipient = json.recipient ?? model.recipient;
+        model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
+
+        return model;
+    }
+
+    static fromChain(json): NftModel {
+        if (json === null) {
+            return null;
+        }
+
+        const model = new NftModel();
+
+        model.tokenId = json.id ?? model.tokenId;
+        model.name = json.name ?? model.name;
+        model.url = json.uri ?? model.url;
         model.data = json.data ?? model.data;
         model.recipient = json.recipient ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
