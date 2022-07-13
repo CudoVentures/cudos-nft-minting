@@ -267,10 +267,12 @@ export default class NavStore {
     }
 
     collectionMintSuccess() {
+        this.mintStep = NavStore.STEP_COLLECTION_DETAILS;
         this.collectionMinted = NavStore.COLLECTION_MINT_SUCCESS;
     }
 
     collectionMintFail() {
+        this.mintStep = NavStore.STEP_COLLECTION_DETAILS;
         this.collectionMinted = NavStore.COLLECTION_MINT_FAIL;
     }
 

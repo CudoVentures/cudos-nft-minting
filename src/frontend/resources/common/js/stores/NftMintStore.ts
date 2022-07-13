@@ -74,7 +74,6 @@ export default class NftMintStore {
                 GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
             );
 
-            // TODO: get denom id from txRes
             const log = JSON.parse(txRes.rawLog);
             const attributeEvent = log[0].events.find((event: any) => event.type === 'issue_denom');
 
