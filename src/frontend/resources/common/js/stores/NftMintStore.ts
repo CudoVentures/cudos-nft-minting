@@ -134,7 +134,6 @@ export default class NftMintStore {
                     this.nfts,
                     (txHash: string) => {
                         this.transactionHash = txHash;
-                        this.myNftsStore.onMintNft(null, this.nfts);
                         success();
                     },
                     error,
