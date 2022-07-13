@@ -15,7 +15,7 @@ interface Props {
     nftModels: NftModel[];
 }
 
-class NftModelsViewer extends React.Component < Props > {
+class NftModelsViewer extends React.Component<Props> {
 
     onClickNft(nftModel: NftModel) {
         this.props.myNftsStore.markNft(nftModel);
@@ -23,20 +23,19 @@ class NftModelsViewer extends React.Component < Props > {
 
     render() {
         const appStore = this.props.appStore;
-
         return (
-            <div className = { 'NftModelsViewer' } >
-                { this.props.nftModels.map((nftModel: NftModel) => {
+            <div className={'NftModelsViewer'} >
+                {this.props.nftModels.map((nftModel: NftModel) => {
                     return (
                         <div
-                            key = { nftModel.tokenId }
-                            className = { 'NftModel' }
-                            onClick = { this.onClickNft.bind(this, nftModel) } >
-                            <div className = { 'NftImg ImgCoverNode Transition' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper)) } />
-                            <div className = { 'NftName' } title = { nftModel.name } > { nftModel.name } </div>
+                            key={nftModel.tokenId}
+                            className={'NftModel'}
+                            onClick={this.onClickNft.bind(this, nftModel)} >
+                            <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
+                            <div className={'NftName'} title={nftModel.name} > {nftModel.name} </div>
                         </div>
                     )
-                }) }
+                })}
             </div>
         )
     }
