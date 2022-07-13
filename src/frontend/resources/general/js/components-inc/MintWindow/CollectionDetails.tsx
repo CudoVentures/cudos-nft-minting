@@ -41,10 +41,7 @@ class CollectionDetails extends React.Component<Props> {
                 stepNumber={`Step ${this.props.navStore.getMintStepShowNumber()}`}
                 stepName={'Collection Details'} >
                 <div className={'FlexRow DetailsHolder'}>
-                    <NftSidePreview
-                        imageUrl={''}
-                        name={this.props.nftMintStore.collectionName}
-                    />
+                    <NftSidePreview imageUrl={''} name={this.props.nftMintStore.collectionName} />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'DetailsForm'}>
                         <Input
                             className={'CollectionName'}
@@ -52,8 +49,7 @@ class CollectionDetails extends React.Component<Props> {
                             placeholder={'E.g. Cool NFT Collection'}
                             value={this.props.nftMintStore.collectionName}
                             readOnly={!this.props.navStore.isCollectionMintedNone()}
-                            onChange={this.onChangeCollectionName}
-                        />
+                            onChange={this.onChangeCollectionName} />
 
                         <div className={'Info FlexRow'}>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgInfo }} />
@@ -97,7 +93,7 @@ class CollectionDetails extends React.Component<Props> {
                             </Actions>
                         }
                     </LayoutBlock>
-                </div >
+                </div>
             </NftStepWrapper >
         )
     }
