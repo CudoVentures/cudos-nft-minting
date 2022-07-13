@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
 
 export default class AppStore {
 
@@ -6,7 +7,10 @@ export default class AppStore {
     disabledActionsCounter: number = 0;
     dimmer: number = 0;
 
+    workerQueueHelper: WorkerQueueHelper;
+
     constructor() {
+        this.workerQueueHelper = new WorkerQueueHelper();
         makeAutoObservable(this);
     }
 

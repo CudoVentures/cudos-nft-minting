@@ -7,6 +7,7 @@ import NftModel from '../models/NftModel';
 import NftApi from '../api/NftApi';
 import S from '../utilities/Main';
 import WalletStore from './WalletStore';
+import AppStore from './AppStore';
 
 const emptyStore = false;
 
@@ -16,6 +17,7 @@ export default class MyNftsStore {
     static PAGE_NFT_COLLECTIONS: number = 2;
 
     nftApi: NftApi;
+    appStore: AppStore;
     walletStore: WalletStore;
 
     nftModels: NftModel[];
@@ -33,8 +35,9 @@ export default class MyNftsStore {
     initialized: boolean;
     timeoutHelper: TimeoutHelper;
 
-    constructor(walletStore: WalletStore) {
+    constructor(appStore: AppStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
+        this.appStore = appStore;
         this.walletStore = walletStore;
 
         this.nftModels = [];

@@ -30,15 +30,16 @@ export interface PageComponentProps {
 export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = any> extends React.Component<Pr, St, SS> {
 
     static layout(componentNode: React.ReactNode) {
+        const appStore = new AppStore();
         const walletStore = new WalletStore();
-        const myNftsStore = new MyNftsStore(walletStore);
+        const myNftsStore = new MyNftsStore(appStore, walletStore);
         const nftMintStore = new NftMintStore(walletStore);
         const navStore = new NavStore(nftMintStore);
 
         ReactDOM.render(
             (
                 <Provider
-                    appStore={new AppStore()}
+                    appStore={appStore}
                     accountSessionStore={new AccountSessionStore()}
                     alertStore={new AlertStore()}
                     popupConnectWalletsStore={new PopupConnectWalletsStore()}

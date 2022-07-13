@@ -3,22 +3,24 @@ import { inject, observer } from 'mobx-react';
 
 import Config from '../../../../../../builds/dev-generated/Config';
 import S from '../../../common/js/utilities/Main';
+import ProjectUtils from '../../../common/js/ProjectUtils';
 import PopupSendAsGiftStore from '../../../common/js/stores/PopupSendAsGiftStore';
+import AppStore from '../../../common/js/stores/AppStore';
 
 import PopupWindow, { PopupWindowProps } from '../../../common/js/components-core/PopupWindow';
+import LoadingIndicator from '../../../common/js/components-core/LoadingIndicator';
+import Input from '../../../common/js/components-inc/Input';
+import Actions from '../../../common/js/components-inc/Actions';
+import Button from '../../../common/js/components-inc/Button';
 
 import SvgLoadingWaves from '../../../common/svg/loading-waves.svg';
 import SvgFinishedWaves from '../../../common/svg/finished-waves.svg';
 import SvgSuccessfulWaves from '../../../common/svg/unsuccessful-waves.svg';
 import SvgOpenUrl from '../../../common/svg/open-url.svg';
 import '../../css/components-popups/send-as-gift-popup.css';
-import ProjectUtils from '../../../common/js/ProjectUtils';
-import LoadingIndicator from '../../../common/js/components-core/LoadingIndicator';
-import Input from '../../../common/js/components-inc/Input';
-import Actions from '../../../common/js/components-inc/Actions';
-import Button from '../../../common/js/components-inc/Button';
 
 interface Props extends PopupWindowProps {
+    appStore: AppStore;
     popupStore: PopupSendAsGiftStore;
 }
 
@@ -70,6 +72,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
     }
 
     renderStatusInit() {
+        const appStore = this.props.appStore;
         const popupStore = this.props.popupStore;
         const nftModel = popupStore.nftModel;
         const display = popupStore.isStatusInit();
@@ -86,7 +89,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
                         <div className = { 'Title' } >Send NFT as a GIFT</div>
                         <div className = { 'SubTitle' } >Enter recepient address and they will receive it in their wallet.</div>
                         <div className = { 'NftPreviewCnt' } >
-                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl()) } />
+                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper)) } />
                             <div className = { 'NftData FlexColumn' } >
                                 <div className = { 'NftDataRow' } >
                                     <label>NFT Name</label>
@@ -145,6 +148,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
     }
 
     renderStatusDoneSuccess() {
+        const appStore = this.props.appStore;
         const popupStore = this.props.popupStore;
         const nftModel = popupStore.nftModel;
 
@@ -156,7 +160,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
                     <>
                         <div className = { 'SVG Size SvgIconBackground' } dangerouslySetInnerHTML = {{ __html: SvgLoadingWaves }} />
                         <div className = { 'NftPreviewCnt' } >
-                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl()) } />
+                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper)) } />
                             <div className = { 'NftName' } >{nftModel.name}</div>
                         </div>
                         <div className = { 'Title' } >Success!</div>
@@ -215,6 +219,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
 
 export default inject((stores) => {
     return {
+        appStore: stores.appStore,
         popupStore: stores.popupSendAsGiftStore,
     }
 })(observer(SendAsGiftPopup));

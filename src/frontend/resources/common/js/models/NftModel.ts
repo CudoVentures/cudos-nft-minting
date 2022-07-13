@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import Config from '../../../../../../builds/dev-generated/Config';
+import WorkerQueueHelper, { Runnable } from '../helpers/WorkerQueueHelper';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
 
@@ -67,12 +68,19 @@ export default class NftModel implements Filterable {
         return this.name;
     }
 
-    getPreviewUrl(): string {
+    getPreviewUrl(workerQueueHelper: WorkerQueueHelper): string {
         if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
-            fetch(this.url).then((res) => {
-                this.type = res.headers.get('content-type');
+            workerQueueHelper.pushAndExecute(new Runnable(async () => {
+                const res = await fetch(this.url);
+                return res.headers.get('content-type');
+            }, (type: string) => {
+                this.type = type;
                 this.updatePreviewUrl();
-            });
+            }))
+            // fetch(this.url).then((res) => {
+            //     this.type = res.headers.get('content-type');
+            //     this.updatePreviewUrl();
+            // });
         }
 
         return this.previewUrl;

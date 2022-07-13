@@ -1,31 +1,35 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
+import S from '../../../../common/js/utilities/Main';
+import Config from '../../../../../../../builds/dev-generated/Config';
+import NavStore from '../../../../common/js/stores/NavStore';
+import NftMintStore from '../../../../common/js/stores/NftMintStore';
+import AlertStore from '../../../../common/js/stores/AlertStore';
+import AppStore from '../../../../common/js/stores/AppStore';
+import NftModel from '../../../../common/js/models/NftModel';
+import TableHelper from '../../../../common/js/helpers/TableHelper';
+import InputStateHelper from '../../../../common/js/helpers/InputStateHelper';
+
 import Button from '../../../../common/js/components-inc/Button';
 import Input, { InputType, InputMargin } from '../../../../common/js/components-inc/Input';
 import Table from '../../../../common/js/components-inc/Table';
-import NavStore from '../../../../common/js/stores/NavStore';
-import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
-import TableHelper from '../../../../common/js/helpers/TableHelper';
-import S from '../../../../common/js/utilities/Main';
-import Config from '../../../../../../../builds/dev-generated/Config';
-import '../../../css/components-inc/NftMint/upload-files.css';
 import Actions from '../../../../common/js/components-inc/Actions';
-import AlertStore from '../../../../common/js/stores/AlertStore';
 import Checkbox from '../../../../common/js/components-inc/Checkbox';
 import FileUpload from '../../../../common/js/components-inc/FileUpload';
-import NftModel from '../../../../common/js/models/NftModel';
-
-import SvgUploadFile from '../../../../common/svg/upload-file.svg';
-import SvgTrash from '../../../../common/svg/trash.svg';
 import NftStepWrapper from './NftStepWrapper';
 import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
-import InputStateHelper from '../../../../common/js/helpers/InputStateHelper';
+
+import SvgTrash from '../../../../common/svg/trash.svg';
+import SvgUploadFile from '../../../../common/svg/upload-file.svg';
+import '../../../css/components-inc/NftMint/upload-files.css';
 
 interface Props {
-    navStore: NavStore
-    nftMintStore: NftMintStore
-    alertStore: AlertStore
+    appStore: AppStore;
+    navStore: NavStore;
+    nftMintStore: NftMintStore;
+    alertStore: AlertStore;
 }
 
 const FIELDS = ['link'];
@@ -176,6 +180,8 @@ class UploadFiles extends React.Component<Props> {
     }
 
     renderRows() {
+        const appStore = this.props.appStore;
+
         return this.props.nftMintStore.nfts.map((nft: NftModel, index: number) => {
             let cells = [];
 
@@ -191,7 +197,7 @@ class UploadFiles extends React.Component<Props> {
             cells = cells.concat([
                 Table.cell(
                     <div className={'FlexRow'}>
-                        <img className={'Image'} src={nft.getPreviewUrl()} />
+                        <img className={'Image'} src={nft.getPreviewUrl(appStore.workerQueueHelper)} />
                         {nft.fileName}
                     </div>,
                 ),
@@ -254,4 +260,4 @@ class UploadFiles extends React.Component<Props> {
     }
 }
 
-export default inject('alertStore', 'navStore', 'nftMintStore')((observer(UploadFiles)));
+export default inject('appStore', 'alertStore', 'navStore', 'nftMintStore')((observer(UploadFiles)));

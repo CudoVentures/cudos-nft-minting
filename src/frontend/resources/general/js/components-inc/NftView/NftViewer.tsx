@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 import PopupSendAsGiftStore from '../../../../common/js/stores/PopupSendAsGiftStore';
+import AppStore from '../../../../common/js/stores/AppStore';
 import NftModel from '../../../../common/js/models/NftModel';
 import NftCollectionModel from '../../../../common/js/models/NftCollectionModel';
 
@@ -15,6 +16,7 @@ import SvgTwitter from '../../../../common/svg/twitter.svg';
 import '../../../css/components-inc/NftView/nft-viewer.css'
 
 interface Props {
+    appStore: AppStore;
     popupSendAsGiftStore: PopupSendAsGiftStore;
     myNftsStore: MyNftsStore;
     nftModel?: NftModel;
@@ -128,12 +130,12 @@ class NftViewer extends React.Component < Props > {
     }
 
     renderPreview() {
-        const { nftModel, nftCollectionModel } = this.props;
+        const { appStore, nftModel, nftCollectionModel } = this.props;
 
         if (nftModel !== null) {
             return (
                 <div>
-                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl()) } />
+                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper)) } />
                 </div>
             )
         }
@@ -142,7 +144,7 @@ class NftViewer extends React.Component < Props > {
             const nftModels = this.props.myNftsStore.getNftsInCollection(nftCollectionModel.denomId);
             return (
                 <div>
-                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModels[0].getPreviewUrl()) } />
+                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModels[0].getPreviewUrl(appStore.workerQueueHelper)) } />
                 </div>
             )
         }
@@ -157,4 +159,4 @@ NftViewer.defaultProps = {
     nftCollectionModel: null,
 };
 
-export default inject('myNftsStore', 'popupSendAsGiftStore')(observer(NftViewer));
+export default inject('appStore', 'myNftsStore', 'popupSendAsGiftStore')(observer(NftViewer));

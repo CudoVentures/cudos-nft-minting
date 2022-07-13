@@ -5,6 +5,7 @@ import S from '../../../../common/js/utilities/Main';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import NavStore from '../../../../common/js/stores/NavStore';
 import WalletStore from '../../../../common/js/stores/WalletStore';
+import AppStore from '../../../../common/js/stores/AppStore';
 
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
@@ -16,9 +17,10 @@ import SvgInfo from '../../../../common/svg/info.svg';
 import '../../../css/components-inc/NftMint/nft-finish.css';
 
 interface Props {
-    nftMintStore: NftMintStore
-    navStore: NavStore
-    walletStore: WalletStore
+    nftMintStore: NftMintStore;
+    navStore: NavStore;
+    walletStore: WalletStore;
+    appStore: AppStore;
 }
 
 interface State {
@@ -77,12 +79,13 @@ class NftFinish extends React.Component<Props, State> {
     }
 
     renderSingleMintFinish(): any {
+        const appStore = this.props.appStore;
         const nfts = this.props.nftMintStore.nfts;
 
         return (
             <>
                 <NftSidePreview
-                    imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].getPreviewUrl() : ''}
+                    imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].getPreviewUrl(appStore.workerQueueHelper) : ''}
                     name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName} />
                 <div className={'FlexColumn FlexGrow'}>
                     <div className={'FlexColumn SummaryDetails'}>
@@ -163,4 +166,4 @@ class NftFinish extends React.Component<Props, State> {
         )
     }
 }
-export default inject('walletStore', 'navStore', 'nftMintStore')((observer(NftFinish)));
+export default inject('appStore', 'walletStore', 'navStore', 'nftMintStore')((observer(NftFinish)));

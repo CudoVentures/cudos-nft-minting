@@ -17,8 +17,10 @@ import NftStepWrapper from './NftStepWrapper';
 import SvgInfo from '../../../../common/svg/info.svg';
 import '../../../css/components-inc/NftMint/nft-details.css';
 import InputStateHelper from '../../../../common/js/helpers/InputStateHelper';
+import AppStore from '../../../../common/js/stores/AppStore';
 
 interface Props {
+    appStore: AppStore;
     nftMintStore: NftMintStore;
     navStore: NavStore;
 }
@@ -72,14 +74,16 @@ class NftDetails extends React.Component < Props, State > {
     }
 
     renderMultipleNftDetails() {
+        const appStore = this.props.appStore;
         const nfts: NftModel[] = this.props.nftMintStore.nfts;
+
         return (
             <div className={'CollectionModels'} >
                 {nfts.map((nft: NftModel, i: number) => (
                     <div
                         key={i}
                         className={'NftModel'}>
-                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl())} />
+                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl(appStore.workerQueueHelper))} />
                         <Input
                             className={'NameInput'}
                             inputType={InputType.TEXT}
@@ -95,6 +99,7 @@ class NftDetails extends React.Component < Props, State > {
     }
 
     renderSingleNftDetails() {
+        const appStore = this.props.appStore;
         const nftMintStore = this.props.nftMintStore;
         const nftModel = this.props.nftMintStore.nfts[0];
 
@@ -105,7 +110,7 @@ class NftDetails extends React.Component < Props, State > {
                 stepName = { 'NFT Details' } >
                 <div className={'FlexRow DetailsHolder'}>
                     <NftSidePreview
-                        imageUrl={nftModel.getPreviewUrl()}
+                        imageUrl={nftModel.getPreviewUrl(appStore.workerQueueHelper)}
                         name={nftModel.name} />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
                         <Input
@@ -150,4 +155,4 @@ class NftDetails extends React.Component < Props, State > {
     }
 }
 
-export default inject('navStore', 'nftMintStore')((observer(NftDetails)));
+export default inject('appStore', 'navStore', 'nftMintStore')((observer(NftDetails)));

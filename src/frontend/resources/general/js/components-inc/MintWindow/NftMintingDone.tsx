@@ -1,17 +1,21 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import Config from '../../../../../../../builds/dev-generated/Config';
+import ProjectUtils from '../../../../common/js/ProjectUtils';
+import AppStore from '../../../../common/js/stores/AppStore';
+import NftMintStore from '../../../../common/js/stores/NftMintStore';
+
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
-import ProjectUtils from '../../../../common/js/ProjectUtils';
 import NavStore from '../../../../common/js/stores/NavStore';
-import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import SvgMintingWaves from '../../../../common/svg/finished-waves.svg';
 import SvgLinkBox from '../../../../common/svg/link-box.svg';
 import SvgTwitter from '../../../../common/svg/twitter.svg';
 import '../../../css/components-inc/NftMint/nft-minting-done.css';
 
 interface Props {
+    appStore: AppStore;
     navStore: NavStore;
     nftMintStore: NftMintStore;
 }
@@ -19,6 +23,7 @@ interface Props {
 class NftMintingDone extends React.Component<Props> {
 
     render() {
+        const appStore = this.props.appStore;
         const nftModel = this.props.nftMintStore.nfts[0];
 
         return (
@@ -27,7 +32,7 @@ class NftMintingDone extends React.Component<Props> {
                 <div className={'NftBoxRow FlexRow'}>
                     <div key={nftModel.tokenId} className={'NftBox FlexColumn'}>
                         <div className={'NftImageHolder'}>
-                            <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl())} />
+                            <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
                         </div>
                         <div className={'NftName'}>{nftModel.name}</div>
                     </div>
@@ -58,4 +63,4 @@ class NftMintingDone extends React.Component<Props> {
     }
 }
 
-export default inject('nftMintStore', 'navStore')((observer(NftMintingDone)));
+export default inject('appStore', 'nftMintStore', 'navStore')((observer(NftMintingDone)));
