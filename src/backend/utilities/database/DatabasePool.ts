@@ -20,7 +20,7 @@ export default class DatabasePool {
         // });
     }
 
-    aquireConnection(): Promise < Database > {
+    aquireConnection(): Promise<Database> {
         // return new Promise < Database >((resolve, reject) => {
         //     this.pool.getConnection((er: MysqlError, dbc: PoolConnection) => {
         //         if (er) {
@@ -31,6 +31,7 @@ export default class DatabasePool {
         //         resolve(new Database(dbc));
         //     });
         // });
+        return null;
     }
 
     releaseConnection(db: Database): void {
@@ -38,7 +39,7 @@ export default class DatabasePool {
     }
 
     close() {
-        return new Promise < void >((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             // this.pool.end((er: MysqlError) => {
             //     // Do not use ER object.
             //     // Any access to it leads to nothing, abosutely nothing below the access itself is executed. It is like the event loop goes directly to the next iteration.

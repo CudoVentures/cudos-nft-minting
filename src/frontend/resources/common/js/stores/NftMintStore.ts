@@ -81,6 +81,21 @@ export default class NftMintStore {
         error: () => void,
     ): Promise<void> {
         callBefore();
+        const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
+        const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
+
+        if (missingUri !== undefined) {
+            console.log('in service: 1')
+            error();
+            return;
+        }
+
+        if (missingName !== undefined) {
+            console.log('in service: 4')
+            error();
+            return;
+        }
+
         this.nfts.forEach((nft: NftModel) => {
             if (nft.recipient === S.Strings.EMPTY) {
                 nft.recipient = this.walletStore.keplrWallet.accountAddress;
@@ -95,12 +110,16 @@ export default class NftMintStore {
         })
 
         try {
-            await this.nftApi.mintNfts(this.nfts, (nfts: NftModel[], txHash: string) => {
-                this.nfts = nfts
-                this.transactionHash = txHash;
+            await this.nftApi.mintNfts(
+                this.nfts,
+                (nfts: NftModel[], txHash: string) => {
+                    this.nfts = nfts
+                    this.transactionHash = txHash;
 
-                success();
-            })
+                    success();
+                },
+                error,
+            );
 
         } catch (e) {
             error();

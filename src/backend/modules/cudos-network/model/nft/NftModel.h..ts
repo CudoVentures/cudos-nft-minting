@@ -4,7 +4,7 @@ export default class NftModelH {
     denomId: string;
     tokenId: string;
     name: string;
-    uri: string;
+    url: string;
     data: string;
     recipient: string;
     approvedAddresses: string[];

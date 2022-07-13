@@ -5,6 +5,7 @@ import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 import { create, IPFSHTTPClient } from 'ipfs-http-client';
 import StateException from '../utilities/network/StateException';
 import Response from '../utilities/network/Response';
+import SV from '../utilities/SV';
 
 const MEMO = 'Minted by Cudos NFT Minter';
 
@@ -18,6 +19,27 @@ export default class NftService {
     }
 
     async mintNft(nftModels: NftModel[]): Promise<any> {
+        throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to mint nfts:');
+        const missingUrl = nftModels.find((nft: NftModel) => nft.url === '' || !nft.url);
+        const missingDenom = nftModels.find((nft: NftModel) => nft.denomId === '' || !nft.denomId);
+        const missingName = nftModels.find((nft: NftModel) => nft.name === '' || !nft.name);
+        const missingRecipient = nftModels.find((nft: NftModel) => nft.recipient === '' || !nft.recipient);
+
+        if (missingUrl !== undefined) {
+            throw new StateException(Response.S_STATUS_RUNTIME_ERROR, `NFT image url is invalid: ${missingUrl.url}`);
+        }
+
+        if (missingDenom !== undefined) {
+            throw new StateException(Response.S_STATUS_RUNTIME_ERROR, `NFT denomId is invalid: ${missingDenom.denomId}`);
+        }
+
+        if (missingName !== undefined) {
+            throw new StateException(Response.S_STATUS_RUNTIME_ERROR, `NFT name is invalid: ${missingName.name}`);
+        }
+
+        if (missingRecipient !== undefined) {
+            throw new StateException(Response.S_STATUS_RUNTIME_ERROR, `NFT recipient is invalid: ${missingRecipient.recipient}`);
+        }
 
         let wallet = null;
         let sender = SV.Strings.EMPTY;
@@ -27,30 +49,27 @@ export default class NftService {
             wallet = await DirectSecp256k1HdWallet.fromMnemonic(Config.CUDOS_SIGNER.MNEMONIC);
             sender = (await wallet.getAccounts())[0].address;
         } catch (e) {
-            throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to create wallet');
+            throw new StateException(Response.S_STATUS_RUNTIME_ERROR, 'Failed to create wallet');
         }
 
+        // TODO: set the env rpc value
         try {
             client = await SigningStargateClient.connectWithSigner('http://host.docker.internal:36657', wallet);
+            // client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, wallet);
         } catch (e) {
             throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to connect signing client');
         }
 
         let mintRes: any;
 
-        if (!nftModels[0].uri) {
-            throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'NFT image uri is invalid');
-        }
-        // TODO: upload images first
-        try {
-            if (nftModels[0].uri.includes(';base64,')) {
-                await imageUpload(nftModels[0].uri);
+        for (let i = 0; i < nftModels.length; ++i) {
+            const nft = nftModels[i];
+            if (nft.url.includes(';base64,')) {
+                nft.url = await this.imageUpload(nft.url);
             }
-        } catch (e) {
-
         }
 
-        const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.uri, nftModel.data, nftModel.recipient));
+        const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
 
         try {
             mintRes = await client.nftMintMultipleTokens(
@@ -60,7 +79,7 @@ export default class NftService {
                 MEMO,
             )
         } catch (e) {
-            throw Error(`Failed to mint token. Reason: ${e}`);
+            throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, `Failed to mint nfts: ${e}`);
         }
 
         const log = JSON.parse(mintRes.rawLog);
@@ -98,12 +117,11 @@ export default class NftService {
                     authorization,
                 },
             });
-            const uri = `https://ipfs.infura.io/ipfs/${added.path}`
+            const url = `https://ipfs.infura.io/ipfs/${added.path}`
 
-            return uri;
+            return url;
         } catch (error) {
-            throw ()
-            console.error('IPFS error ', error);
+            throw new StateException(Response.S_STATUS_INFURA_ERROR, 'Failed to upload image to infura');
         }
 
     }

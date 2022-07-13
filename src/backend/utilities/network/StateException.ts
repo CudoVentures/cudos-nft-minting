@@ -4,6 +4,7 @@ export default class StateException extends Error {
     msg: string;
 
     constructor(errorCode: number, msg: string = '') {
+        console.log(`In error: ${msg}`);
         super(`${errorCode}: ${msg}`);
         this.errorCode = errorCode;
         this.msg = msg;

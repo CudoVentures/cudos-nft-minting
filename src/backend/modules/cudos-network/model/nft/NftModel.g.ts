@@ -9,7 +9,7 @@ export default class NftModelG extends NftModelH {
         this.denomId = SV.Strings.EMPTY;
         this.tokenId = SV.Strings.EMPTY;
         this.name = SV.Strings.EMPTY;
-        this.uri = SV.Strings.EMPTY;
+        this.url = SV.Strings.EMPTY;
         this.data = SV.Strings.EMPTY;
         this.recipient = SV.Strings.EMPTY;
         this.approvedAddresses = [];
@@ -20,7 +20,7 @@ export default class NftModelG extends NftModelH {
             'denomId': this.denomId,
             'tokenId': this.tokenId,
             'name': this.name,
-            'uri': this.uri,
+            'url': this.url,
             'data': this.data,
             'recipient': this.recipient,
             'approvedAddresses': this.approvedAddresses,
@@ -37,7 +37,7 @@ export default class NftModelG extends NftModelH {
         model.denomId = json.denomId ?? model.denomId;
         model.tokenId = json.tokenId ?? model.tokenId;
         model.name = json.name ?? model.name;
-        model.uri = json.uri ?? model.uri;
+        model.url = json.url ?? model.url;
         model.data = json.data ?? model.data;
         model.recipient = json.recipient ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
