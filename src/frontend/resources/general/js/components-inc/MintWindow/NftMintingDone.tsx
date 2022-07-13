@@ -36,7 +36,6 @@ class NftMintingDone extends React.Component<Props> {
                 </div>
                 <div className={'Heading4'} >Minting is Done!</div>
                 <div className={'Description'}>Minting was successful! Check the details from the link below.</div>
-                {/* // TODO: fix undefined link */}
                 <a href={`${Config.CUDOS_NETWORK.EXPLORER}/trabsactions/${this.props.nftMintStore.transactionHash}`} className={'TransactionLink FlexRow'}>
                     <div>Check transaction details in Explorer</div>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>

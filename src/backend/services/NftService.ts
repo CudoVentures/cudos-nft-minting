@@ -81,8 +81,8 @@ export default class NftService {
             throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, `Failed to mint nfts: ${e}`);
         }
 
-        const log = JSON.parse(mintRes.rawLog);
         // TODO: get token ids
+        // const log = JSON.parse(mintRes.rawLog);
         // const attributeEvent = log[0].events.find((event: any) => event.type === 'mint_nft');
 
         // if (attributeEvent === undefined) {

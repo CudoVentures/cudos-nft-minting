@@ -17,6 +17,7 @@ export default class NftMintStore {
     @observable imageUrlInputValue: string;
     @observable isAddressFieldActive: number;
 
+    @observable denomId: string;
     @observable collectionName: string;
     @observable nfts: NftModel[];
     @observable mintedNfts: number[];
@@ -70,6 +71,20 @@ export default class NftMintStore {
                 GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
             );
 
+            // TODO: get denom id from txRes
+            const log = JSON.parse(txRes.rawLog);
+            const attributeEvent = log[0].events.find((event: any) => event.type === 'issue_denom');
+
+            if (attributeEvent === undefined) {
+                throw Error('Failed to get event from tx response');
+            }
+
+            const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'denom_id');
+            if (tokenIdAttr === undefined) {
+                throw Error('Failed to get token id attribute from attribute event.');
+            }
+
+            this.denomId = tokenIdAttr.value;
             this.transactionHash = txRes.transactionHash;
 
             success();
@@ -127,6 +142,10 @@ export default class NftMintStore {
         } catch (e) {
             error();
         }
+    }
+
+    async mintSingleNft() {
+
     }
 
     async esimateMintFees(): Promise<number> {

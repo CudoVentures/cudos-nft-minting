@@ -51,88 +51,93 @@ class NftFinish extends React.Component<Props, State> {
     }
 
     render() {
-        const nfts: NftModel[] = this.props.nftMintStore.nfts;
-
         return (
             <NftStepWrapper
-                className = { 'NftFinish' }
-                stepNumber = { `Step ${this.props.navStore.getMintStepShowNumber()}` }
-                stepName = { 'Summarised Details' } >
+                className={'NftFinish'}
+                stepNumber={`Step ${this.props.navStore.getMintStepShowNumber()}`}
+                stepName={'Summarised Details'} >
                 <div className={'FlexRow NftFinishHolder'}>
-                    <NftSidePreview
-                        imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].getPreviewUrl() : ''}
-                        name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName}
-                    />
-                    <div className={'FlexColumn FlexGrow'}>
-                        <div className={'FlexColumn SummaryDetails'}>
-                            <div className={'SummaryHeading'}>Minting details</div>
-                            {this.props.navStore.isMintOptionMultiple()
-                                && <div className={'FlexColumn DetailsRow'}>
-                                    <div className={'DetailHeading'}>Collection Name</div>
-                                    <div className={'DetailData'}>{this.props.nftMintStore.collectionName}</div>
-                                </div>}
-                            <div className={'FlexRow DetailsRow'}>
-                                <div className={'FlexColumnt DetailColumn'}>
-                                    <div className={'DetailHeading'}>Items</div>
-                                    <div className={'DetailData'}>{this.props.nftMintStore.nfts.length}</div>
-                                </div>
-                                <div className={'FlexColumnt DetailColumn'}>
-                                    <div className={'DetailHeading'}>Mint Type</div>
-                                    <div className={'DetailData'}>{NavStore.getMintTypeText(this.props.navStore.mintOption)}</div>
-                                </div>
-
-                                <div className={'FlexColumnt DetailColumn'}>
-                                    <div className={'DetailHeading'}>Estimated Gas Fee</div>
-                                    <div className={'DetailData FlexRow'}>
-                                        <div className={`FeeEstimate ${this.props.navStore.isMintOptionSingle() ? 'Crossed' : ''}`}>{this.state.feeEstimate} CUDOS</div>
-                                        <div className={'RealPrice FlexRow'}>
-                                            {this.props.navStore.isMintOptionSingle()
-                                                ? <>
-                                                    FREE
-                                                    <div
-                                                        className={'SVG Icon'}
-                                                        dangerouslySetInnerHTML={{ __html: SvgInfo }}
-                                                        onClick={(e) => { this.anchorEl = e.target; this.setState({}); }}
-                                                    />
-                                                    <Popover
-                                                        anchorEl={this.anchorEl}
-                                                        open={this.anchorEl !== null}
-                                                        onClose={() => { this.anchorEl = null; this.setState({}) }} >
-                                                        {/* // TODO: get real TEXT */}
-                                                        This is free
-                                                    </Popover>
-                                                </>
-                                                : <>{`&dollar; ${this.state.feeEstimateInDollars.toFixed(2)}`}</>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {this.props.navStore.isMintOptionSingle()
-                                && <div className={'FlexColumnt DetailColumn'}>
-                                    <div className={'DetailHeading'}>Recipient</div>
-                                    <div className={'DetailData'}>{nfts[0].recipient !== S.Strings.EMPTY ? nfts[0].recipient : this.props.walletStore.keplrWallet.accountAddress}</div>
-                                </div>}
-                        </div>
-                        <Actions className={'MintNftButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
-                            <Button
-                                type={Button.TYPE_ROUNDED}
-                                radius={Button.RADIUS_MAX}
-                                color={Button.COLOR_SCHEME_1}
-                                padding={Button.PADDING_24}
-                                onClick={this.props.nftMintStore.mintNfts.bind(
-                                    this.props.nftMintStore,
-                                    this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
-                                    this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
-                                    this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
-                                )}
-                            >{this.props.navStore.isMintOptionSingle() ? 'Mint NFT' : 'Mint Collection NFTs'}</Button>
-                        </Actions>
-                    </div>
+                    {this.renderSingleMintFinish()}
                 </div>
             </NftStepWrapper>
         )
     }
-}
 
+    renderSingleMintFinish(): any {
+        const nfts: NftModel[] = this.props.nftMintStore.nfts;
+
+        return (<>
+            <NftSidePreview
+                imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].getPreviewUrl() : ''}
+                name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName}
+            />
+            <div className={'FlexColumn FlexGrow'}>
+                <div className={'FlexColumn SummaryDetails'}>
+                    <div className={'SummaryHeading'}>Minting details</div>
+                    {this.props.navStore.isMintOptionMultiple()
+                        && <div className={'FlexColumn DetailsRow'}>
+                            <div className={'DetailHeading'}>Collection Name</div>
+                            <div className={'DetailData'}>{this.props.nftMintStore.collectionName}</div>
+                        </div>}
+                    <div className={'FlexRow DetailsRow'}>
+                        <div className={'FlexColumnt DetailColumn'}>
+                            <div className={'DetailHeading'}>Items</div>
+                            <div className={'DetailData'}>{this.props.nftMintStore.nfts.length}</div>
+                        </div>
+                        <div className={'FlexColumnt DetailColumn'}>
+                            <div className={'DetailHeading'}>Mint Type</div>
+                            <div className={'DetailData'}>{NavStore.getMintTypeText(this.props.navStore.mintOption)}</div>
+                        </div>
+
+                        <div className={'FlexColumnt DetailColumn'}>
+                            <div className={'DetailHeading'}>Estimated Gas Fee</div>
+                            <div className={'DetailData FlexRow'}>
+                                <div className={`FeeEstimate ${this.props.navStore.isMintOptionSingle() ? 'Crossed' : ''}`}>{this.state.feeEstimate} CUDOS</div>
+                                <div className={'RealPrice FlexRow'}>
+                                    {this.props.navStore.isMintOptionSingle()
+                                        ? <>
+                                            FREE
+                                            <div
+                                                className={'SVG Icon'}
+                                                dangerouslySetInnerHTML={{ __html: SvgInfo }}
+                                                onClick={(e) => { this.anchorEl = e.target; this.setState({}); }}
+                                            />
+                                            <Popover
+                                                anchorEl={this.anchorEl}
+                                                open={this.anchorEl !== null}
+                                                onClose={() => { this.anchorEl = null; this.setState({}) }} >
+                                                {/* // TODO: get real TEXT */}
+                                                This is free
+                                            </Popover>
+                                        </>
+                                        : <>{`&dollar; ${this.state.feeEstimateInDollars.toFixed(2)}`}</>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {this.props.navStore.isMintOptionSingle()
+                        && <div className={'FlexColumnt DetailColumn'}>
+                            <div className={'DetailHeading'}>Recipient</div>
+                            <div className={'DetailData'}>{nfts[0].recipient !== S.Strings.EMPTY ? nfts[0].recipient : this.props.walletStore.keplrWallet.accountAddress}</div>
+                        </div>}
+                </div>
+                <Actions className={'MintNftButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
+                    <Button
+                        type={Button.TYPE_ROUNDED}
+                        radius={Button.RADIUS_MAX}
+                        color={Button.COLOR_SCHEME_1}
+                        padding={Button.PADDING_24}
+                        onClick={this.props.nftMintStore.mintNfts.bind(
+                            this.props.nftMintStore,
+                            this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
+                            this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
+                            this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
+                        )}
+                    >{this.props.navStore.isMintOptionSingle() ? 'Mint NFT' : 'Mint Collection NFTs'}</Button>
+                </Actions>
+            </div>
+        </>)
+    }
+}
 export default inject('walletStore', 'navStore', 'nftMintStore')((observer(NftFinish)));
