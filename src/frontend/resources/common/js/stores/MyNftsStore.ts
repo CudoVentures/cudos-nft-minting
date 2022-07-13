@@ -4,7 +4,9 @@ import FilterHelper from '../helpers/FilterHelper';
 import TimeoutHelper from '../helpers/TimeoutHelper';
 import NftCollectionModel from '../models/NftCollectionModel';
 import NftModel from '../models/NftModel';
+import NftApi from '../api/NftApi';
 import S from '../utilities/Main';
+import WalletStore from './WalletStore';
 
 const emptyStore = false;
 
@@ -12,6 +14,9 @@ export default class MyNftsStore {
 
     static PAGE_SINGLE_NFTS: number = 1;
     static PAGE_NFT_COLLECTIONS: number = 2;
+
+    nftApi: NftApi;
+    walletStore: WalletStore;
 
     nftModels: NftModel[];
     nftCollectionModels: NftCollectionModel[];
@@ -28,7 +33,10 @@ export default class MyNftsStore {
     initialized: boolean;
     timeoutHelper: TimeoutHelper;
 
-    constructor() {
+    constructor(walletStore: WalletStore) {
+        this.nftApi = new NftApi();
+        this.walletStore = walletStore;
+
         this.nftModels = [];
         this.nftCollectionModels = [];
         this.nftsInCollectionsMap = new Map();
@@ -103,85 +111,33 @@ export default class MyNftsStore {
     }
 
     async fetchNfts() {
-        const singleNfts = emptyStore === true ? [] : [
-            {
-                'tokenId': '1',
-                'denomId': '-1',
-                'name': 'In Da Jungl',
-                'url': `${Config.URL.RESOURCES}/common/img/tmp/nft.png`,
-                'data': '',
-                'recipient': '',
-                'approvedAddresses': [],
-            }, {
-                'tokenId': '2',
-                'denomId': '-1',
-                'name': 'In Da Jungl #2',
-                'url': `${Config.URL.RESOURCES}/common/img/tmp/nft.png`,
-                'data': '',
-                'recipient': '',
-                'approvedAddresses': [],
-            }, {
-                'tokenId': '3',
-                'denomId': '-1',
-                'name': 'In Da Jungl #3',
-                'url': `${Config.URL.RESOURCES}/common/img/tmp/nft.png`,
-                'data': '',
-                'recipient': '',
-                'approvedAddresses': [],
-            }, {
-                'tokenId': '4',
-                'denomId': '-1',
-                'name': 'In Da Jungl #4',
-                'url': `${Config.URL.RESOURCES}/common/img/tmp/nft.png`,
-                'data': '',
-                'recipient': '',
-                'approvedAddresses': [],
-            }, {
-                'tokenId': '5',
-                'denomId': '-1',
-                'name': 'In Da Jungl #5',
-                'url': `${Config.URL.RESOURCES}/common/img/tmp/nft.png`,
-                'data': '',
-                'recipient': '',
-                'approvedAddresses': [],
-            },
-        ];
+        let nftCollectionModels = [];
+        let nftModels = [];
 
-        const collections = emptyStore === true ? [] : [
-            {
-                'denomId': 'C1',
-                'name': 'AI generated witches',
-                'nfts': [
-                    {
-                        'tokenId': '6',
-                        'denomId': 'C1',
-                        'name': 'In Da Jungl #6',
-                        'url': `${Config.URL.RESOURCES}/common/img/tmp/nft.png`,
-                        'data': '',
-                        'recipient': '',
-                        'approvedAddresses': [],
-                    }, {
-                        'tokenId': '7',
-                        'denomId': 'C1',
-                        'name': 'In Da Jungl #7',
-                        'url': `${Config.URL.RESOURCES}/common/img/tmp/nft.png`,
-                        'data': '',
-                        'recipient': '',
-                        'approvedAddresses': [],
-                    },
-                ],
-            },
-        ]
+        await new Promise < void >((resolve, reject) => {
+            this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_, nftModels_) => {
+                nftCollectionModels = nftCollectionModels_.filter((nftCollectioModel) => {
+                    return nftCollectioModel.isCudosMainCollection() === false;
+                });
+                nftModels = nftModels.concat(nftModels_);
+                resolve();
+            });
+        });
 
         const cache = this.nftsInCollectionsMap
         this.nftsInCollectionsMap = null;
         cache.clear();
 
-        this.nftModels = singleNfts.map((m) => NftModel.fromJSON(m));
-        this.nftCollectionModels = collections.map((collection) => {
-            const nftCollectionModel = NftCollectionModel.fromJson(collection);
-            cache.set(nftCollectionModel.denomId, collection.nfts.map((m) => NftModel.fromJSON(m)));
-            return nftCollectionModel;
+        this.nftModels = nftModels.map((m) => NftModel.fromJSON(m));
+        this.nftModels.forEach((nftModel) => {
+            let pointer = cache.get(nftModel.denomId);
+            if (pointer === undefined) {
+                cache.set(nftModel.denomId, pointer = []);
+            }
+            pointer.push(nftModel);
+        });
+        this.nftCollectionModels = nftCollectionModels.map((collection) => {
+            return NftCollectionModel.fromJson(collection);
         });
 
         this.nftsInCollectionsMap = cache;

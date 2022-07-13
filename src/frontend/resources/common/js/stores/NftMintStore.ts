@@ -46,17 +46,17 @@ export default class NftMintStore {
         // await this.nftApi.init();
     }
 
-    async getAllNfts(): Promise<void> {
-        this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
-            this.nfts = nfts;
-        });
-    }
+    // async getAllNfts(): Promise<void> {
+    //     this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
+    //         this.nfts = nfts;
+    //     });
+    // }
 
-    async getUserNfts(recipient: string): Promise<void> {
-        this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
-            this.nfts = nfts.filter((nft: NftModel) => nft.recipient === recipient);
-        })
-    }
+    // async getUserNfts(recipient: string): Promise<void> {
+    //     this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
+    //         this.nfts = nfts.filter((nft: NftModel) => nft.recipient === recipient);
+    //     })
+    // }
 
     async mintCollection(callBefore: () => void, success: () => void, error: () => void) {
         callBefore();

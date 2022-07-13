@@ -1,5 +1,4 @@
 import { StargateClient } from 'cudosjs';
-import { BaseNFT } from 'cudosjs/stargate/modules/nft/proto-types/nft';
 import Apis from '../../../../../../builds/dev-generated/Apis';
 import Actions from '../../../../../../builds/dev-generated/Actions';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -8,6 +7,8 @@ import MintNftReq from '../network-requests/MintNftReq';
 import Api from '../utilities/Api';
 import AbsApi from './AbsApi';
 import MintNftRes from '../network-responses/MintNftRes';
+import NftCollectionModel from '../models/NftCollectionModel';
+import { IDCollection } from 'cudosjs/build/stargate/modules/nft/proto-types/nft';
 
 export default class NftApi extends AbsApi {
     api: Api
@@ -18,33 +19,90 @@ export default class NftApi extends AbsApi {
     constructor() {
         super();
 
-        this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
         this.api = new Api(Apis.NFT, this.enableActions, this.disableActions);
+
+        this.queryClient = null;
+        this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
     }
 
     async init() {
         this.queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
     }
 
-    async fetchAllNfts(callback: (nfts: NftModel[]) => void) {
-        const collectionRes = await this.queryClient.getNftCollection(this.denomId);
-        if (collectionRes.collection !== undefined) {
-            callback(
-                collectionRes.collection.nfts
-                    .map((nft: BaseNFT) => NftModel.fromJSON(nft.toJSON())),
-            );
+    async fetchNftCollection(denomId: string, callback: (a_: NftCollectionModel | null, b_: NftModel[] | null) => void): Promise < void > {
+        console.log('invoke', denomId);
+        let nftCollectionModel = null;
+        let nftModels = null;
+
+        if (this.queryClient === null) {
+            await this.init();
         }
+
+        try {
+            const resCollection = await this.queryClient.getNftCollection(denomId);
+            if (resCollection.collection !== undefined) {
+                if (resCollection.collection.denom !== undefined) {
+                    console.log(resCollection.collection.denom);
+                    nftCollectionModel = NftCollectionModel.fromJson(resCollection.collection.denom);
+                    nftModels = resCollection.collection.nfts.map((nftJson) => {
+                        const nftModel = NftModel.fromJSON(nftJson);
+                        nftModel.denomId = nftCollectionModel.denomId;
+                        return nftModel;
+                    });
+                }
+            }
+
+            if (nftModels?.length === 0) {
+                nftCollectionModel = null;
+                nftModels = null;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        callback(nftCollectionModel, nftModels);
     }
 
-    async fetchUserTokenIds(owner: string, callback: (tokenIds: string[]) => void) {
-        const collectionRes = await this.queryClient.getNftOwner(owner, this.denomId);
-        if (collectionRes.owner !== undefined) {
-            callback(
-                collectionRes.owner.idCollections
-                    .find((collection) => collection.denomId === this.denomId)
-                    .tokenIds,
-            );
+    async fetchNftCollections(walletAddress: string, callback: (a_: NftCollectionModel[] | null, b_: NftModel[] | null) => void): Promise < void > {
+        const resNftCollectionModels = [];
+        let resNftModels = [];
+
+        if (this.queryClient === null) {
+            await this.init();
         }
+
+        try {
+            const resOwner = await this.queryClient.getNftOwner(walletAddress);
+            if (resOwner.owner !== undefined) {
+                if (resOwner.owner.idCollections !== undefined) {
+                    const denomIds = resOwner.owner.idCollections.map((idCollection: IDCollection) => {
+                        return idCollection.denomId
+                    });
+
+                    for (let i = 0; i < denomIds.length; ++i) {
+                        // eslint-disable-next-line no-loop-func
+                        await new Promise < void >((resolve, reject) => {
+                            const run = async () => {
+                                this.fetchNftCollection(denomIds[i], (nftCollectionModel, nftModels) => {
+                                    if (nftCollectionModel !== null) {
+                                        resNftCollectionModels.push(nftCollectionModel);
+                                        resNftModels = resNftModels.concat(nftModels);
+                                    }
+
+                                    resolve();
+                                });
+                            }
+
+                            run();
+                        })
+                    }
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        callback(resNftCollectionModels, resNftModels);
     }
 
     async mintNfts(nftModels: NftModel[], callback: (txHash: string) => void, error: () => void) {
