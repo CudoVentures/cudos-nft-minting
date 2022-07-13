@@ -1,18 +1,21 @@
+import React from 'react';
 import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
-import Checkbox from '../../../../common/js/components-inc/Checkbox';
-import Input, { InputMargin, InputType } from '../../../../common/js/components-inc/Input';
-import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
+
+import S from '../../../../common/js/utilities/Main';
+import ProjectUtils from '../../../../common/js/ProjectUtils';
 import NftModel from '../../../../common/js/models/NftModel';
 import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
-import S from '../../../../common/js/utilities/Main';
-import '../../../css/components-inc/NftMint/nft-details.css';
-import SvgInfo from '../../../../common/svg/info.svg';
+
+import Checkbox from '../../../../common/js/components-inc/Checkbox';
+import Input, { InputMargin, InputType } from '../../../../common/js/components-inc/Input';
+import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import NftSidePreview from '../NftSidePreview';
 import Popover from '../../../../common/js/components-inc/Popover';
-import ProjectUtils from '../../../../common/js/ProjectUtils';
 import NftStepWrapper from './NftStepWrapper';
+
+import SvgInfo from '../../../../common/svg/info.svg';
+import '../../../css/components-inc/NftMint/nft-details.css';
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -76,16 +79,14 @@ class NftDetails extends React.Component<Props, State> {
                 <div className={'FlexRow DetailsHolder'}>
                     <NftSidePreview
                         imageUrl={nft.getPreviewUrl()}
-                        name={nft.name}
-                    />
+                        name={nft.name} />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
                         <Input
                             className={'NftName'}
                             label={'Nft Name'}
                             placeholder={'E.g. Cool NFT'}
                             value={nft.name}
-                            onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)}
-                        />
+                            onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)} />
                         <div className={'FlexRow'}>
                             <Checkbox
                                 value={this.props.nftMintStore.isAddressFieldActive}
