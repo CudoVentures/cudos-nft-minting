@@ -42,14 +42,14 @@ class ListNfts extends React.Component < Props > {
                                 type = { myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
                                 color = { myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
                                 onClick = { myNftsStore.markViewSingleNfts } >
-                            Single NFTs ({myNftsStore.nftModels.length})
+                                Single NFTs ({myNftsStore.getNftsInCudosMainCollection().length})
                             </Button>
 
                             <Button
                                 type = { myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
                                 color = { myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
                                 onClick = { myNftsStore.markViewNftCollections } >
-                            Collections ({myNftsStore.nftCollectionModels.length})
+                                Collections ({myNftsStore.nftCollectionModels.length})
                             </Button>
 
                         </Actions>

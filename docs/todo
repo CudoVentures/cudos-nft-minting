@@ -7,3 +7,4 @@ estimate tx
 disable actions while minting
 explorer to env
 nftmintstore to mynftsstore
+remove nftModels from store

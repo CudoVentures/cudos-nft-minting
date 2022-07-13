@@ -20,7 +20,6 @@ export default class MyNftsStore {
     appStore: AppStore;
     walletStore: WalletStore;
 
-    nftModels: NftModel[];
     nftCollectionModels: NftCollectionModel[];
     nftsInCollectionsMap: Map < string, NftModel[] >;
 
@@ -40,9 +39,8 @@ export default class MyNftsStore {
         this.appStore = appStore;
         this.walletStore = walletStore;
 
-        this.nftModels = [];
-        this.nftCollectionModels = [];
-        this.nftsInCollectionsMap = new Map();
+        this.nftCollectionModels = []; // does not hold the cudos default collection
+        this.nftsInCollectionsMap = new Map(); // holds denom ids to nfts map for all collections
 
         this.viewPage = MyNftsStore.PAGE_SINGLE_NFTS;
         this.viewNftModel = null;
@@ -77,7 +75,7 @@ export default class MyNftsStore {
     }
 
     hasNfts(): boolean {
-        return this.nftModels.length !== 0 || this.nftCollectionModels.length !== 0;
+        return this.getNftsInCudosMainCollection().length !== 0 || this.nftCollectionModels.length !== 0;
     }
 
     markViewSingleNfts = () => {
@@ -108,8 +106,12 @@ export default class MyNftsStore {
         return this.nftsInCollectionsMap.get(denomId) ?? [];
     }
 
+    getNftsInCudosMainCollection() {
+        return this.getNftsInCollection(Config.CUDOS_NETWORK.NFT_DENOM_ID);
+    }
+
     filter = () => {
-        this.filterredNftModels = FilterHelper.filter(this.getNftsInCollection(Config.CUDOS_NETWORK.NFT_DENOM_ID), this.filterString) as NftModel[];
+        this.filterredNftModels = FilterHelper.filter(this.getNftsInCudosMainCollection(), this.filterString) as NftModel[];
         this.filteredNftCollectionModels = FilterHelper.filter(this.nftCollectionModels, this.filterString) as NftCollectionModel[];
     }
 
@@ -121,54 +123,54 @@ export default class MyNftsStore {
         }
 
         if (nftModels !== null) {
-            nftModels.forEach((nftModel) => {
-                this.nftModels.pushIfNotExist(nftModel, (t1, t2) => {
-                    return t1.tokenId === t2.tokenId;
-                })
-            });
+            this.updateNftsInCollectionsMap(nftModels);
         }
-
-        this.updateNftsInCollectionsMap();
     }
 
     async fetchNfts() {
+        let nftModels = [];
+
         await new Promise < void >((resolve, reject) => {
             this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_: NftCollectionModel[], nftModels_: NftModel[]) => {
                 this.nftCollectionModels = nftCollectionModels_.filter((nftCollectioModel) => {
                     return nftCollectioModel.isCudosMainCollection() === false;
                 });
-                this.nftModels = this.nftModels.concat(nftModels_);
+                nftModels = nftModels_;
                 resolve();
             });
         });
 
-        this.initializeNftsInCollectionsMap();
+        this.initializeNftsInCollectionsMap(nftModels);
         this.filter();
 
         this.initialized = true;
     }
 
-    initializeNftsInCollectionsMap() {
+    initializeNftsInCollectionsMap(nftModels: NftModel[]) {
         this.nftsInCollectionsMap.clear();
-        this.updateNftsInCollectionsMap();
+        this.updateNftsInCollectionsMap(nftModels);
     }
 
-    updateNftsInCollectionsMap() {
+    updateNftsInCollectionsMap(nftModels: NftModel[]) {
         const cache = this.nftsInCollectionsMap;
         this.nftsInCollectionsMap = null;
 
-        this.nftModels.forEach((nftModel) => {
-            let pointer = cache.get(nftModel.denomId);
-            if (pointer === undefined) {
-                cache.set(nftModel.denomId, pointer = []);
-            }
-            pointer.push(nftModel);
-        });
-
+        if (cache.has(Config.CUDOS_NETWORK.NFT_DENOM_ID) === false) {
+            cache.set(Config.CUDOS_NETWORK.NFT_DENOM_ID, []);
+        }
         this.nftCollectionModels.forEach((nftCollectionModel) => {
             if (cache.has(nftCollectionModel.denomId) === false) {
                 cache.set(nftCollectionModel.denomId, []);
             }
+        });
+
+        nftModels.forEach((nftModel) => {
+            let pointer = cache.get(nftModel.denomId);
+            if (pointer === undefined) {
+                pointer = [];
+            }
+            pointer.push(nftModel);
+            cache.set(nftModel.denomId, pointer);
         });
 
         this.nftsInCollectionsMap = cache;
