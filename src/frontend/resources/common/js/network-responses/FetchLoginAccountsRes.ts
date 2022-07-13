@@ -1,5 +1,3 @@
-import AccountModel from '../models/AccountModel';
-
 export default class FetchLoginAccountsRes {
 
     account: AccountModel;

@@ -4,10 +4,10 @@ import { GasPrice, SigningStargateClient } from 'cudosjs';
 import S from '../utilities/Main';
 import Config from '../../../../../../builds/dev-generated/Config';
 
-import InfuraApi from '../api/InfuraApi';
 import NftApi from '../api/NftApi';
 import NftModel from '../models/NftModel';
 import WalletStore from './WalletStore';
+import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 
 export default class NftMintStore {
 
@@ -15,7 +15,6 @@ export default class NftMintStore {
     static MINT_MODE_BACKEND: number = 2;
 
     nftApi: NftApi;
-    infuraApi: InfuraApi;
     walletStore: WalletStore;
 
     // @observable isImageLinkValid: boolean;
@@ -31,7 +30,6 @@ export default class NftMintStore {
 
     constructor(walletStore: WalletStore) {
         this.nftApi = new NftApi();
-        this.infuraApi = new InfuraApi();
         this.walletStore = walletStore;
 
         this.recipientFieldActive = S.INT_FALSE;
@@ -92,6 +90,7 @@ export default class NftMintStore {
 
             success();
         } catch (e) {
+            console.log(e);
             error();
         }
     }
@@ -116,41 +115,97 @@ export default class NftMintStore {
             return;
         }
 
+        if (this.denomId === S.Strings.EMPTY) {
+            this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+        }
+
         this.nfts.forEach((nft: NftModel) => {
             if (nft.recipient === S.Strings.EMPTY) {
                 nft.recipient = this.walletStore.keplrWallet.accountAddress;
             }
 
-            if (nft.denomId === S.Strings.EMPTY) {
-                if (local === NftMintStore.MINT_MODE_LOCAL) {
-                    nft.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
-                } else if (local === NftMintStore.MINT_MODE_BACKEND) {
-                    nft.denomId = this.denomId;
-                }
-            }
+            nft.denomId = this.denomId;
 
             // TODO: get real checksum
-            // nft.data = 'some checksum'
+            nft.data = 'some checksum'
         })
 
         try {
-
-            await this.nftApi.mintNfts(
-                this.nfts,
-                (txHash: string) => {
-                    this.transactionHash = txHash;
-                    success();
-                },
-                error,
-            );
+            if (local === NftMintStore.MINT_MODE_BACKEND) {
+                await this.nftApi.mintNfts(
+                    this.nfts,
+                    (txHash: string) => {
+                        this.transactionHash = txHash;
+                        success();
+                    },
+                    error,
+                );
+            } else if (local === NftMintStore.MINT_MODE_LOCAL) {
+                await this.mintNftsFrontend(success, error);
+            }
         } catch (e) {
             error();
         }
     }
 
-    private async mintNftsFrontend() {
-        const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
+    private async mintNftsFrontend(success: () => void, error: () => void) {
+        const nfts = this.nfts;
 
+        let client: SigningStargateClient;
+
+        try {
+            client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
+        } catch (e) {
+            throw new Error('Failed to connect signing client');
+        }
+
+        let mintRes: any;
+        const urls = nfts.map((nft: NftModel) => nft.url);
+        await this.nftApi.uploadFiles(
+            urls,
+            async (imageUrls: string[]) => {
+                for (let i = 0; i < nfts.length; i++) {
+                    if (nfts[i].url.includes(';base64,')) {
+                        nfts[i].url = imageUrls[i];
+                    }
+                }
+                const nftInfos = nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
+                console.log(nftInfos);
+                try {
+                    mintRes = await client.nftMintMultipleTokens(
+                        nftInfos,
+                        this.walletStore.keplrWallet.accountAddress,
+                        GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
+                    )
+                    console.log(mintRes);
+                } catch (e) {
+                    console.log(e);
+                    error();
+                }
+
+                // get the token ids from the mint transaction result
+                // each log represents one message in the transaction
+                const log = JSON.parse(mintRes.rawLog);
+                for (let i = 0; i < log.length; i++) {
+                    // each message has a few events, the get the one with the correct type
+                    const attributeEvent = log[i].events.find((event: any) => event.type === 'mint_nft');
+
+                    if (attributeEvent === undefined) {
+                        throw Error('Failed to get event from tx response');
+                    }
+
+                    // get token id from the event attributes
+                    const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'token_id');
+                    if (tokenIdAttr === undefined) {
+                        throw Error('Failed to get token id attribute from attribute event.');
+                    }
+
+                    nfts[i].tokenId = tokenIdAttr.value;
+                }
+                success();
+            },
+            error,
+        );
     }
 
     async esimateMintFees(): Promise<number> {

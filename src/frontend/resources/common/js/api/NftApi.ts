@@ -8,6 +8,8 @@ import MintNftReq from '../network-requests/MintNftReq';
 import Api from '../utilities/Api';
 import AbsApi from './AbsApi';
 import MintNftRes from '../network-responses/MintNftRes';
+import UploadImagesReq from '../network-requests/UploadImagesReq';
+import UploadImagesRes from '../network-responses/UploadImagesRes';
 
 export default class NftApi extends AbsApi {
     api: Api
@@ -65,4 +67,16 @@ export default class NftApi extends AbsApi {
         });
     }
 
+    async uploadFiles(files: string[], callback: (urls: string[]) => void, error: () => void) {
+        const req = new UploadImagesReq(files);
+        this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
+            if (json.status !== 0) {
+                error();
+                return;
+            }
+            const res = new UploadImagesRes(json.obj);
+
+            callback(res.urls);
+        });
+    }
 }
