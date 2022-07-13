@@ -86,7 +86,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
                         <div className = { 'Title' } >Send NFT as a GIFT</div>
                         <div className = { 'SubTitle' } >Enter recepient address and they will receive it in their wallet.</div>
                         <div className = { 'NftPreviewCnt' } >
-                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.uri) } />
+                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.url) } />
                             <div className = { 'NftData FlexColumn' } >
                                 <div className = { 'NftDataRow' } >
                                     <label>NFT Name</label>
@@ -156,7 +156,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
                     <>
                         <div className = { 'SVG Size SvgIconBackground' } dangerouslySetInnerHTML = {{ __html: SvgLoadingWaves }} />
                         <div className = { 'NftPreviewCnt' } >
-                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.uri) } />
+                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.url) } />
                             <div className = { 'NftName' } >{nftModel.name}</div>
                         </div>
                         <div className = { 'Title' } >Success!</div>

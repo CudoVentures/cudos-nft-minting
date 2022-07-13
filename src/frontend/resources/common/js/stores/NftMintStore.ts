@@ -116,10 +116,10 @@ export default class NftMintStore {
         return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
     }
 
-    addNewImage(uri: string, fileName: string, type: string, sizeBytes: number): void {
+    addNewImage(url: string, fileName: string, type: string, sizeBytes: number): void {
         const nft = new NftModel();
 
-        nft.uri = uri;
+        nft.url = url;
         nft.fileName = fileName;
         nft.type = type;
         nft.sizeBytes = sizeBytes;
@@ -147,7 +147,7 @@ export default class NftMintStore {
 
             const nft = new NftModel();
 
-            nft.uri = url;
+            nft.url = url;
             nft.fileName = 'linkedImage';
             nft.type = contentType;
             nft.sizeBytes = contentLength;

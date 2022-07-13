@@ -60,7 +60,7 @@ class NftFinish extends React.Component<Props, State> {
                 stepName = { 'Summarised Details' } >
                 <div className={'FlexRow NftFinishHolder'}>
                     <NftSidePreview
-                        imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].uri : ''}
+                        imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].url : ''}
                         name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName}
                     />
                     <div className={'FlexColumn FlexGrow'}>
