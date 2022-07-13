@@ -282,27 +282,35 @@ export default class NavStore {
 
     isNextStepActive(): boolean {
         // on first step a mint option should be selected to continue
-        return (this.isMintStepChooseOption()
-            && this.mintOption !== S.NOT_EXISTS)
-            // on upload file step a file should be present to continue
-            || (this.isMintStepUploadFile()
-                && !this.nftMintStore.isNftsEmpty())
-            // on collection details step a colletion should be minted
-            || (this.isMintStepCollectionDetails()
-                && this.isCollectionMintedSuccess())
-            // on nft details step nft name should be entered for all pictures
-            || (this.isMintStepDetails()
-                && (
-                    (this.isMintOptionSingle()
-                        && this.nftMintStore.nfts[0].name !== S.Strings.EMPTY
-                        && (this.nftMintStore.isRecipientFieldActive() === false || this.nftMintStore.nfts[0].recipient !== S.Strings.EMPTY))
-                    || (this.isMintOptionMultiple()
-                        && this.nftMintStore.nfts.find((nft: NftModel) => nft.name === S.Strings.EMPTY) === undefined)
-                )
-            )
-            // on fourth step always active
-            || this.isMintStepFinish()
-            // on step minting done button is always active as well
-            || this.isMintStepDone()
+        if (this.isMintStepChooseOption() && this.mintOption !== S.NOT_EXISTS) {
+            return true;
+        }
+
+        // on upload file step a file should be present to continue
+        if (this.isMintStepUploadFile() && !this.nftMintStore.isNftsEmpty()) {
+            return true;
+        }
+
+        // on collection details step a colletion should be minted
+        if (this.isMintStepCollectionDetails() && this.isCollectionMintedSuccess()) {
+            return true;
+        }
+
+        // on nft details step nft name should be entered for all pictures
+        if (this.isMintStepDetails() && this.nftMintStore.isValidNftModels()) {
+            return true;
+        }
+
+        // on fourth step always active
+        if (this.isMintStepFinish()) {
+            return true;
+        }
+
+        // on step minting done button is always active as well
+        if (this.isMintStepDone()) {
+            return true;
+        }
+
+        return false;
     }
 }

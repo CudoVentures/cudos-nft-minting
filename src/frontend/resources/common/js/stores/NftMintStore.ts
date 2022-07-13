@@ -105,12 +105,7 @@ export default class NftMintStore {
         const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
         const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
 
-        if (missingUri !== undefined) {
-            error();
-            return;
-        }
-
-        if (missingName !== undefined) {
+        if (!this.isValidNftModels()) {
             error();
             return;
         }
@@ -206,6 +201,27 @@ export default class NftMintStore {
             },
             error,
         );
+    }
+
+    // checks if the form fields are filled right
+    isValidNftModels(): boolean {
+        const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
+        const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
+        const missingRecipient = this.nfts.find((nft: NftModel) => nft.recipient === '' || !nft.name);
+
+        if (missingUri !== undefined) {
+            return false;
+        }
+
+        if (missingName !== undefined) {
+            return false;
+        }
+
+        if (this.isRecipientFieldActive() && missingRecipient !== undefined) {
+            return false;
+        }
+
+        return true;
     }
 
     async esimateMintFees(): Promise<number> {
