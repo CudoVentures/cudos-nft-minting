@@ -27,7 +27,7 @@ class NftMintingDone extends React.Component<Props> {
                         return (
                             <div key={nft.tokenId} className={'NftBox FlexColumn'}>
                                 <div className={'NftImageHolder'}>
-                                    <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nft.url)} />
+                                    <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl())} />
                                 </div>
                                 <div className={'NftName'}>{nft.name}</div>
                             </div>

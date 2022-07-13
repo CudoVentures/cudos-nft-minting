@@ -1,8 +1,11 @@
 import { makeAutoObservable } from 'mobx';
+import Config from '../../../../../../builds/dev-generated/Config';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
 
 export default class NftModel implements Filterable {
+
+    static UNKNOWN_PREVIEW_URL = `${Config.URL.RESOURCES}/common/img/file-preview/unknown.svg`;
 
     denomId: string;
     tokenId: string;
@@ -29,7 +32,7 @@ export default class NftModel implements Filterable {
         this.fileName = S.Strings.EMPTY;
         this.type = S.Strings.EMPTY;
         this.sizeBytes = S.NOT_EXISTS;
-        this.previewUrl = S.Strings.EMPTY;
+        this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL
 
         makeAutoObservable(this);
     }
@@ -56,18 +59,39 @@ export default class NftModel implements Filterable {
 
     }
 
+    isMimeTypeKnown(): boolean {
+        return this.type !== S.Strings.EMPTY;
+    }
+
     getFilterableString(): string {
         return this.name;
     }
 
     getPreviewUrl(): string {
-        if (this.previewUrl === S.Strings.EMPTY) {
+        if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
             fetch(this.url).then((res) => {
-                const contentType = res.headers.get('content-type');
-            })
+                this.type = res.headers.get('content-type');
+                this.updatePreviewUrl();
+            });
         }
 
         return this.previewUrl;
+    }
+
+    updatePreviewUrl() {
+        if (this.type.indexOf('svg') !== -1) {
+            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/svg.svg`
+        } else if (this.type.indexOf('mp3') !== -1 || this.type.indexOf('wav') !== -1 || this.type.indexOf('ogg') !== -1) {
+            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/music.svg`
+        } else if (this.type.indexOf('mp4') !== -1 || this.type.indexOf('webm') !== -1 || this.type.indexOf('webp') !== -1) {
+            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/video.svg`
+        } else if (this.type.indexOf('gltf') !== -1 || this.type.indexOf('glb') !== -1) {
+            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/gl.svg`
+        } else if (this.type.indexOf('jpeg') !== -1 || this.type.indexOf('jpg') !== -1 || this.type.indexOf('png') !== -1 || this.type.indexOf('gif') !== -1) {
+            this.previewUrl = this.url
+        } else {
+            this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL;
+        }
     }
 
     clone(): NftModel {

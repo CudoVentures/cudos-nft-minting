@@ -123,6 +123,7 @@ export default class NftMintStore {
         nft.fileName = fileName;
         nft.type = type;
         nft.sizeBytes = sizeBytes;
+        nft.updatePreviewUrl();
 
         this.nfts.push(nft);
     }
@@ -151,6 +152,7 @@ export default class NftMintStore {
             nft.fileName = 'linkedImage';
             nft.type = contentType;
             nft.sizeBytes = contentLength;
+            nft.updatePreviewUrl();
 
             this.nfts.push(nft);
 

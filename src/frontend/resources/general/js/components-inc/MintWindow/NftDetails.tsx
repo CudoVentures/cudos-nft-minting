@@ -50,7 +50,7 @@ class NftDetails extends React.Component<Props, State> {
                     <div
                         key={i}
                         className={'NftModel'}>
-                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.url)} />
+                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl())} />
                         <Input
                             className={'NameInput'}
                             inputType={InputType.TEXT}
@@ -75,7 +75,7 @@ class NftDetails extends React.Component<Props, State> {
                 stepName = { 'NFT Details' } >
                 <div className={'FlexRow DetailsHolder'}>
                     <NftSidePreview
-                        imageUrl={nft.url}
+                        imageUrl={nft.getPreviewUrl()}
                         name={nft.name}
                     />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
