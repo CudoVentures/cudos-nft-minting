@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import NftModel from '../models/NftModel';
 import ProjectUtils from '../ProjectUtils';
 import S from '../utilities/Main';
+import MyNftsStore from './MyNftsStore';
 import NftMintStore from './NftMintStore';
 
 export default class NavStore {
@@ -31,20 +32,32 @@ export default class NavStore {
     mintOption: number;
     mintStep: number;
     nftMintStore: NftMintStore;
+    myNftsStore: MyNftsStore;
     collectionMinted: number;
 
-    constructor(nftMintStore: NftMintStore) {
-        this.nftPage = NavStore.MY_NFTS_PAGE_KEY;
-        this.mintOption = S.NOT_EXISTS;
-        this.mintStep = NavStore.STEP_CHOOSE_OPTION;
+    constructor(nftMintStore: NftMintStore, myNftsStore: MyNftsStore) {
         this.nftMintStore = nftMintStore;
-        this.collectionMinted = NavStore.COLLECTION_MINT_NONE;
+        this.myNftsStore = myNftsStore;
+        this.reset();
 
         makeAutoObservable(this);
     }
 
+    reset() {
+        this.nftPage = NavStore.MY_NFTS_PAGE_KEY;
+        this.mintOption = S.NOT_EXISTS;
+        this.mintStep = NavStore.STEP_CHOOSE_OPTION;
+        this.collectionMinted = NavStore.COLLECTION_MINT_NONE;
+    }
+
     // page
     selectNftPage(page: number): void {
+        if (page === NavStore.MINT_PAGE_KEY) {
+            this.nftMintStore.reset();
+        }
+
+        this.reset();
+
         this.nftPage = page;
     }
 
@@ -178,22 +191,30 @@ export default class NavStore {
 
     getNextStepFunction() {
         if (this.isNextStepActive()) {
+
             // for these cases return standard ++step
+            // choose option step standard function
             if (this.isMintStepChooseOption()
+                // upload files step standard function
                 || (this.isMintStepUploadFile() && this.isMintOptionMultiple())
+                // collection details step standard function
                 || this.isMintStepCollectionDetails()
+                // details step standard function
                 || this.isMintStepDetails()) {
                 return () => this.selectNextStep();
             }
 
-            // if collection mint, this should jump to nft details
+            // on single nft mint option, jump pass collection details directly to mint details
             if (this.isMintStepUploadFile() && this.isMintOptionSingle()) {
-                return () => this.mintStep = NavStore.STEP_NFT_DETAILS;
+                return () => { this.mintStep = NavStore.STEP_NFT_DETAILS };
             }
 
-            // if success page text sais go to my nfts page, so do that
+            // on mint success jump to my nfts
             if (this.isMintStepDone()) {
-                return () => this.selectMyNftPage();
+                return () => {
+                    this.selectMyNftPage();
+                    this.nftMintStore.reset.bind(this.nftMintStore);
+                }
             }
         }
 
@@ -201,17 +222,12 @@ export default class NavStore {
     }
 
     // option
-
     isMintOptionSingle(): boolean {
         return this.mintOption === NavStore.MINT_OPTION_SINGLE;
     }
 
     isMintOptionMultiple(): boolean {
         return this.mintOption === NavStore.MINT_OPTION_MULTIPLE;
-    }
-
-    isCollectionMinted(): boolean {
-        return this.collectionMinted;
     }
 
     getMintStepShowNumber(): number {

@@ -35,6 +35,12 @@ export default class NftMintStore {
         this.myNftsStore = myNftsStore;
         this.walletStore = walletStore;
 
+        this.reset();
+
+        makeObservable(this);
+    }
+
+    reset() {
         this.recipientFieldActive = S.INT_FALSE;
         this.imageUrlInputValue = S.Strings.EMPTY;
 
@@ -42,25 +48,7 @@ export default class NftMintStore {
         this.nfts = [];
         this.selectedNfts = [];
         this.transactionHash = S.Strings.EMPTY;
-
-        makeObservable(this);
     }
-
-    async init(): Promise<void> {
-        // await this.nftApi.init();
-    }
-
-    // async getAllNfts(): Promise<void> {
-    //     this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
-    //         this.nfts = nfts;
-    //     });
-    // }
-
-    // async getUserNfts(recipient: string): Promise<void> {
-    //     this.nftApi.fetchAllNfts((nfts: NftModel[]) => {
-    //         this.nfts = nfts.filter((nft: NftModel) => nft.recipient === recipient);
-    //     })
-    // }
 
     async mintCollection(callBefore: () => void, success: () => void, error: () => void) {
         callBefore();
