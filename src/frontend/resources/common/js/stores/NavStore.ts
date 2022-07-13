@@ -196,11 +196,6 @@ export default class NavStore {
         return null;
     }
 
-    finishMintingCollection() {
-        this.collectionMinted = true;
-        this.mintStep = NavStore.STEP_COLLECTION_DETAILS;
-    }
-
     // option
 
     isMintOptionSingle(): boolean {

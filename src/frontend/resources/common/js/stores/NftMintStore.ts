@@ -56,23 +56,26 @@ export default class NftMintStore {
         })
     }
 
-    async mintCollection(callBefore: () => void, success: () => void) {
+    async mintCollection(callBefore: () => void, success: () => void, error: () => void) {
         callBefore();
 
-        const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
-        // TODO: check if denom id exists
-        const txRes = await client.nftIssueDenom(
-            this.walletStore.keplrWallet.accountAddress,
-            this.collectionName,
-            this.collectionName,
-            this.collectionName,
-            this.collectionName,
-            GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
-        );
+        try {
+            const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
+            const txRes = await client.nftIssueDenom(
+                this.walletStore.keplrWallet.accountAddress,
+                this.collectionName,
+                this.collectionName,
+                this.collectionName,
+                this.collectionName,
+                GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
+            );
 
-        this.transactionHash = txRes.transactionHash;
+            this.transactionHash = txRes.transactionHash;
 
-        success();
+            success();
+        } catch (e) {
+            error();
+        }
     }
 
     async mintNfts(
