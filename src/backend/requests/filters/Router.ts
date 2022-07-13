@@ -67,14 +67,13 @@ export default class Router {
 
             if (e instanceof StateException) {
                 switch (e.errorCode) {
-                    default:
-                    case Response.S_STATUS_DO_NOT_HANDLE:
-                        const res = new Response();
-                        res.setStatus(e.errorCode);
-                        ctx.body = res;
-                        break;
                     case Response.S_STATUS_RUNTIME_ERROR:
                         Router.processRequestError(ctx, e);
+                        break;
+                    case Response.S_STATUS_DO_NOT_HANDLE:
+                    default:
+                        ctx.body = new Response();
+                        ctx.body.setStatus(e.errorCode);
                         break;
                 }
             } else {
@@ -92,7 +91,7 @@ export default class Router {
 
     static processRequestError(ctx, e) {
         ctx.response.status = 500;
-        ctx.body = `${Date.now()}#${parseInt(Math.random() * 100000)}`;
+        ctx.body = `${Date.now()}#${Math.floor(Math.random() * 100000)}`;
         Logger.error(e);
     }
 
