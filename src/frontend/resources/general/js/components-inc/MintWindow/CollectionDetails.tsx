@@ -21,23 +21,13 @@ interface Props {
     navStore: NavStore;
 }
 
-interface State {
-    isAfterMintTry: boolean;
-    mintingFailed: boolean;
-}
-
-class CollectionDetails extends React.Component<Props, State> {
+class CollectionDetails extends React.Component<Props> {
     anchorEl: any;
 
     constructor(props) {
         super(props);
 
         this.anchorEl = null;
-
-        this.state = {
-            isAfterMintTry: false,
-            mintingFailed: false,
-        }
     }
 
     onChangeCollectionName = (value) => {
@@ -61,8 +51,8 @@ class CollectionDetails extends React.Component<Props, State> {
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={this.props.nftMintStore.collectionName}
+                            readOnly={!this.props.navStore.isCollectionMintedNone()}
                             onChange={this.onChangeCollectionName}
-                            readOnly={this.state.isAfterMintTry}
                         />
 
                         <div className={'Info FlexRow'}>
@@ -70,11 +60,11 @@ class CollectionDetails extends React.Component<Props, State> {
                             <div className={'Text'}>The cover image of the collection will be randomly selected from the uploaded NFTs in it.</div>
                         </div>
 
-                        {this.state.isAfterMintTry
+                        {!this.props.navStore.isCollectionMintedNone()
                             ? <div className={'SuccessMessage FlexColumn'}>
                                 <div className={'Heading FlexRow'}>
 
-                                    {this.state.mintingFailed
+                                    {this.props.navStore.isCollectionMintedFail()
                                         ? (<>
                                             {/* // TODO: set to error circle */}
                                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
@@ -86,7 +76,7 @@ class CollectionDetails extends React.Component<Props, State> {
                                         </>)
                                     }
                                 </div>
-                                {!this.state.mintingFailed
+                                {!this.props.navStore.isCollectionMintedSuccess()
                                     && <div className={'FlexRow TransacionInfo'}>
                                         <div className={'InfoMessage'}>Check transaction details in Explorer</div>
                                         <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
@@ -101,20 +91,8 @@ class CollectionDetails extends React.Component<Props, State> {
                                     onClick={this.props.nftMintStore.mintCollection.bind(
                                         this.props.nftMintStore,
                                         this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
-                                        () => {
-                                            this.props.navStore.mintStep = NavStore.STEP_COLLECTION_DETAILS;
-                                            this.setState({
-                                                isAfterMintTry: true,
-                                                mintingFailed: false,
-                                            })
-                                        },
-                                        () => {
-                                            this.props.navStore.mintStep = NavStore.STEP_COLLECTION_DETAILS;
-                                            this.setState({
-                                                isAfterMintTry: true,
-                                                mintingFailed: true,
-                                            })
-                                        },
+                                        this.props.navStore.collectionMintSuccess.bind(this.props.navStore),
+                                        this.props.navStore.collectionMintFail.bind(this.props.navStore),
                                     )}
                                 >Mint Collection</Button>
                             </Actions>

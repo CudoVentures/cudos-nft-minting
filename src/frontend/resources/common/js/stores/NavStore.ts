@@ -23,18 +23,22 @@ export default class NavStore {
     static STEP_MINTING_DONE: number = 7;
     static STEP_MINTING_FAILED: number = 8;
 
+    static COLLECTION_MINT_NONE: number = 1;
+    static COLLECTION_MINT_SUCCESS: number = 2;
+    static COLLECTION_MINT_FAIL: number = 3;
+
     nftPage: number;
     mintOption: number;
     mintStep: number;
     nftMintStore: NftMintStore;
-    collectionMinted: boolean;
+    collectionMinted: number;
 
     constructor(nftMintStore: NftMintStore) {
         this.nftPage = NavStore.MY_NFTS_PAGE_KEY;
         this.mintOption = S.NOT_EXISTS;
         this.mintStep = NavStore.STEP_CHOOSE_OPTION;
         this.nftMintStore = nftMintStore;
-        this.collectionMinted = false;
+        this.collectionMinted = NavStore.COLLECTION_MINT_NONE;
 
         makeAutoObservable(this);
     }
@@ -166,7 +170,7 @@ export default class NavStore {
 
     getPreviousStepFunction() {
         if (this.isMintStepDetails() && this.isMintOptionSingle()) {
-            return () => this.mintStep = NavStore.STEP_UPLOAD_FILE;
+            return () => { this.mintStep = NavStore.STEP_UPLOAD_FILE };
         }
 
         return () => this.selectPreviousStep();
@@ -250,6 +254,30 @@ export default class NavStore {
         return NavStore.getMintOptionText(this.mintOption);
     }
 
+    isCollectionMintedSuccess(): boolean {
+        return this.collectionMinted === NavStore.COLLECTION_MINT_SUCCESS;
+    }
+
+    isCollectionMintedNone(): boolean {
+        return this.collectionMinted === NavStore.COLLECTION_MINT_NONE;
+    }
+
+    isCollectionMintedFail(): boolean {
+        return this.collectionMinted === NavStore.COLLECTION_MINT_FAIL;
+    }
+
+    collectionMintSuccess() {
+        this.collectionMinted = NavStore.COLLECTION_MINT_SUCCESS;
+    }
+
+    collectionMintFail() {
+        this.collectionMinted = NavStore.COLLECTION_MINT_FAIL;
+    }
+
+    collectionMintNone() {
+        this.collectionMinted = NavStore.COLLECTION_MINT_NONE;
+    }
+
     isNextStepActive(): boolean {
         // on first step a mint option should be selected to continue
         return (this.isMintStepChooseOption()
@@ -259,7 +287,7 @@ export default class NavStore {
                 && !this.nftMintStore.isNftsEmpty())
             // on collection details step a colletion should be minted
             || (this.isMintStepCollectionDetails()
-                && this.collectionMinted)
+                && this.isCollectionMintedSuccess())
             // on nft details step nft name should be entered for all pictures
             || (this.isMintStepDetails()
                 && (
