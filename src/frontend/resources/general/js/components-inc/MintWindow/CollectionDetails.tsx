@@ -40,6 +40,10 @@ class CollectionDetails extends React.Component<Props, State> {
         }
     }
 
+    onChangeCollectionName = (value) => {
+        this.props.nftMintStore.collectionName = value;
+    }
+
     render() {
         return (
             <NftStepWrapper
@@ -57,7 +61,7 @@ class CollectionDetails extends React.Component<Props, State> {
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={this.props.nftMintStore.collectionName}
-                            onChange={this.props.nftMintStore.onChangeCollectionName.bind(this.props.nftMintStore)}
+                            onChange={this.onChangeCollectionName}
                             readOnly={this.state.isAfterMintTry}
                         />
 

@@ -1,11 +1,13 @@
 import { makeObservable, observable } from 'mobx';
+import { GasPrice, SigningStargateClient } from 'cudosjs';
+
+import S from '../utilities/Main';
+import Config from '../../../../../../builds/dev-generated/Config';
+
 import InfuraApi from '../api/InfuraApi';
 import NftApi from '../api/NftApi';
 import NftModel from '../models/NftModel';
-import S from '../utilities/Main';
-import { GasPrice, SigningStargateClient, StargateClient } from 'cudosjs';
 import WalletStore from './WalletStore';
-import Config from '../../../../../../builds/dev-generated/Config';
 
 export default class NftMintStore {
 
@@ -13,9 +15,9 @@ export default class NftMintStore {
     infuraApi: InfuraApi;
     walletStore: WalletStore;
 
-    @observable isImageLinkValid: boolean;
+    // @observable isImageLinkValid: boolean;
     @observable imageUrlInputValue: string;
-    @observable isAddressFieldActive: number;
+    @observable recipientFieldActive: number;
 
     @observable collectionName: string;
     @observable nfts: NftModel[];
@@ -29,12 +31,13 @@ export default class NftMintStore {
         this.infuraApi = new InfuraApi();
         this.walletStore = walletStore;
 
-        this.nfts = [];
+        this.recipientFieldActive = S.INT_FALSE;
+        this.imageUrlInputValue = S.Strings.EMPTY;
+
         this.collectionName = S.Strings.EMPTY;
+        this.nfts = [];
         this.mintedNfts = [];
         this.selectedNfts = [];
-        this.isAddressFieldActive = S.INT_FALSE;
-        this.imageUrlInputValue = S.Strings.EMPTY;
         this.transactionHash = S.Strings.EMPTY;
 
         makeObservable(this);
@@ -216,9 +219,7 @@ export default class NftMintStore {
     }
 
     areAllNftsSelected(): number {
-        return this.nfts.length === this.selectedNfts.length
-            && this.nfts.length !== 0
-            ? S.INT_TRUE : S.INT_FALSE;
+        return this.nfts.length === this.selectedNfts.length && this.nfts.length !== 0 ? S.INT_TRUE : S.INT_FALSE;
     }
 
     isNftSelected(index: number): number {
@@ -229,20 +230,12 @@ export default class NftMintStore {
         return this.nfts.length === 0;
     }
 
-    onChangeCollectionName(value: string): void {
-        this.collectionName = value;
-    }
-
-    onChangeNftFormName(nft: NftModel, value: string): void {
-        nft.name = value;
-    }
-
-    onChangeNftFormAddress(nft: NftModel, value: string): void {
-        nft.recipient = value;
-    }
-
     toggleAddressFieldActive(): void {
-        this.isAddressFieldActive = this.isAddressFieldActive === S.INT_TRUE ? S.INT_FALSE : S.INT_TRUE;
-        this.onChangeNftFormAddress(this.nfts[0], '');
+        this.recipientFieldActive = this.isRecipientFieldActive() === true ? S.INT_FALSE : S.INT_TRUE;
+        this.nfts[0].recipient = S.Strings.EMPTY;
+    }
+
+    isRecipientFieldActive(): boolean {
+        return this.recipientFieldActive === S.INT_TRUE;
     }
 }
