@@ -16,7 +16,7 @@
 
     /* theme */
     --color-input-text: var(--color-dark);
-    --color-input-label: var(--color-gray-dark);
+    --color-input-label: var(--color-dark);
     --color-input-focused: #262b31;
     --color-input-border: var(--color-gray-dark);
     --color-input-border-hover: #262b31;

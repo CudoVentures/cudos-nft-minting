@@ -128,10 +128,6 @@ export default class NftMintStore {
         this.nfts.push(nft);
     }
 
-    onImageUrlChange(value: string): void {
-        this.imageUrlInputValue = value;
-    }
-
     async getImageFromUrl(): Promise<void> {
         let url = this.imageUrlInputValue;
 
@@ -155,7 +151,6 @@ export default class NftMintStore {
             nft.updatePreviewUrl();
 
             this.nfts.push(nft);
-
         } catch (e) {
             throw Error('Could not fetch file.');
         }

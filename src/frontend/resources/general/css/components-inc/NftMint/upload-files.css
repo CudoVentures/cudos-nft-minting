@@ -11,18 +11,18 @@
     min-height: 80px;
 }
 
-/* here active stands for the oposite */
+/* here active stands for the opposite */
 .UploadFiles .FileAddRow.Active {
     opacity: 0.5;
     pointer-events: none;
 }
 
-.UploadFiles .FilesUpload {
+.UploadFiles .FileAddRow .FilesUpload {
     width: 50%;
 }
 
 .UploadFiles .FileAddRow .UploadFileBox {
-    border: 2px dashed #2e2e2e;
+    border: 2px dashed var(--color-gray-light-02);
     border-radius: 20px;
     padding: 27px 44px;
     margin-right: 30px;
@@ -78,14 +78,19 @@
     width: 50%;
 }
 
-.UploadFiles .FileAddRow .FileFromLink .BoxHeading {
+.UploadFiles .FileAddRow .FileFromLink .UploadActions {
+    align-self: flex-end;
+    flex: 0 0 auto;
+}
+
+/* .UploadFiles .FileAddRow .FileFromLink .BoxHeading {
     font-weight: 600;
     font-size: 14px;
     color: var(--color-secondary);
     margin-bottom: 5px;
-}
+} */
 
-.UploadFiles .FileAddRow .FileFromLink .Input {
+/* .UploadFiles .FileAddRow .FileFromLink .Input {
     margin-right: 20px;
 }
 
@@ -95,7 +100,7 @@
     line-height: 21px;
     color: #999FB1;
     padding-left: 21px;
-}
+} */
 
 .UploadFiles .TableDesktop .Empty .NoRowsContent {
     align-items: center;
