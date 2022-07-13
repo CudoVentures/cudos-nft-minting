@@ -51,10 +51,8 @@ export default class NftService {
             throw new StateException(Response.S_STATUS_RUNTIME_ERROR, 'Failed to create wallet');
         }
 
-        // TODO: set the env rpc value
         try {
-            client = await SigningStargateClient.connectWithSigner('http://host.docker.internal:36657', wallet);
-            // client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, wallet);
+            client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC_BACKEND, wallet);
         } catch (e) {
             throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to connect signing client');
         }

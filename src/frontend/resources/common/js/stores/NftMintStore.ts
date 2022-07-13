@@ -25,7 +25,6 @@ export default class NftMintStore {
     @observable denomId: string;
     @observable collectionName: string;
     @observable nfts: NftModel[];
-    @observable mintedNfts: number[];
     @observable selectedNfts: number[];
 
     @observable transactionHash: string;
@@ -40,7 +39,6 @@ export default class NftMintStore {
 
         this.collectionName = S.Strings.EMPTY;
         this.nfts = [];
-        this.mintedNfts = [];
         this.selectedNfts = [];
         this.transactionHash = S.Strings.EMPTY;
 
@@ -139,10 +137,8 @@ export default class NftMintStore {
 
             await this.nftApi.mintNfts(
                 this.nfts,
-                (nfts: NftModel[], txHash: string) => {
-                    this.nfts = nfts
+                (txHash: string) => {
                     this.transactionHash = txHash;
-
                     success();
                 },
                 error,
