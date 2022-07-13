@@ -13,7 +13,7 @@ import NftStepWrapper from './NftStepWrapper';
 
 import SvgInfo from '../../../../common/svg/info.svg';
 import SvgTickCircle from '../../../../common/svg/tick-circle.svg';
-// import SvgErrorCircle from '../../../../common/svg/error-circle.svg';
+import SvgCloseBtnOutlined from '../../../../common/svg/close-btn-outlined.svg';
 import SvgLinkBox from '../../../../common/svg/link-box.svg';
 
 interface Props {
@@ -66,8 +66,7 @@ class CollectionDetails extends React.Component<Props> {
 
                                     {this.props.navStore.isCollectionMintedFail()
                                         ? (<>
-                                            {/* // TODO: set to error circle */}
-                                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
+                                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCloseBtnOutlined }} />
                                             <div className={'ErrorMessageText'}>Collection minting failed!</div>
                                         </>)
                                         : (<>
