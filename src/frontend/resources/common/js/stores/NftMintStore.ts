@@ -8,6 +8,7 @@ import NftApi from '../api/NftApi';
 import NftModel from '../models/NftModel';
 import WalletStore from './WalletStore';
 import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
+import MyNftsStore from './MyNftsStore';
 
 export default class NftMintStore {
 
@@ -15,6 +16,7 @@ export default class NftMintStore {
     static MINT_MODE_BACKEND: number = 2;
 
     nftApi: NftApi;
+    myNftsStore: MyNftsStore;
     walletStore: WalletStore;
 
     // @observable isImageLinkValid: boolean;
@@ -28,8 +30,9 @@ export default class NftMintStore {
 
     @observable transactionHash: string;
 
-    constructor(walletStore: WalletStore) {
+    constructor(myNftsStore: MyNftsStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
+        this.myNftsStore = myNftsStore;
         this.walletStore = walletStore;
 
         this.recipientFieldActive = S.INT_FALSE;
@@ -131,6 +134,7 @@ export default class NftMintStore {
                     this.nfts,
                     (txHash: string) => {
                         this.transactionHash = txHash;
+                        this.myNftsStore.onMintNft(null, this.nfts);
                         success();
                     },
                     error,

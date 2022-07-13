@@ -113,25 +113,50 @@ export default class MyNftsStore {
         this.filteredNftCollectionModels = FilterHelper.filter(this.nftCollectionModels, this.filterString) as NftCollectionModel[];
     }
 
-    async fetchNfts() {
-        let nftCollectionModels = [];
-        let nftModels = [];
+    onMintNft(nftCollectionModel: NftCollectionModel, nftModels: NftModel[]) {
+        if (nftCollectionModel !== null) {
+            this.nftCollectionModels.pushIfNotExist(nftCollectionModel, (t1, t2) => {
+                return t1.denomId === t2.denomId;
+            })
+        }
 
+        if (nftModels !== null) {
+            nftModels.forEach((nftModel) => {
+                this.nftModels.pushIfNotExist(nftModel, (t1, t2) => {
+                    return t1.tokenId === t2.tokenId;
+                })
+            });
+        }
+
+        this.updateNftsInCollectionsMap();
+    }
+
+    async fetchNfts() {
         await new Promise < void >((resolve, reject) => {
-            this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_, nftModels_) => {
-                nftCollectionModels = nftCollectionModels_.filter((nftCollectioModel) => {
+            this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_: NftCollectionModel[], nftModels_: NftModel[]) => {
+                this.nftCollectionModels = nftCollectionModels_.filter((nftCollectioModel) => {
                     return nftCollectioModel.isCudosMainCollection() === false;
                 });
-                nftModels = nftModels.concat(nftModels_);
+                this.nftModels = this.nftModels.concat(nftModels_);
                 resolve();
             });
         });
 
-        const cache = this.nftsInCollectionsMap
-        this.nftsInCollectionsMap = null;
-        cache.clear();
+        this.initializeNftsInCollectionsMap();
+        this.filter();
 
-        this.nftModels = nftModels.map((m) => NftModel.fromJSON(m));
+        this.initialized = true;
+    }
+
+    initializeNftsInCollectionsMap() {
+        this.nftsInCollectionsMap.clear();
+        this.updateNftsInCollectionsMap();
+    }
+
+    updateNftsInCollectionsMap() {
+        const cache = this.nftsInCollectionsMap;
+        this.nftsInCollectionsMap = null;
+
         this.nftModels.forEach((nftModel) => {
             let pointer = cache.get(nftModel.denomId);
             if (pointer === undefined) {
@@ -139,15 +164,14 @@ export default class MyNftsStore {
             }
             pointer.push(nftModel);
         });
-        this.nftCollectionModels = nftCollectionModels.map((collection) => {
-            return NftCollectionModel.fromJson(collection);
+
+        this.nftCollectionModels.forEach((nftCollectionModel) => {
+            if (cache.has(nftCollectionModel.denomId) === false) {
+                cache.set(nftCollectionModel.denomId, []);
+            }
         });
 
         this.nftsInCollectionsMap = cache;
-
-        this.filter();
-
-        this.initialized = true;
     }
 
 }
