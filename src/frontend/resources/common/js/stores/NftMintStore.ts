@@ -224,5 +224,6 @@ export default class NftMintStore {
 
     toggleAddressFieldActive(): void {
         this.isAddressFieldActive = this.isAddressFieldActive === S.INT_TRUE ? S.INT_FALSE : S.INT_TRUE;
+        this.onChangeNftFormAddress(this.nfts[0], '');
     }
 }
