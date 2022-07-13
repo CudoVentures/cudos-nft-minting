@@ -1,3 +1,4 @@
+import Config from '../../../../../../builds/dev-generated/Config';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
 
@@ -15,6 +16,10 @@ export default class NftCollectionModel implements Filterable {
         return this.name;
     }
 
+    isCudosMainCollection(): boolean {
+        return this.denomId === Config.CUDOS_NETWORK.NFT_DENOM_ID;
+    }
+
     toJson(): any {
         return {
             'denomId': this.denomId,
@@ -29,7 +34,7 @@ export default class NftCollectionModel implements Filterable {
 
         const model = new NftCollectionModel();
 
-        model.denomId = json.denomId ?? model.denomId;
+        model.denomId = json.id ?? model.denomId;
         model.name = json.name ?? model.name;
 
         return model;

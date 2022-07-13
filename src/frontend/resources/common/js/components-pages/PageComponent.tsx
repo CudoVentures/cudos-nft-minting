@@ -31,7 +31,7 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
 
     static layout(componentNode: React.ReactNode) {
         const walletStore = new WalletStore();
-        const myNftsStore = new MyNftsStore();
+        const myNftsStore = new MyNftsStore(walletStore);
         const nftMintStore = new NftMintStore(walletStore);
         const navStore = new NavStore(nftMintStore);
 
