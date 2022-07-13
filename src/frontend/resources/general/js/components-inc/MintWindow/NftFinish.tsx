@@ -1,18 +1,19 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
-import NftModel from '../../../../common/js/models/NftModel';
+import { inject, observer } from 'mobx-react';
+
+import S from '../../../../common/js/utilities/Main';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
-import '../../../css/components-inc/NftMint/nft-finish.css';
-import NftSidePreview from '../NftSidePreview';
 import NavStore from '../../../../common/js/stores/NavStore';
 import WalletStore from '../../../../common/js/stores/WalletStore';
-import S from '../../../../common/js/utilities/Main';
+
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 import Popover from '../../../../common/js/components-inc/Popover';
+import NftSidePreview from '../NftSidePreview';
+import NftStepWrapper from './NftStepWrapper';
 
 import SvgInfo from '../../../../common/svg/info.svg';
-import NftStepWrapper from './NftStepWrapper';
+import '../../../css/components-inc/NftMint/nft-finish.css';
 
 interface Props {
     nftMintStore: NftMintStore
@@ -21,18 +22,18 @@ interface Props {
 }
 
 interface State {
+    anchorEl: any;
     feeEstimate: number;
     feeEstimateInDollars: number;
 }
 
 class NftFinish extends React.Component<Props, State> {
-    anchorEl: any;
 
     constructor(props) {
         super(props);
-        this.anchorEl = null;
 
         this.state = {
+            anchorEl: null,
             feeEstimate: 0,
             feeEstimateInDollars: 0,
         }
@@ -50,8 +51,20 @@ class NftFinish extends React.Component<Props, State> {
 
     }
 
+    onShowFreeInfo = (e) => {
+        this.setState({
+            'anchorEl': e.target,
+        });
+    }
+
+    onHideFreeInfo = () => {
+        this.setState({
+            'anchorEl': null,
+        })
+    }
+
     render() {
-        const nfts: NftModel[] = this.props.nftMintStore.nfts;
+        const nfts = this.props.nftMintStore.nfts;
 
         return (
             <NftStepWrapper
@@ -61,16 +74,16 @@ class NftFinish extends React.Component<Props, State> {
                 <div className={'FlexRow NftFinishHolder'}>
                     <NftSidePreview
                         imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].getPreviewUrl() : ''}
-                        name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName}
-                    />
+                        name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName} />
                     <div className={'FlexColumn FlexGrow'}>
                         <div className={'FlexColumn SummaryDetails'}>
                             <div className={'SummaryHeading'}>Minting details</div>
-                            {this.props.navStore.isMintOptionMultiple()
-                                && <div className={'FlexColumn DetailsRow'}>
+                            { this.props.navStore.isMintOptionMultiple() === true && (
+                                <div className={'FlexColumn DetailsRow'}>
                                     <div className={'DetailHeading'}>Collection Name</div>
                                     <div className={'DetailData'}>{this.props.nftMintStore.collectionName}</div>
-                                </div>}
+                                </div>
+                            ) }
                             <div className={'FlexRow DetailsRow'}>
                                 <div className={'FlexColumnt DetailColumn'}>
                                     <div className={'DetailHeading'}>Items</div>
@@ -80,39 +93,45 @@ class NftFinish extends React.Component<Props, State> {
                                     <div className={'DetailHeading'}>Mint Type</div>
                                     <div className={'DetailData'}>{NavStore.getMintTypeText(this.props.navStore.mintOption)}</div>
                                 </div>
-
                                 <div className={'FlexColumnt DetailColumn'}>
                                     <div className={'DetailHeading'}>Estimated Gas Fee</div>
                                     <div className={'DetailData FlexRow'}>
-                                        <div className={`FeeEstimate ${this.props.navStore.isMintOptionSingle() ? 'Crossed' : ''}`}>{this.state.feeEstimate} CUDOS</div>
+                                        <div className={`FeeEstimate ${S.CSS.getClassName(this.props.navStore.isMintOptionSingle(), 'Crossed')}`}>{this.state.feeEstimate} CUDOS</div>
                                         <div className={'RealPrice FlexRow'}>
-                                            {this.props.navStore.isMintOptionSingle()
-                                                ? <>
+                                            {this.props.navStore.isMintOptionSingle() ? (
+                                                <>
                                                     FREE
                                                     <div
-                                                        className={'SVG Icon'}
+                                                        className={'SVG Icon Clickable'}
                                                         dangerouslySetInnerHTML={{ __html: SvgInfo }}
-                                                        onClick={(e) => { this.anchorEl = e.target; this.setState({}); }}
-                                                    />
+                                                        onClick={this.onShowFreeInfo} />
                                                     <Popover
-                                                        anchorEl={this.anchorEl}
-                                                        open={this.anchorEl !== null}
-                                                        onClose={() => { this.anchorEl = null; this.setState({}) }} >
+                                                        anchorEl={this.state.anchorEl}
+                                                        open={this.state.anchorEl !== null}
+                                                        onClose={this.onHideFreeInfo}
+                                                        transformOrigin = {{
+                                                            'vertical': 'top',
+                                                            'horizontal': 'left',
+                                                        }} >
                                                         {/* // TODO: get real TEXT */}
                                                         This is free
                                                     </Popover>
                                                 </>
-                                                : <>{`&dollar; ${this.state.feeEstimateInDollars.toFixed(2)}`}</>
-                                            }
+                                            ) : (
+                                                <>
+                                                    {`&dollar; ${this.state.feeEstimateInDollars.toFixed(2)}`}
+                                                </>
+                                            ) }
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {this.props.navStore.isMintOptionSingle()
-                                && <div className={'FlexColumnt DetailColumn'}>
+                            {this.props.navStore.isMintOptionSingle() === true && (
+                                <div className={'FlexColumnt DetailColumn'}>
                                     <div className={'DetailHeading'}>Recipient</div>
                                     <div className={'DetailData'}>{nfts[0].recipient !== S.Strings.EMPTY ? nfts[0].recipient : this.props.walletStore.keplrWallet.accountAddress}</div>
-                                </div>}
+                                </div>
+                            ) }
                         </div>
                         <Actions className={'MintNftButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
                             <Button
@@ -125,8 +144,9 @@ class NftFinish extends React.Component<Props, State> {
                                     this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
                                     this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
                                     this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
-                                )}
-                            >{this.props.navStore.isMintOptionSingle() ? 'Mint NFT' : 'Mint Collection NFTs'}</Button>
+                                )} >
+                                {this.props.navStore.isMintOptionSingle() === true ? 'Mint NFT' : 'Mint Collection NFTs'}
+                            </Button>
                         </Actions>
                     </div>
                 </div>
