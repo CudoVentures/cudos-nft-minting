@@ -16,6 +16,7 @@ import NftStepWrapper from './NftStepWrapper';
 
 import SvgInfo from '../../../../common/svg/info.svg';
 import '../../../css/components-inc/NftMint/nft-details.css';
+import InputStateHelper from '../../../../common/js/helpers/InputStateHelper';
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -23,16 +24,41 @@ interface Props {
 }
 
 interface State {
-
+    anchorEl: any;
 }
 
-class NftDetails extends React.Component<Props, State> {
-    anchorEl: any;
+class NftDetails extends React.Component < Props, State > {
 
     constructor(props) {
         super(props);
 
-        this.anchorEl = null;
+        this.state = {
+            'anchorEl': null,
+        }
+    }
+
+    onChangeNftName = (nftModel: NftModel, value) => {
+        nftModel.name = value;
+    }
+
+    onChangeNftRecipient = (nftModel: NftModel, value) => {
+        nftModel.recipient = value;
+    }
+
+    onShowGiftInfo = (e) => {
+        this.setState({
+            'anchorEl': e.target,
+        });
+    }
+
+    onHideGiftInfo = () => {
+        this.setState({
+            'anchorEl': null,
+        })
+    }
+
+    onToggleRecipient = () => {
+        this.props.nftMintStore.toggleAddressFieldActive();
     }
 
     render() {
@@ -60,7 +86,7 @@ class NftDetails extends React.Component<Props, State> {
                             placeholder={'Add name...'}
                             value={nft.name}
                             margin={InputMargin.DENSE}
-                            onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)}
+                            onChange={this.onChangeNftName.bind(this, nft)}
                         />
                     </div>))
                 }
@@ -69,7 +95,8 @@ class NftDetails extends React.Component<Props, State> {
     }
 
     renderSingleNftDetails() {
-        const nft: NftModel = this.props.nftMintStore.nfts[0];
+        const nftMintStore = this.props.nftMintStore;
+        const nftModel = this.props.nftMintStore.nfts[0];
 
         return (
             <NftStepWrapper
@@ -78,42 +105,42 @@ class NftDetails extends React.Component<Props, State> {
                 stepName = { 'NFT Details' } >
                 <div className={'FlexRow DetailsHolder'}>
                     <NftSidePreview
-                        imageUrl={nft.getPreviewUrl()}
-                        name={nft.name} />
+                        imageUrl={nftModel.getPreviewUrl()}
+                        name={nftModel.name} />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
                         <Input
                             className={'NftName'}
                             label={'Nft Name'}
                             placeholder={'E.g. Cool NFT'}
-                            value={nft.name}
-                            onChange={this.props.nftMintStore.onChangeNftFormName.bind(this.props.nftMintStore, nft)} />
+                            value = { nftModel.name }
+                            onChange = { this.onChangeNftName.bind(this, nftModel) } />
                         <div className={'FlexRow'}>
                             <Checkbox
-                                value={this.props.nftMintStore.isAddressFieldActive}
-                                onChange={this.props.nftMintStore.toggleAddressFieldActive.bind(this.props.nftMintStore)}
-                                label={'I want to send this NFT as a gift'}
-                            />
-                            <div className={'SVG Icon'}
+                                value={nftMintStore.recipientFieldActive}
+                                onChange={this.onToggleRecipient}
+                                label={'I want to send this NFT as a gift'} />
+                            <div className={'SVG Icon Clickable'}
                                 dangerouslySetInnerHTML={{ __html: SvgInfo }}
-                                onClick={(e) => { this.anchorEl = e.target; this.setState({}); }}
-                            ></div>
+                                onClick={ this.onShowGiftInfo } />
                             <Popover
-                                anchorEl={this.anchorEl}
-                                open={this.anchorEl !== null}
-                                onClose={() => { this.anchorEl = null; this.setState({}) }} >
-                            This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
+                                anchorEl = { this.state.anchorEl }
+                                open = { this.state.anchorEl !== null }
+                                onClose = { this.onHideGiftInfo }
+                                transformOrigin = {{
+                                    'vertical': 'top',
+                                    'horizontal': 'left',
+                                }} >
+                                This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
                             </Popover>
                         </div>
-                        {this.props.nftMintStore.isAddressFieldActive === S.INT_TRUE
-                        && (<Input
-                            className={'NftRecepient'}
-                            label={'Recipient Address'}
-                            placeholder={'cudos1...'}
-                            value={nft.recipient}
-                            onChange={this.props.nftMintStore.onChangeNftFormAddress.bind(this.props.nftMintStore, nft)}
-                        />
-                        )
-                        }
+                        { nftMintStore.isRecipientFieldActive() === true && (
+                            <Input
+                                className={'NftRecepient'}
+                                label={'Recipient Address'}
+                                placeholder={'cudos1...'}
+                                value = { nftModel.recipient }
+                                onChange = {this.onChangeNftRecipient.bind(this, nftModel) } />
+                        ) }
                     </LayoutBlock>
                 </div>
             </NftStepWrapper>

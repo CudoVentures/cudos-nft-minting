@@ -30,6 +30,10 @@ class CollectionDetails extends React.Component<Props> {
         this.anchorEl = null;
     }
 
+    onChangeCollectionName = (value) => {
+        this.props.nftMintStore.collectionName = value;
+    }
+
     render() {
         return (
             <NftStepWrapper
@@ -47,8 +51,8 @@ class CollectionDetails extends React.Component<Props> {
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={this.props.nftMintStore.collectionName}
-                            onChange={this.props.nftMintStore.onChangeCollectionName.bind(this.props.nftMintStore)}
                             readOnly={!this.props.navStore.isCollectionMintedNone()}
+                            onChange={this.onChangeCollectionName}
                         />
 
                         <div className={'Info FlexRow'}>
