@@ -154,9 +154,9 @@ class NftFinish extends React.Component<Props, State> {
                             onClick={this.props.nftMintStore.mintNfts.bind(
                                 this.props.nftMintStore,
                                 this.props.navStore.isMintOptionSingle() ? NftMintStore.MINT_MODE_BACKEND : NftMintStore.MINT_MODE_LOCAL,
-                                this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
-                                this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
-                                this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
+                                this.props.navStore.selectStepMintingInProgress,
+                                this.props.navStore.selectStepMintingSucceeeded,
+                                this.props.navStore.selectStepMintingFailed,
                             )} >
                             {this.props.navStore.isMintOptionSingle() === true ? 'Mint NFT' : 'Mint Collection NFTs'}
                         </Button>

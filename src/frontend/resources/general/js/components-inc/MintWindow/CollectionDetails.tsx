@@ -85,12 +85,7 @@ class CollectionDetails extends React.Component<Props> {
                                     radius={Button.RADIUS_MAX}
                                     color={Button.COLOR_SCHEME_1}
                                     padding={Button.PADDING_24}
-                                    onClick={this.props.nftMintStore.mintCollection.bind(
-                                        this.props.nftMintStore,
-                                        this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
-                                        this.props.navStore.collectionMintSuccess.bind(this.props.navStore),
-                                        this.props.navStore.collectionMintFail.bind(this.props.navStore),
-                                    )}>
+                                    onClick={this.props.nftMintStore.mintCollection.bind(this.props.nftMintStore, this.props.navStore.selectStepMintingInProgress, this.props.navStore.collectionMintSuccess, this.props.navStore.collectionMintFail)}>
                                     Mint Collection
                                 </Button>
                             </Actions>
