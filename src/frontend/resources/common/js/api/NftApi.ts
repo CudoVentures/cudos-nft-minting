@@ -112,30 +112,50 @@ export default class NftApi extends AbsApi {
         callback(resNftCollectionModels, resNftModels);
     }
 
-    mintNfts(nftModels: NftModel[], callback: (txHash: string) => void, error: () => void) {
-        const req = new MintNftReq(nftModels);
+    mintNfts(nftModels: NftModel[]): Promise < string > {
+        return new Promise < string >((resolve, reject) => {
+            const req = new MintNftReq(nftModels);
 
-        this.api.req(Actions.NFT.MINT, req, (json: any) => {
-            if (json.status !== 0) {
-                error();
-                return;
-            }
+            this.api.req(Actions.NFT.MINT, req, (json: any) => {
+                if (json.status !== 0) {
+                    reject();
+                    return;
+                }
 
-            const res = new MintNftRes(json.obj);
-            nftModels.forEach((nftModel, i) => {
-                nftModel.tokenId = res.nfts[i].tokenId;
-                nftModel.url = res.nfts[i].url;
+                const res = new MintNftRes(json.obj);
+                nftModels.forEach((nftModel, i) => {
+                    nftModel.tokenId = res.nfts[i].tokenId;
+                    nftModel.url = res.nfts[i].url;
+                });
+                resolve(res.txHash);
             });
-            callback(res.txHash);
         });
+
+    }
+
+    uploadFiles(files: string[]): Promise < string[] > {
+        return new Promise < string[] >((resolve, reject) => {
+            const req = new UploadImagesReq(files);
+            this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
+                if (json.status !== 0) {
+                    reject();
+                    return;
+                }
+
+                const res = new UploadImagesRes(json.obj);
+                resolve(res.urls);
+            });
+        });
+
     }
 
     async sendNft(nft: NftModel, recipientAddress: string, senderAddress: string, client: SigningStargateClient): Promise<string> {
         const txRes = await client.nftTransfer(senderAddress, nft.denomId, nft.tokenId, senderAddress, recipientAddress, NftApi.getGasPrice());
         return txRes.transactionHash;
     }
+
     async estimateFeeSendNft(nft: NftModel, recipientAddress: string, senderAddress: string, client: SigningStargateClient): Promise<Coin> {
-        const { msgs, fee } = await client.nftModule.msgTransferNft(nft.denomId, nft.tokenId, senderAddress, recipientAddress, senderAddress, '', NftApi.getGasPrice());
+        const { msg, fee } = await client.nftModule.msgTransferNft(nft.denomId, nft.tokenId, senderAddress, recipientAddress, senderAddress, '', NftApi.getGasPrice());
         return fee.amount[0];
     }
 
@@ -149,9 +169,7 @@ export default class NftApi extends AbsApi {
         });
     }
 
-    async getCudosPriceInUsd(): Promise<number> {
-        const now = new Date();
-        now.setMinutes(0);
+    async getCudosPriceInUsd(): Promise < number > {
         const coinId = 'cudos';
         const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`;
         const res = await fetch(url);
@@ -159,19 +177,6 @@ export default class NftApi extends AbsApi {
         const price = Number(data[coinId].usd);
 
         return price;
-    }
-
-    uploadFiles(files: string[], callback: (urls: string[]) => void, error: () => void) {
-        const req = new UploadImagesReq(files);
-        this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
-            if (json.status !== 0) {
-                error();
-                return;
-            }
-
-            const res = new UploadImagesRes(json.obj);
-            callback(res.urls);
-        });
     }
 
 }
