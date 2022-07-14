@@ -101,12 +101,10 @@ class CollectionDetails extends React.Component<Props> {
                                         )}
                                     </div>
                                     {navMintStore.isCollectionMintedSuccess() && (
-                                        <>
-                                            <div className={'FlexRow TransacionInfo'}>
-                                                <div className={'InfoMessage'}>Check transaction details in Explorer</div>
-                                                <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
-                                            </div>
-                                        </>
+                                        <a className={'FlexRow TransacionInfo'} href={this.props.nftMintStore.getTxHashLink()} target='_blank' rel='noreferrer'>
+                                            <div className={'InfoMessage'}>Check transaction details in Explorer</div>
+                                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} />
+                                        </a>
                                     )}
                                 </div>
                             </>

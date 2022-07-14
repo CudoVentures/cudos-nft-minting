@@ -166,9 +166,9 @@ export default class NftMintStore {
         try {
             this.appStore.disableActions();
             if (this.navMintStore.isMintOptionSingle() === true) {
-                await this.mintBackend();
+                await this.mintSingleNftInCudosCollection();
             } else if (this.navMintStore.isMintOptionMultiple() === true) {
-                await this.mintFrontend();
+                await this.mintNftsInOwnCollection();
             }
             this.navMintStore.selectStepMintingSucceeeded();
         } catch (e) {
@@ -178,11 +178,11 @@ export default class NftMintStore {
         }
     }
 
-    private async mintBackend() {
-        this.transactionHash = await this.nftApi.mintNfts(this.nfts);
+    private async mintSingleNftInCudosCollection() {
+        this.transactionHash = await this.nftApi.mintNftsInCudosCollection(this.nfts);
     }
 
-    private async mintFrontend() {
+    private async mintNftsInOwnCollection() {
         const nfts = this.nfts;
 
         let client: SigningStargateClient;
@@ -195,7 +195,7 @@ export default class NftMintStore {
 
         let mintRes: any;
         const urls = nfts.map((nft: NftModel) => nft.url);
-        const imageUrls = await this.nftApi.uploadFiles(urls);
+        const imageUrls = await this.nftApi.uploadFilesToIpfs(urls);
         for (let i = 0; i < nfts.length; i++) {
             if (nfts[i].url.includes(';base64,')) {
                 nfts[i].url = imageUrls[i];
@@ -203,11 +203,7 @@ export default class NftMintStore {
         }
         const nftInfos = nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
         try {
-            mintRes = await client.nftMintMultipleTokens(
-                nftInfos,
-                this.walletStore.keplrWallet.accountAddress,
-                NftApi.getGasPrice(),
-            )
+            mintRes = await client.nftMintMultipleTokens(nftInfos, this.walletStore.keplrWallet.accountAddress, NftApi.getGasPrice());
         } catch (e) {
             console.log(e);
             throw e;
@@ -557,37 +553,4 @@ export class NavMintStore {
         this.collectionMinted = NavMintStore.COLLECTION_MINT_NONE;
     }
 
-    isNextStepActive(): boolean {
-        // on first step a mint option should be selected to continue
-        if (this.isMintStepChooseOption() && this.mintOption !== S.NOT_EXISTS) {
-            return true;
-        }
-
-        // on upload file step a file should be present to continue
-        if (this.isMintStepUploadFile() && !this.nftMintStore.isNftsEmpty()) {
-            return true;
-        }
-
-        // on collection details step a colletion should be minted
-        if (this.isMintStepCollectionDetails() && this.isCollectionMintedSuccess()) {
-            return true;
-        }
-
-        // on nft details step nft name should be entered for all pictures
-        if (this.isMintStepDetails() && this.nftMintStore.isValidNftModels()) {
-            return true;
-        }
-
-        // on fourth step always active
-        if (this.isMintStepFinish()) {
-            return true;
-        }
-
-        // on step minting done button is always active as well
-        if (this.isMintStepDone()) {
-            return true;
-        }
-
-        return false;
-    }
 }
