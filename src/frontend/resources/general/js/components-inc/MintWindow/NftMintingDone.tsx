@@ -1,7 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
-import Config from '../../../../../../../builds/dev-generated/Config';
 import ProjectUtils from '../../../../common/js/ProjectUtils';
 import AppStore from '../../../../common/js/stores/AppStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
@@ -21,8 +20,10 @@ interface Props {
 class NftMintingDone extends React.Component<Props> {
 
     render() {
-        const appStore = this.props.appStore;
-        const nftModel = this.props.nftMintStore.nfts[0];
+        const { appStore, nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
+        const nftCollectionModel = nftMintStore.nftCollection;
+        const nftModel = nftMintStore.nfts[0];
 
         return (
             <div className={'NftMintingDone FlexColumn FlexGrow'}>
@@ -32,7 +33,7 @@ class NftMintingDone extends React.Component<Props> {
                         <div className={'NftImageHolder'}>
                             <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
                         </div>
-                        <div className={'NftName'}>{nftModel.name}</div>
+                        <div className={'NftName'}>{navMintStore.isMintOptionSingle() ? nftModel.name : nftCollectionModel.name}</div>
                     </div>
                 </div>
                 <div className={'Heading4'} >Minting is Done!</div>

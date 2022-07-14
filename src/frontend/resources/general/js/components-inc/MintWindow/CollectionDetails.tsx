@@ -68,7 +68,7 @@ class CollectionDetails extends React.Component<Props> {
                             label={'Collection  Id'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={nftCollectionModel.denomId}
-                            readOnly={!navMintStore.isCollectionMintedNone()}
+                            readOnly={navMintStore.isCollectionMintedSuccess()}
                             error={nftMintStore.collectionInputError !== S.Strings.EMPTY}
                             helperText={nftMintStore.collectionInputError !== S.Strings.EMPTY ? nftMintStore.collectionInputError : ''}
                             onChange={this.onChangeDenomId} />
@@ -76,7 +76,7 @@ class CollectionDetails extends React.Component<Props> {
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={nftCollectionModel.name}
-                            readOnly={!navMintStore.isCollectionMintedNone()}
+                            readOnly={navMintStore.isCollectionMintedSuccess()}
                             onChange={this.onChangeCollectionName} />
 
                         <div className={'Info FlexRow'}>

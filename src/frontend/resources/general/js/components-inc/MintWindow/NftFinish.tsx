@@ -107,7 +107,7 @@ class NftFinish extends React.Component<Props, State> {
         return (
             <>
                 <NftSidePreview
-                    imageUrl={navMintStore.isMintOptionSingle() ? nfts[0].getPreviewUrl(appStore.workerQueueHelper) : ''}
+                    imageUrl={nfts[0].getPreviewUrl(appStore.workerQueueHelper)}
                     name={navMintStore.isMintOptionSingle() ? nfts[0].name : nftCollectionModel.name} />
                 <div className={'FlexColumn FlexGrow'}>
                     <div className={'FlexColumn SummaryDetails'}>
