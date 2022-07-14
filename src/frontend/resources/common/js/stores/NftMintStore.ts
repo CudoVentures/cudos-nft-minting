@@ -118,7 +118,10 @@ export default class NftMintStore {
                 throw Error('Failed to get token id attribute from attribute event.');
             }
 
-            // this.denomId = tokenIdAttr.value;
+            this.nftCollection.denomId = tokenIdAttr.value;
+            this.nfts.forEach((nftModel) => {
+                nftModel.denomId = this.nftApi.denomId;
+            })
             this.transactionHash = txRes.transactionHash;
 
             success();
@@ -261,7 +264,6 @@ export default class NftMintStore {
     private async addNftModel(url: string, fileName: string, type: string, sizeBytes: number, arrayBuffer: ArrayBuffer): Promise<void> {
         const nft = new NftModel();
 
-        nft.denomId = this.nftCollection.denomId;
         nft.url = url;
         nft.recipient = this.walletStore.keplrWallet.accountAddress;
 
