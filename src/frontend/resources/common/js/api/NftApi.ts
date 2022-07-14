@@ -1,4 +1,4 @@
-import { Coin, StargateClient } from 'cudosjs';
+import { Coin, StargateClient, SigningStargateClient, GasPrice, StdFee } from 'cudosjs';
 import Apis from '../../../../../../builds/dev-generated/Apis';
 import Actions from '../../../../../../builds/dev-generated/Actions';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -27,6 +27,9 @@ export default class NftApi extends AbsApi {
 
         this.queryClient = null;
         this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+    }
+    static getGasPrice() {
+        return GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
     }
 
     async init() {
@@ -125,6 +128,15 @@ export default class NftApi extends AbsApi {
         });
     }
 
+    async sendNft(nft: NftModel, recipientAddress: string, senderAddress: string, client: SigningStargateClient): Promise<string> {
+        const txRes = await client.nftTransfer(senderAddress, nft.denomId, nft.tokenId, senderAddress, recipientAddress, NftApi.getGasPrice());
+        return txRes.transactionHash;
+    }
+    async estimateFeeSendNft(nft: NftModel, recipientAddress: string, senderAddress: string, client: SigningStargateClient): Promise<Coin> {
+        const { msgs, fee } = await client.nftModule.msgTransferNft(nft.denomId, nft.tokenId, senderAddress, recipientAddress, senderAddress, '', NftApi.getGasPrice());
+        return fee.amount[0];
+    }
+
     async estimateFeeMintNft(nftModels: NftModel[], callback: (fee: Coin[]) => void) {
         const req = new EstimateFeeMintNftReq(nftModels);
 
@@ -133,6 +145,18 @@ export default class NftApi extends AbsApi {
 
             callback(res.fee);
         });
+    }
+
+    async getCudosPriceInUsd(): Promise<number> {
+        const now = new Date();
+        now.setMinutes(0);
+        const coinId = 'cudos';
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const price = Number(data[coinId].usd);
+
+        return price;
     }
 
     uploadFiles(files: string[], callback: (urls: string[]) => void, error: () => void) {

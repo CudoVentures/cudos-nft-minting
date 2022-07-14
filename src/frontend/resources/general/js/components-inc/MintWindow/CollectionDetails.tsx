@@ -15,6 +15,7 @@ import SvgInfo from '../../../../common/svg/info.svg';
 import SvgTickCircle from '../../../../common/svg/tick-circle.svg';
 import SvgCloseBtnOutlined from '../../../../common/svg/close-btn-outlined.svg';
 import SvgLinkBox from '../../../../common/svg/link-box.svg';
+import S from '../../../../common/js/utilities/Main';
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -42,6 +43,11 @@ class CollectionDetails extends React.Component<Props> {
         nftCollectionModel.name = value;
     }
 
+    isMintButtonActive(): boolean {
+        const nftCollectionModel = this.props.nftMintStore.nftCollection;
+        return nftCollectionModel.denomId !== S.Strings.EMPTY && nftCollectionModel.name !== S.Strings.EMPTY;
+    }
+
     render() {
         const nftMintStore = this.props.nftMintStore;
         const nftCollectionModel = nftMintStore.nftCollection;
@@ -52,19 +58,19 @@ class CollectionDetails extends React.Component<Props> {
                 stepNumber={`Step ${this.props.navStore.getMintStepShowNumber()}`}
                 stepName={'Collection Details'} >
                 <div className={'FlexRow DetailsHolder'}>
-                    <NftSidePreview name = { nftCollectionModel.name } />
+                    <NftSidePreview name={nftCollectionModel.name} />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'DetailsForm'}>
                         <Input
                             label={'Collection  Id'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={nftCollectionModel.denomId}
-                            readOnly={!this.props.navStore.isCollectionMintedNone()}
+                            readOnly={this.props.navStore.isCollectionMintedSuccess()}
                             onChange={this.onChangeDenomId} />
                         <Input
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
                             value={nftCollectionModel.name}
-                            readOnly={!this.props.navStore.isCollectionMintedNone()}
+                            readOnly={this.props.navStore.isCollectionMintedSuccess()}
                             onChange={this.onChangeCollectionName} />
 
                         <div className={'Info FlexRow'}>
@@ -72,32 +78,36 @@ class CollectionDetails extends React.Component<Props> {
                             <div className={'Text'}>The cover image of the collection will be randomly selected from the uploaded NFTs in it.</div>
                         </div>
 
-                        {this.props.navStore.isCollectionMintedNone() === false ? (
-                            <div className={`ResultMessage FlexColumn ${this.props.navStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
-                                <div className={'Heading FlexRow'}>
-                                    { this.props.navStore.isCollectionMintedFail() ? (
-                                        <>
-                                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCloseBtnOutlined }} />
-                                            <div>Collection minting failed!</div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
-                                            <div>Collection Was Minted Successfully!</div>
-                                        </>
-                                    ) }
-                                </div>
-                                { this.props.navStore.isCollectionMintedSuccess() && (
-                                    <div className={'FlexRow TransacionInfo'}>
-                                        <div className={'InfoMessage'}>Check transaction details in Explorer</div>
-                                        <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
+                        {this.props.navStore.isCollectionMintedNone() === false
+                            && (<>
+                                <div className={`ResultMessage FlexColumn ${this.props.navStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
+                                    <div className={'Heading FlexRow'}>
+                                        {this.props.navStore.isCollectionMintedFail() ? (
+                                            <>
+                                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCloseBtnOutlined }} />
+                                                <div>Collection minting failed!</div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
+                                                <div>Collection Was Minted Successfully!</div>
+                                            </>
+                                        )}
                                     </div>
-                                ) }
-                            </div>
-                        ) : (
-                            <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
+                                    {this.props.navStore.isCollectionMintedSuccess() && (
+                                        <div className={'FlexRow TransacionInfo'}>
+                                            <div className={'InfoMessage'}>Check transaction details in Explorer</div>
+                                            <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
+                                        </div>
+                                    )}
+                                </div>
+                            </>)
+                        }
+                        {this.props.navStore.isCollectionMintedSuccess() === false
+                            && <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
                                 <Button
                                     type={Button.TYPE_ROUNDED}
+                                    disabled={!this.isMintButtonActive()}
                                     radius={Button.RADIUS_MAX}
                                     color={Button.COLOR_SCHEME_1}
                                     padding={Button.PADDING_24}
@@ -105,7 +115,7 @@ class CollectionDetails extends React.Component<Props> {
                                     Mint Collection
                                 </Button>
                             </Actions>
-                        ) }
+                        }
                     </LayoutBlock>
                 </div>
             </NftStepWrapper >

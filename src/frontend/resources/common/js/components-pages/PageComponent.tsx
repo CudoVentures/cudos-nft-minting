@@ -43,7 +43,7 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
                     accountSessionStore={new AccountSessionStore()}
                     alertStore={new AlertStore()}
                     popupConnectWalletsStore={new PopupConnectWalletsStore()}
-                    popupSendAsGiftStore = { new PopupSendAsGiftStore() }
+                    popupSendAsGiftStore={new PopupSendAsGiftStore(walletStore)}
                     walletStore={walletStore}
                     nftMintStore={nftMintStore}
                     navStore={navStore}
