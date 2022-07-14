@@ -26,11 +26,48 @@ interface Props {
 
 class MintWindow extends React.Component<Props> {
 
+    isNextStepActive(): boolean {
+        const { navStore, nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
+
+        // on first step a mint option should be selected to continue
+        if (navMintStore.isMintStepChooseOption() && navMintStore.mintOption !== S.NOT_EXISTS) {
+            return true;
+        }
+
+        // on upload file step a file should be present to continue
+        if (navMintStore.isMintStepUploadFile() && !navMintStore.nftMintStore.isNftsEmpty()) {
+            return true;
+        }
+
+        // on collection details step a colletion should be minted
+        if (navMintStore.isMintStepCollectionDetails() && navMintStore.isCollectionMintedSuccess()) {
+            return true;
+        }
+
+        // on nft details step nft name should be entered for all pictures
+        if (navMintStore.isMintStepDetails() && navMintStore.nftMintStore.isValidNftModels()) {
+            return true;
+        }
+
+        // on fourth step always active
+        if (navMintStore.isMintStepFinish()) {
+            return true;
+        }
+
+        // on step minting done button is always active as well
+        if (navMintStore.isMintStepDone()) {
+            return true;
+        }
+
+        return false;
+    }
+
     getNextStepHandler() {
         const { navStore, nftMintStore } = this.props;
         const navMintStore = nftMintStore.navMintStore;
 
-        if (navMintStore.isNextStepActive()) {
+        if (this.isNextStepActive()) {
             // for these cases return standard ++step
             // choose option step standard function
             if (navMintStore.isMintStepChooseOption()
@@ -90,7 +127,7 @@ class MintWindow extends React.Component<Props> {
                         </div>
                     )}
                     {navMintStore.shouldShowNextStep() === true && (
-                        <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(navMintStore.isNextStepActive())}`}
+                        <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(this.isNextStepActive())}`}
                             onClick = { this.getNextStepHandler() } >
                             <span>{this.getNextStepText()}</span>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>

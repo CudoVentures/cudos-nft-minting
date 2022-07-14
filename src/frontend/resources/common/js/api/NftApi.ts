@@ -112,7 +112,7 @@ export default class NftApi extends AbsApi {
         callback(resNftCollectionModels, resNftModels);
     }
 
-    mintNfts(nftModels: NftModel[]): Promise < string > {
+    mintNftsInCudosCollection(nftModels: NftModel[]): Promise < string > {
         return new Promise < string >((resolve, reject) => {
             const req = new MintNftReq(nftModels);
 
@@ -133,7 +133,7 @@ export default class NftApi extends AbsApi {
 
     }
 
-    uploadFiles(files: string[]): Promise < string[] > {
+    uploadFilesToIpfs(files: string[]): Promise < string[] > {
         return new Promise < string[] >((resolve, reject) => {
             const req = new UploadImagesReq(files);
             this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
