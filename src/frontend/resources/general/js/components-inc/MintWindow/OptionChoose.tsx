@@ -46,7 +46,7 @@ class OptionChoose extends React.Component<Props> {
                         onClick={this.onSelectMultipleMintOption} >
                         <div className={'SvgBox'}>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadMultiple }}></div>
-                            <div className={'Heading4'}>{NavStore.getMintOptionText(NavStore.MINT_OPTION_SINGLE)}</div>
+                            <div className={'Heading4'}>{NavStore.getMintOptionText(NavStore.MINT_OPTION_MULTIPLE)}</div>
                             <div className={'OptionInfo'}>This option allows you to upload and mint multiple files in one mint</div>
                         </div>
                     </div>

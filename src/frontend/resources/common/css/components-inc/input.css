@@ -83,6 +83,10 @@
     color: var(--color-red);
 }
 
+.Input label[data-shrink=false] + .MuiInputBase-formControl input::placeholder {
+    opacity: 0.5 !important;
+}
+
 @-webkit-keyframes autofill {
     0%, 100% {
         color: inherit;
