@@ -60,4 +60,8 @@ export default class WalletStore {
 
         return { signer, sender, client };
     }
+
+    static isValidAddress(address: string) {
+        return address.length === 44 || /^cudos1[a-z0-9]*$/.test(address);
+    }
 }

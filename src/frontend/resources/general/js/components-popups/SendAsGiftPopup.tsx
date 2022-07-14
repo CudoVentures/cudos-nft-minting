@@ -15,13 +15,17 @@ import Button from '../../../common/js/components-inc/Button';
 
 import SvgLoadingWaves from '../../../common/svg/loading-waves.svg';
 import SvgFinishedWaves from '../../../common/svg/finished-waves.svg';
-import SvgSuccessfulWaves from '../../../common/svg/unsuccessful-waves.svg';
 import SvgOpenUrl from '../../../common/svg/open-url.svg';
 import '../../css/components-popups/send-as-gift-popup.css';
+import NftModel from '../../../common/js/models/NftModel';
+import MyNftsStore from '../../../common/js/stores/MyNftsStore';
+import NftCollectionModel from '../../../common/js/models/NftCollectionModel';
+import WalletStore from '../../../common/js/stores/WalletStore';
 
 interface Props extends PopupWindowProps {
     appStore: AppStore;
     popupStore: PopupSendAsGiftStore;
+    myNftsStore: MyNftsStore;
 }
 
 class SendAsGiftPopup extends PopupWindow<Props> {
@@ -40,7 +44,14 @@ class SendAsGiftPopup extends PopupWindow<Props> {
     }
 
     onChangeRecipientAddress = (value) => {
-        this.props.popupStore.recipientAddress = value;
+        const popupStore = this.props.popupStore;
+        popupStore.recipientAddress = value;
+
+        if (!WalletStore.isValidAddress(value) && value !== S.Strings.EMPTY) {
+            popupStore.recipientAddressError = true;
+        } else {
+            popupStore.recipientAddressError = false;
+        }
     }
 
     onClickSendNft = async () => {
@@ -54,9 +65,11 @@ class SendAsGiftPopup extends PopupWindow<Props> {
         try {
             popupStore.markStatusProcessing();
 
-            await this.props.popupStore.sendNft();
+            await popupStore.sendNft();
 
             popupStore.markStatusDoneSuccess()
+        } catch (e) {
+            popupStore.markStatusDoneError();
         } finally {
             this.props.appStore.enableActions();
         }
@@ -119,8 +132,9 @@ class SendAsGiftPopup extends PopupWindow<Props> {
                         <Input
                             label={'Recipient Address'}
                             value={inputStateHelper.values.get(PopupSendAsGiftStore.FIELDS[0])}
-                            error={inputStateHelper.errors.get(PopupSendAsGiftStore.FIELDS[0])}
-                            onChange={inputStateHelper.onChanges.get(PopupSendAsGiftStore.FIELDS[0])} />
+                            error={popupStore.recipientAddressError}
+                            onChange={this.onChangeRecipientAddress}
+                            helperText={popupStore.recipientAddressError ? 'Address must start with \'cudos1\' and be 44 symbols long' : ''} />
                         <Actions
                             className={'StepActions'}
                             height={Actions.HEIGHT_60} >
@@ -228,5 +242,6 @@ export default inject((stores) => {
     return {
         appStore: stores.appStore,
         popupStore: stores.popupSendAsGiftStore,
+        myNftsStore: stores.myNftsStore,
     }
 })(observer(SendAsGiftPopup));

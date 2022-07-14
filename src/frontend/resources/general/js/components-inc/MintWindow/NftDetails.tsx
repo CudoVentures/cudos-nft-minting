@@ -50,7 +50,7 @@ class NftDetails extends React.Component<Props, State> {
         const nftErrors = this.props.nftMintStore.nftsInputErrors;
 
         nfts[index].recipient = value;
-        if (value.length !== 44 || !/^cudos1[a-z0-9]*$/.test(value)) {
+        if (!WalletStore.isValidAddress(value) && value !== S.Strings.EMPTY) {
             nftErrors[index] = true;
         } else {
             nftErrors[index] = false;

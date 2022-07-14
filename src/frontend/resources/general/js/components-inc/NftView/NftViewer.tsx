@@ -21,9 +21,10 @@ interface Props {
     myNftsStore: MyNftsStore;
     nftModel?: NftModel;
     nftCollectionModel?: NftCollectionModel;
+    onSendAsGiftSuccess: () => void;
 }
 
-class NftViewer extends React.Component < Props > {
+class NftViewer extends React.Component<Props> {
 
     static defaultProps: any;
 
@@ -32,7 +33,7 @@ class NftViewer extends React.Component < Props > {
     }
 
     onClickSendAsGift = () => {
-        this.props.popupSendAsGiftStore.showSignal(this.props.nftModel)
+        this.props.popupSendAsGiftStore.showSignal(this.props.nftModel, this.props.onSendAsGiftSuccess);
     }
 
     getCollectionName(): string {
@@ -81,46 +82,46 @@ class NftViewer extends React.Component < Props > {
         const { nftModel, nftCollectionModel } = this.props;
 
         return (
-            <div className = { 'NftViewer' } >
-                { this.renderPreview() }
-                <div className = { 'NftDataCnt FlexColumn' } >
-                    <div className = { 'NftHeader FlexSplit' } >
-                        <div className = { 'CollectionName' } >{ this.getCollectionName() }</div>
+            <div className={'NftViewer'} >
+                {this.renderPreview()}
+                <div className={'NftDataCnt FlexColumn'} >
+                    <div className={'NftHeader FlexSplit'} >
+                        <div className={'CollectionName'} >{this.getCollectionName()}</div>
                         {/* <div className = { 'StartRight FlexRow Share' } >
                             <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgTwitter }} />
                             Share on Twitter
                         </div> */}
                     </div>
-                    <div className = { 'NftName' } > { this.getName() } </div>
-                    <div className = { 'TxInfo FlexColumn' } >
-                        <div className = { 'TxInfoRow FlexSplit' } >
+                    <div className={'NftName'} > {this.getName()} </div>
+                    <div className={'TxInfo FlexColumn'} >
+                        <div className={'TxInfoRow FlexSplit'} >
                             <label>Transation Hash</label>
-                            <a href = { '#' } className = { 'TxInfoBlue StartRight' } > { this.getTxHash() } </a>
+                            <a href={'#'} className={'TxInfoBlue StartRight'} > {this.getTxHash()} </a>
                         </div>
-                        <div className = { 'TxInfoRow FlexSplit' } >
+                        <div className={'TxInfoRow FlexSplit'} >
                             <label>Token Standart</label>
-                            <div className = { 'StartRight' } > CUDOS Network Native Token </div>
+                            <div className={'StartRight'} > CUDOS Network Native Token </div>
                         </div>
-                        <div className = { 'TxInfoRow FlexSplit' } >
+                        <div className={'TxInfoRow FlexSplit'} >
                             <label>Collection ID</label>
-                            <div className = { 'StartRight' } > { this.getId() } </div>
+                            <div className={'StartRight'} > {this.getId()} </div>
                         </div>
                     </div>
                     <Actions
-                        height = { Actions.HEIGHT_60 }
-                        layout = { Actions.LAYOUT_ROW_RIGHT } >
-                        { nftModel !== null && (
+                        height={Actions.HEIGHT_60}
+                        layout={Actions.LAYOUT_ROW_RIGHT} >
+                        {nftModel !== null && (
                             <Button
-                                radius = { Button.RADIUS_MAX }
-                                padding = { Button.PADDING_48 }
-                                color = { Button.COLOR_SCHEME_3 }
-                                onClick = { this.onClickSendAsGift } >
+                                radius={Button.RADIUS_MAX}
+                                padding={Button.PADDING_48}
+                                color={Button.COLOR_SCHEME_3}
+                                onClick={this.onClickSendAsGift} >
                                 Send as a gift
                             </Button>
-                        ) }
+                        )}
                         <Button
-                            radius = { Button.RADIUS_MAX }
-                            padding = { Button.PADDING_48 } >
+                            radius={Button.RADIUS_MAX}
+                            padding={Button.PADDING_48} >
                             View details in Explorer
                         </Button>
                     </Actions>
@@ -135,7 +136,7 @@ class NftViewer extends React.Component < Props > {
         if (nftModel !== null) {
             return (
                 <div>
-                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper)) } />
+                    <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
                 </div>
             )
         }
