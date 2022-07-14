@@ -107,7 +107,7 @@ export default class NftApi extends AbsApi {
         callback(resNftCollectionModels, resNftModels);
     }
 
-    async mintNfts(nftModels: NftModel[], callback: (txHash: string) => void, error: () => void) {
+    mintNfts(nftModels: NftModel[], callback: (txHash: string) => void, error: () => void) {
         const req = new MintNftReq(nftModels);
 
         this.api.req(Actions.NFT.MINT, req, (json: any) => {
@@ -135,15 +135,15 @@ export default class NftApi extends AbsApi {
         });
     }
 
-    async uploadFiles(files: string[], callback: (urls: string[]) => void, error: () => void) {
+    uploadFiles(files: string[], callback: (urls: string[]) => void, error: () => void) {
         const req = new UploadImagesReq(files);
         this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
             if (json.status !== 0) {
                 error();
                 return;
             }
-            const res = new UploadImagesRes(json.obj);
 
+            const res = new UploadImagesRes(json.obj);
             callback(res.urls);
         });
     }

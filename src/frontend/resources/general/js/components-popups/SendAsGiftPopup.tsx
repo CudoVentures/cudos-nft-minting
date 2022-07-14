@@ -49,10 +49,16 @@ class SendAsGiftPopup extends PopupWindow < Props > {
             return;
         }
 
-        popupStore.markStatusProcessing();
-        setTimeout(() => {
-            popupStore.markStatusDoneSuccess();
-        }, 500);
+        this.props.appStore.disableActions();
+
+        try {
+            popupStore.markStatusProcessing();
+            setTimeout(() => {
+                popupStore.markStatusDoneSuccess();
+            }, 500);
+        } finally {
+            this.props.appStore.enableActions();
+        }
     }
 
     onClickBack = () => {
