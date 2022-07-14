@@ -32,7 +32,7 @@ export default class NftApi extends AbsApi {
         return GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
     }
 
-    async init() {
+    private async init() {
         this.queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
     }
 
@@ -171,4 +171,5 @@ export default class NftApi extends AbsApi {
             callback(res.urls);
         });
     }
+
 }
