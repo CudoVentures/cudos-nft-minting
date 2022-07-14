@@ -29,7 +29,7 @@ export default class NftApi extends AbsApi {
         this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
     }
 
-    async init() {
+    private async init() {
         this.queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
     }
 
@@ -125,16 +125,6 @@ export default class NftApi extends AbsApi {
         });
     }
 
-    async estimateFeeMintNft(nftModels: NftModel[], callback: (fee: Coin[]) => void) {
-        const req = new EstimateFeeMintNftReq(nftModels);
-
-        this.api.req(Actions.NFT.ESTIMATE_FEE_MINT_NFT, req, (json: any) => {
-            const res = new EstimateFeeMintNftRes(json.obj);
-
-            callback(res.fee);
-        });
-    }
-
     uploadFiles(files: string[], callback: (urls: string[]) => void, error: () => void) {
         const req = new UploadImagesReq(files);
         this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
@@ -147,4 +137,15 @@ export default class NftApi extends AbsApi {
             callback(res.urls);
         });
     }
+
+    async estimateFeeMintNft(nftModels: NftModel[], callback: (fee: Coin[]) => void) {
+        const req = new EstimateFeeMintNftReq(nftModels);
+
+        this.api.req(Actions.NFT.ESTIMATE_FEE_MINT_NFT, req, (json: any) => {
+            const res = new EstimateFeeMintNftRes(json.obj);
+
+            callback(res.fee);
+        });
+    }
+
 }
