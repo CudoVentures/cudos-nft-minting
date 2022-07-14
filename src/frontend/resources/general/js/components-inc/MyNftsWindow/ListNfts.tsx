@@ -19,7 +19,7 @@ interface Props {
     myNftsStore: MyNftsStore;
 }
 
-class ListNfts extends React.Component < Props > {
+class ListNfts extends React.Component<Props> {
 
     onChangeFilterString = (value) => {
         const myNftsStore = this.props.myNftsStore;
@@ -31,45 +31,45 @@ class ListNfts extends React.Component < Props > {
         const myNftsStore = this.props.myNftsStore;
 
         return (
-            <div className = { 'ListNfts' } >
-                { myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && (
-                    <div className = { 'NftListFilter FlexSplit' } >
+            <div className={'ListNfts'} >
+                {myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && (
+                    <div className={'NftListFilter FlexSplit'} >
                         <Actions
-                            height = { Actions.HEIGHT_42 }
-                            layout = { Actions.LAYOUT_ROW_LEFT } >
+                            height={Actions.HEIGHT_42}
+                            layout={Actions.LAYOUT_ROW_LEFT} >
 
                             <Button
-                                type = { myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
-                                color = { myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
-                                onClick = { myNftsStore.markViewSingleNfts } >
+                                type={myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE}
+                                color={myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2}
+                                onClick={myNftsStore.markViewSingleNfts} >
                                 Single NFTs ({myNftsStore.getNftsInCudosMainCollection().length})
                             </Button>
 
                             <Button
-                                type = { myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE }
-                                color = { myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2 }
-                                onClick = { myNftsStore.markViewNftCollections } >
+                                type={myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE}
+                                color={myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2}
+                                onClick={myNftsStore.markViewNftCollections} >
                                 Collections ({myNftsStore.nftCollectionModels.length})
                             </Button>
 
                         </Actions>
                         <Input
-                            className = { 'FilterString StartRight' }
-                            value = { myNftsStore.filterString }
-                            placeholder = { 'Search for NFTs' }
-                            gray = { true }
-                            InputProps = { {
+                            className={'FilterString StartRight'}
+                            value={myNftsStore.filterString}
+                            placeholder={'Search for NFTs'}
+                            gray={true}
+                            InputProps={{
                                 startAdornment: (
-                                    <div className = { 'SVG IconSearch' } dangerouslySetInnerHTML = {{ __html: SvgSearch }} />
+                                    <div className={'SVG IconSearch'} dangerouslySetInnerHTML={{ __html: SvgSearch }} />
                                 ),
-                            } }
-                            onChange = { this.onChangeFilterString } />
+                            }}
+                            onChange={this.onChangeFilterString} />
                     </div>
-                ) }
-                { this.renderNftModel() }
-                { this.renderNftCollection() }
-                { this.renderSingleNfts() }
-                { this.renderNftCollecions() }
+                )}
+                {this.renderNftModel()}
+                {this.renderNftCollection()}
+                {this.renderSingleNfts()}
+                {this.renderNftCollecions()}
             </div>
         )
     }
@@ -79,8 +79,8 @@ class ListNfts extends React.Component < Props > {
         const display = myNftsStore.hasViewNft() === true;
 
         return (
-            <div className = { `ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}` } >
-                { display === true && <NftModelViewer nftModel = { myNftsStore.viewNftModel } nftCollectionModel = { myNftsStore.viewNftCollectionModel } /> }
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <NftModelViewer nftModel={myNftsStore.viewNftModel} nftCollectionModel={myNftsStore.viewNftCollectionModel} />}
             </div>
         )
     }
@@ -90,8 +90,8 @@ class ListNfts extends React.Component < Props > {
         const display = myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === true;
 
         return (
-            <div className = { `ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}` } >
-                { display === true && <NftCollectionViewer nftCollectionModel = { myNftsStore.viewNftCollectionModel } /> }
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <NftCollectionViewer nftCollectionModel={myNftsStore.viewNftCollectionModel} />}
             </div>
         )
     }
@@ -99,10 +99,10 @@ class ListNfts extends React.Component < Props > {
     renderSingleNfts() {
         const myNftsStore = this.props.myNftsStore;
         const display = myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && myNftsStore.isViewSingleNfts() === true
-
+        console.log(myNftsStore.nftModels.filter((nft) => nft.tokenId === '1'))
         return (
-            <div className = { `ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}` } >
-                { display === true && <NftModelsViewer nftModels = { myNftsStore.filterredNftModels } /> }
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <NftModelsViewer nftModels={myNftsStore.filterredNftModels} />}
             </div>
         )
     }
@@ -112,8 +112,8 @@ class ListNfts extends React.Component < Props > {
         const display = myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && myNftsStore.isViewNftCollections() === true
 
         return (
-            <div className = { `ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}` } >
-                { display === true && <NftCollectionsViewer nftCollectionModels = { myNftsStore.filteredNftCollectionModels } /> }
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <NftCollectionsViewer nftCollectionModels={myNftsStore.filteredNftCollectionModels} />}
             </div>
         )
     }

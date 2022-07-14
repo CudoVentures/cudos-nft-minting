@@ -21,7 +21,7 @@ export default class MyNftsStore {
     walletStore: WalletStore;
 
     nftCollectionModels: NftCollectionModel[];
-    nftsInCollectionsMap: Map < string, NftModel[] >;
+    nftsInCollectionsMap: Map<string, NftModel[]>;
 
     viewPage: number;
     viewNftModel: NftModel;
@@ -130,7 +130,7 @@ export default class MyNftsStore {
     async fetchNfts() {
         let nftModels = [];
 
-        await new Promise < void >((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_: NftCollectionModel[], nftModels_: NftModel[]) => {
                 this.nftCollectionModels = nftCollectionModels_.filter((nftCollectioModel) => {
                     return nftCollectioModel.isCudosMainCollection() === false;

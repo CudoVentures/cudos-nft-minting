@@ -1,5 +1,5 @@
 import { makeObservable, observable } from 'mobx';
-import { GasPrice, SigningStargateClient } from 'cudosjs';
+import { GasPrice, SigningStargateClient, estimateFee, Coin } from 'cudosjs';
 import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 
 import S from '../utilities/Main';
@@ -65,9 +65,21 @@ export default class NftMintStore {
     }
 
     // estimate
-    async esimateMintFees(): Promise<number> {
-        // TODO: estimate fees correctly
-        return 1;
+    async esimateMintFees(): Promise < number > {
+        try {
+            const signer = this.walletStore.keplrWallet.offlineSigner;
+            const sender = this.walletStore.keplrWallet.accountAddress;
+            const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, signer);
+
+            const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
+
+            this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
+                return Number(fee[0].amount)
+            })
+        } catch (e) {
+            console.log(e);
+            throw new Error('Failed to connect signing client');
+        }
     }
 
     // minting
@@ -107,27 +119,12 @@ export default class NftMintStore {
         }
     }
 
-    async mintNfts(local: number, callBefore: () => void, success: () => void, error: () => void): Promise < void > {
+    async mintNfts(local: number, callBefore: () => void, success: () => void, error: () => void): Promise<void> {
         callBefore();
         if (!this.isValidNftModels()) {
             error();
             return;
         }
-
-        // if (this.denomId === S.Strings.EMPTY) {
-        //     this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
-        // }
-
-        // this.nfts.forEach((nft: NftModel) => {
-        //     if (nft.recipient === S.Strings.EMPTY) {
-        //         nft.recipient = this.walletStore.keplrWallet.accountAddress;
-        //     }
-
-        //     nft.denomId = this.denomId;
-
-        //     // TODO: get real checksum
-        //     nft.data = 'some checksum'
-        // })
 
         try {
             switch (local) {
@@ -190,7 +187,7 @@ export default class NftMintStore {
                 // each log represents one message in the transaction
                 const log = JSON.parse(mintRes.rawLog);
                 for (let i = 0; i < log.length; i++) {
-                // each message has a few events, the get the one with the correct type
+                    // each message has a few events, the get the one with the correct type
                     const attributeEvent = log[i].events.find((event: any) => event.type === 'mint_nft');
 
                     if (attributeEvent === undefined) {
