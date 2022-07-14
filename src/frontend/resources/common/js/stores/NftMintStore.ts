@@ -69,8 +69,9 @@ export default class NftMintStore {
     async esimateMintFees(local: number, callback: (fee: BigNumber) => void) {
         try {
             if (local === NftMintStore.MINT_MODE_LOCAL) {
-                const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
                 const { signer, sender, client } = await this.walletStore.getSignerData();
+
+                const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
 
                 const { msgs, fee } = await client.nftModule.msgMintMultipleNFT(
                     nftInfos,
@@ -102,7 +103,8 @@ export default class NftMintStore {
                 this.nftCollection.denomId,
                 this.nftCollection.name,
                 S.Strings.EMPTY,
-                S.Strings.EMPTY,
+                // TODO: do correct symbol
+                this.nftCollection.denomId,
                 this.walletStore.getGasPrice(),
             );
 

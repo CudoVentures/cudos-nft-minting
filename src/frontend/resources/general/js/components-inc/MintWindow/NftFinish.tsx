@@ -55,7 +55,6 @@ class NftFinish extends React.Component<Props, State> {
                 fetch(url).then((res) => {
                     res.json().then((data) => {
                         data = data[coinId];
-                        console.log(data);
                         this.setState({
                             feeEstimate: estimateNumber,
                             feeEstimateInDollars: data.toFixed(3),

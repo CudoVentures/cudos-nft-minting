@@ -30,7 +30,7 @@ class NftMintingDone extends React.Component<Props> {
             <div className={'NftMintingDone FlexColumn FlexGrow'}>
                 <div className={'SVG Icon Size Background'} dangerouslySetInnerHTML={{ __html: SvgMintingWaves }}></div>
                 <div className={'NftBoxRow FlexRow'}>
-                    <div key = { nftModel.getIdsUniquePair() } className={'NftBox FlexColumn'}>
+                    <div key={nftModel.getIdsUniquePair()} className={'NftBox FlexColumn'}>
                         <div className={'NftImageHolder'}>
                             <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
                         </div>
@@ -39,7 +39,7 @@ class NftMintingDone extends React.Component<Props> {
                 </div>
                 <div className={'Heading4'} >Minting is Done!</div>
                 <div className={'Description'}>Minting was successful! Check the details from the link below.</div>
-                <a href = { this.props.nftMintStore.getTxHashLink() } className={'TransactionLink FlexRow'}>
+                <a href={this.props.nftMintStore.getTxHashLink()} className={'TransactionLink FlexRow'}>
                     <div>Check transaction details in Explorer</div>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
                 </a>
@@ -49,7 +49,7 @@ class NftMintingDone extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_1}
                         padding={Button.PADDING_82}
-                        onClick={this.props.navStore.selectFirstMintStep}>
+                        onClick={this.props.navStore.resetToMintPage.bind(this.props.navStore)}>
                         Mint Another
                     </Button>
                 </Actions>
