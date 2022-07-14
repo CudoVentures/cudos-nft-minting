@@ -64,6 +64,24 @@ export default class NftMintStore {
         this.nftCollection = new NftCollectionModel();
     }
 
+    // estimate
+    async esimateMintFees(callback: (fee: number) => void): Promise<number> {
+        try {
+            const signer = this.walletStore.keplrWallet.offlineSigner;
+            const sender = this.walletStore.keplrWallet.accountAddress;
+            const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, signer);
+
+            const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
+
+            this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
+                callback(Number(fee[0].amount));
+            })
+        } catch (e) {
+            console.log(e);
+            throw new Error('Failed to connect signing client');
+        }
+    }
+
     // minting
     async mintCollection(callBefore: () => void, success: () => void, error: () => void) {
         callBefore();
@@ -107,21 +125,6 @@ export default class NftMintStore {
             error();
             return;
         }
-
-        // if (this.denomId === S.Strings.EMPTY) {
-        //     this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
-        // }
-
-        // this.nfts.forEach((nft: NftModel) => {
-        //     if (nft.recipient === S.Strings.EMPTY) {
-        //         nft.recipient = this.walletStore.keplrWallet.accountAddress;
-        //     }
-
-        //     nft.denomId = this.denomId;
-
-        //     // TODO: get real checksum
-        //     nft.data = 'some checksum'
-        // })
 
         try {
             switch (local) {
@@ -215,43 +218,18 @@ export default class NftMintStore {
         return true;
     }
 
-    async esimateMintFees(callback: (fee: number) => void): Promise<number> {
-        try {
-            const signer = this.walletStore.keplrWallet.offlineSigner;
-            const sender = this.walletStore.keplrWallet.accountAddress;
-            const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, signer);
-
-            const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
-
-            this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
-                callback(Number(fee[0].amount));
-            })
-        } catch (e) {
-            console.log(e);
-            throw new Error('Failed to connect signing client');
+    // images
+    async addNftFromUpload(url: string, fileName: string, type: string, sizeBytes: number): Promise<void> {
+        const searchFor = 'base64,';
+        const binaryString = window.atob(url.substring(url.indexOf(searchFor) + searchFor.length));
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = binaryString.length; i-- > 0;) {
+            bytes[i] = binaryString.charCodeAt(i);
         }
+        await this.addNftModel(url, fileName, type, sizeBytes, bytes.buffer);
     }
 
-    getTxHashLink(): string {
-        return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
-    }
-
-    addNftModel(url: string, fileName: string, type: string, sizeBytes: number): void {
-        const nft = new NftModel();
-
-        nft.denomId = this.nftCollection.denomId;
-        nft.url = url;
-        nft.recipient = this.walletStore.keplrWallet.accountAddress;
-
-        nft.fileName = fileName;
-        nft.type = type;
-        nft.sizeBytes = sizeBytes;
-        nft.updatePreviewUrl();
-
-        this.nfts.push(nft);
-    }
-
-    async getImageFromUrl(): Promise<void> {
+    async addNftFromLink(): Promise<void> {
         let url = this.imageUrlInputValue;
         this.imageUrlInputValue = S.Strings.EMPTY;
 
@@ -265,18 +243,29 @@ export default class NftMintStore {
             contentType = contentType.slice(contentType.indexOf('/') + 1);
             const contentLength = Number(imageRes.headers.get('Content-Length'));
 
-            const nft = new NftModel();
-
-            nft.url = url;
-            nft.fileName = `NFT-${Date.now()}`;
-            nft.type = contentType;
-            nft.sizeBytes = contentLength;
-            nft.updatePreviewUrl();
-
-            this.nfts.push(nft);
+            await this.addNftModel(url, `NFT-${Date.now()}`, contentType, contentLength, await imageRes.arrayBuffer());
         } catch (e) {
             throw Error('Could not fetch file.');
         }
+    }
+
+    private async addNftModel(url: string, fileName: string, type: string, sizeBytes: number, arrayBuffer: ArrayBuffer): Promise<void> {
+        const nft = new NftModel();
+
+        nft.denomId = this.nftCollection.denomId;
+        nft.url = url;
+        nft.recipient = this.walletStore.keplrWallet.accountAddress;
+
+        nft.fileName = fileName;
+        nft.type = type;
+        nft.sizeBytes = sizeBytes;
+        nft.updatePreviewUrl();
+
+        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer))
+        nft.data = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+
+        this.nfts.push(nft);
     }
 
     // credit

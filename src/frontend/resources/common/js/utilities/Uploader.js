@@ -408,7 +408,7 @@ class UploaderImpl {
             ajax.open('POST', this.controller, true);
             ajax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-            ajax.onreadystatechange = () => {
+            ajax.onreadystatechange = async () => {
                 if (ajax.readyState !== 4) {
                     return;
                 }
@@ -422,7 +422,7 @@ class UploaderImpl {
                 }
 
                 if (this.onUpload !== null) {
-                    this.onUpload(base64String, ajax.responseText, this.files, this.filePointer);
+                    await this.onUpload(base64String, ajax.responseText, this.files, this.filePointer);
                 }
 
                 this.nextUpload();

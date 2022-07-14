@@ -67,8 +67,8 @@ class UploadFiles extends React.Component<Props> {
             'onExtError': () => {
                 this.props.alertStore.show('You have selected an unsupported file type');
             },
-            'onUpload': (base64File, response, files: any[], i: number) => {
-                this.props.nftMintStore.addNftModel(base64File, files[i].name, files[i].type, files[i].size);
+            'onUpload': async (base64File, response, files: any[], i: number) => {
+                await this.props.nftMintStore.addNftFromUpload(base64File, files[i].name, files[i].type, files[i].size);
             },
         }
     }
@@ -79,7 +79,7 @@ class UploadFiles extends React.Component<Props> {
         }
 
         try {
-            await this.props.nftMintStore.getImageFromUrl();
+            await this.props.nftMintStore.addNftFromLink();
         } catch (e) {
             this.props.alertStore.show(e.message);
         }
