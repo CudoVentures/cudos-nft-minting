@@ -1,37 +1,26 @@
+/* single mint */
 .NftDetails .NftDetailsForm {
     flex-grow: 1;
 }
 
-.NftDetails .DetailsHolder {
+.NftDetails .NftSingleMint {
     align-items: flex-start;
 }
 
-.NftDetails .DetailsHolder .NftDetailsForm .Input {
-    margin-bottom: 15px;
-}
-
-.NftDetails .DetailsHolder .NftDetailsForm .MuiFormLabel-root,
-.NftDetails .DetailsHolder .NftDetailsForm .CheckboxComponent {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 21px;
-    color: var(--color-dark);
-    margin-right: 10px;
-}
-
-.NftDetails .CollectionModels {
+/* multiple mint */
+.NftDetails .NftMultipleMint {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     row-gap: 30px;
     column-gap: 30px;
 }
 
-.NftDetails .CollectionModels .NftModel {
+.NftDetails .NftMultipleMint .NftModel {
     display: flex;
     flex-direction: column;
 }
 
-.NftDetails .CollectionModels .NftModel .NftImg {
+.NftDetails .NftMultipleMint .NftModel .NftImg {
     width: 100%; height: 0;
     box-sizing: border-box;
     border: 3px solid #F6F9FE;
@@ -41,11 +30,13 @@
     transition-property: box-shadow;
 }
 
-.NftDetails html:not(.Touchable) .CollectionModels .NftModel .NftImg:hover {
-    box-shadow: 0px 3px 20px rgba(27, 32, 49, 0.3);
+.NftDetails .NftMultipleMint .NftModel .NftFileName {
+    color: var(--color-secondary);
+    font-size: 12px; font-weight: 600;
+    margin-bottom: 10px;
 }
 
-.NftDetails .CollectionModels .NftModel .NftName {
-    font-size: 16px;
-    font-weight: 700;
+.NftDetails .NftMultipleMint .NftModel .NameInput .MuiInputBase-root {
+    padding-left: 0 !important; padding-right: 0 !important;
+    border: 0;
 }

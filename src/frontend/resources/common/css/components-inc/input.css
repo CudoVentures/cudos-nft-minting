@@ -46,7 +46,7 @@
 
 .Input .MuiInputBase-root input, .Input .MuiInputBase-root textarea {
     height: auto;
-    font-size: 12px; font-weight: 600;
+    font-size: 14px; font-weight: 600;
     padding: 0;
 }
 
