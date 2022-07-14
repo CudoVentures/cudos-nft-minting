@@ -99,7 +99,6 @@ class ListNfts extends React.Component<Props> {
     renderSingleNfts() {
         const myNftsStore = this.props.myNftsStore;
         const display = myNftsStore.hasViewNft() === false && myNftsStore.hasViewCollection() === false && myNftsStore.isViewSingleNfts() === true
-        console.log(myNftsStore.nftModels.filter((nft) => nft.tokenId === '1'))
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <NftModelsViewer nftModels={myNftsStore.filterredNftModels} />}

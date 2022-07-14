@@ -64,12 +64,6 @@ export default class NftMintStore {
         this.nftCollection = new NftCollectionModel();
     }
 
-    // estimate
-    async esimateMintFees(): Promise<number> {
-        // TODO: estimate fees correctly
-        return 1;
-    }
-
     // minting
     async mintCollection(callBefore: () => void, success: () => void, error: () => void) {
         callBefore();
@@ -221,7 +215,7 @@ export default class NftMintStore {
         return true;
     }
 
-    async esimateMintFees(): Promise<number> {
+    async esimateMintFees(callback: (fee: number) => void): Promise<number> {
         try {
             const signer = this.walletStore.keplrWallet.offlineSigner;
             const sender = this.walletStore.keplrWallet.accountAddress;
@@ -230,7 +224,7 @@ export default class NftMintStore {
             const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
 
             this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
-                return Number(fee[0].amount)
+                callback(Number(fee[0].amount));
             })
         } catch (e) {
             console.log(e);
