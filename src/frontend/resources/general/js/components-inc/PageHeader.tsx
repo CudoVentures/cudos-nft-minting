@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
-import { WEBSITE, EXPLORER } from '../../../common/js/utilities/Links';
+import { WEBSITE } from '../../../common/js/utilities/Links';
 
 import PagesGeneral from '../../../../../../builds/dev-generated/PagesGeneral';
 import WalletStore from '../../../common/js/stores/WalletStore';
@@ -22,6 +22,7 @@ import SvgClose from '../../../common/svg/close.svg';
 import './../../css/components-inc/page-header.css';
 import ProjectUtils from '../../../common/js/ProjectUtils';
 import S from '../../../common/js/utilities/Main';
+import Config from '../../../../../../builds/dev-generated/Config';
 
 interface Props {
     walletStore: WalletStore,
@@ -115,7 +116,7 @@ class PageHeader extends React.Component < Props, State > {
                                     <div className = { 'WalletActions' } >
                                         <div className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgCopy }} onClick = { this.onClickCopeWalletAddress } />
                                         <a
-                                            href = { `${EXPLORER}/accounts/${keplrWallet.accountAddress}` }
+                                            href = { `${Config.CUDOS_NETWORK.EXPLORER}/accounts/${keplrWallet.accountAddress}` }
                                             target = '_blank'
                                             rel = 'noreferrer'
                                             className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />

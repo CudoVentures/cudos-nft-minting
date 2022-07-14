@@ -35,11 +35,11 @@ export default class NftApi extends AbsApi {
         let nftCollectionModel = null;
         let nftModels = null;
 
-        if (this.queryClient === null) {
-            await this.init();
-        }
-
         try {
+            if (this.queryClient === null) {
+                await this.init();
+            }
+
             const resCollection = await this.queryClient.getNftCollection(denomId);
             if (resCollection.collection !== undefined) {
                 if (resCollection.collection.denom !== undefined) {
@@ -67,11 +67,11 @@ export default class NftApi extends AbsApi {
         const resNftCollectionModels = [];
         let resNftModels = [];
 
-        if (this.queryClient === null) {
-            await this.init();
-        }
-
         try {
+            if (this.queryClient === null) {
+                await this.init();
+            }
+
             const resOwner = await this.queryClient.getNftOwner(walletAddress);
             if (resOwner.owner !== undefined) {
                 if (resOwner.owner.idCollections !== undefined) {

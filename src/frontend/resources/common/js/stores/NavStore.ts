@@ -101,23 +101,24 @@ export default class NavStore {
         ++this.mintStep;
     }
 
-    selectFirstMintStep() {
+    selectFirstMintStep = () => {
+        this.nftMintStore.reset();
         this.mintStep = NavStore.STEP_CHOOSE_OPTION;
     }
 
-    selectFinishStep() {
+    selectFinishStep = () => {
         this.mintStep = NavStore.STEP_FINISH;
     }
 
-    selectStepMintingInProgress() {
+    selectStepMintingInProgress = () => {
         this.mintStep = NavStore.STEP_MINTING_IN_PROGRESS;
     }
 
-    selectStepMintingSucceeeded() {
+    selectStepMintingSucceeeded = () => {
         this.mintStep = NavStore.STEP_MINTING_DONE;
     }
 
-    selectStepMintingFailed() {
+    selectStepMintingFailed = () => {
         this.mintStep = NavStore.STEP_MINTING_FAILED;
     }
 

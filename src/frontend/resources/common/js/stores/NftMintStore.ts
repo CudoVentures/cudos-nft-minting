@@ -19,7 +19,6 @@ export default class NftMintStore {
     myNftsStore: MyNftsStore;
     walletStore: WalletStore;
 
-    // @observable isImageLinkValid: boolean;
     @observable imageUrlInputValue: string;
     @observable recipientFieldActive: number;
 
