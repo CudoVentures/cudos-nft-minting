@@ -13,4 +13,5 @@ NftApiH.URL = `${Config.URL.API}/nft`;
 NftApiH.Actions = {
     MINT: 'a',
     IMAGES_UPLOAD: 'b',
+    ESTIMATE_FEE_MINT_NFT: 'c',
 };

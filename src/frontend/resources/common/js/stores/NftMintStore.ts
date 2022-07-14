@@ -1,5 +1,6 @@
 import { makeObservable, observable } from 'mobx';
-import { GasPrice, SigningStargateClient } from 'cudosjs';
+import { GasPrice, SigningStargateClient, estimateFee, Coin } from 'cudosjs';
+import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 
 import S from '../utilities/Main';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -7,7 +8,6 @@ import Config from '../../../../../../builds/dev-generated/Config';
 import NftApi from '../api/NftApi';
 import NftModel from '../models/NftModel';
 import WalletStore from './WalletStore';
-import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 import MyNftsStore from './MyNftsStore';
 
 export default class NftMintStore {
@@ -93,9 +93,6 @@ export default class NftMintStore {
         error: () => void,
     ): Promise<void> {
         callBefore();
-        const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
-        const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
-
         if (!this.isValidNftModels()) {
             error();
             return;
@@ -216,8 +213,20 @@ export default class NftMintStore {
     }
 
     async esimateMintFees(): Promise<number> {
-        // TODO: estimate fees correctly
-        return 1;
+        try {
+            const signer = this.walletStore.keplrWallet.offlineSigner;
+            const sender = this.walletStore.keplrWallet.accountAddress;
+            const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, signer);
+
+            const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
+
+            this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
+                return Number(fee[0].amount)
+            })
+        } catch (e) {
+            console.log(e);
+            throw new Error('Failed to connect signing client');
+        }
     }
 
     getTxHashLink(): string {

@@ -1,5 +1,5 @@
 import NftModel from '../modules/cudos-network/model/nft/NftModel';
-import { GasPrice, DirectSecp256k1HdWallet, SigningStargateClient } from 'cudosjs';
+import { GasPrice, DirectSecp256k1HdWallet, SigningStargateClient, StdFee } from 'cudosjs';
 import Config from '../../../config/config';
 import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 import { create, IPFSHTTPClient } from 'ipfs-http-client';
@@ -16,6 +16,27 @@ export default class NftService {
     constructor() {
         this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
         this.gasPrice = GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
+    }
+
+    private async getSigner() {
+        let wallet = null;
+        let sender = SV.Strings.EMPTY;
+        let client: SigningStargateClient;
+
+        try {
+            wallet = await DirectSecp256k1HdWallet.fromMnemonic(Config.CUDOS_SIGNER.MNEMONIC);
+            sender = (await wallet.getAccounts())[0].address;
+        } catch (e) {
+            throw new StateException(Response.S_STATUS_RUNTIME_ERROR, 'Failed to create wallet');
+        }
+
+        try {
+            client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC_BACKEND, wallet);
+        } catch (e) {
+            throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to connect signing client');
+        }
+
+        return { wallet, sender, client }
     }
 
     async mintNft(nftModels: NftModel[]): Promise<any> {
@@ -40,23 +61,6 @@ export default class NftService {
             throw new StateException(Response.S_STATUS_RUNTIME_ERROR, `NFT recipient is invalid: ${missingRecipient.recipient}`);
         }
 
-        let wallet = null;
-        let sender = SV.Strings.EMPTY;
-        let client: SigningStargateClient;
-
-        try {
-            wallet = await DirectSecp256k1HdWallet.fromMnemonic(Config.CUDOS_SIGNER.MNEMONIC);
-            sender = (await wallet.getAccounts())[0].address;
-        } catch (e) {
-            throw new StateException(Response.S_STATUS_RUNTIME_ERROR, 'Failed to create wallet');
-        }
-
-        try {
-            client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC_BACKEND, wallet);
-        } catch (e) {
-            throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to connect signing client');
-        }
-
         let mintRes: any;
 
         for (let i = 0; i < nftModels.length; ++i) {
@@ -69,6 +73,8 @@ export default class NftService {
         const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
 
         try {
+            const { wallet, sender, client } = await this.getSigner();
+
             mintRes = await client.nftMintMultipleTokens(
                 nftInfos,
                 sender,
@@ -100,6 +106,32 @@ export default class NftService {
         }
 
         return { nftModels, txHash: mintRes.transactionHash };
+    }
+
+    async estimateFeeMintNft(nftModels: NftModel[]): Promise<StdFee> {
+        // dont upload images, just replace huge string so validates pass
+        for (let i = 0; i < nftModels.length; ++i) {
+            const nft = nftModels[i];
+            if (nft.url.includes(';base64,')) {
+                nft.url = 'a'.repeat(100);
+            }
+        }
+
+        try {
+            const { wallet, sender, client } = await this.getSigner();
+            const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, nftModel.url, 'ergererherh', sender));
+
+            const { msgs, fee } = await client.nftModule.msgMintMultipleNFT(
+                nftInfos,
+                sender,
+                '',
+                this.gasPrice,
+            )
+
+            return fee;
+        } catch (e) {
+            throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, `Failed to estimate fee nfts: ${e}`);
+        }
     }
 
     async imageUpload(file: string): Promise<string> {

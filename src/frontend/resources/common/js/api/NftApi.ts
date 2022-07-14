@@ -1,4 +1,4 @@
-import { StargateClient } from 'cudosjs';
+import { Coin, StargateClient } from 'cudosjs';
 import Apis from '../../../../../../builds/dev-generated/Apis';
 import Actions from '../../../../../../builds/dev-generated/Actions';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -11,6 +11,8 @@ import NftCollectionModel from '../models/NftCollectionModel';
 import { IDCollection } from 'cudosjs/build/stargate/modules/nft/proto-types/nft';
 import UploadImagesReq from '../network-requests/UploadImagesReq';
 import UploadImagesRes from '../network-responses/UploadImagesRes';
+import EstimateFeeMintNftReq from '../network-requests/EstimateFeeMintNftReq';
+import EstimateFeeMintNftRes from '../network-responses/EstimateFeeMintNftRes';
 
 export default class NftApi extends AbsApi {
     api: Api
@@ -31,7 +33,7 @@ export default class NftApi extends AbsApi {
         this.queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
     }
 
-    async fetchNftCollection(denomId: string, callback: (a_: NftCollectionModel | null, b_: NftModel[] | null) => void): Promise < void > {
+    async fetchNftCollection(denomId: string, callback: (a_: NftCollectionModel | null, b_: NftModel[] | null) => void): Promise<void> {
         let nftCollectionModel = null;
         let nftModels = null;
 
@@ -63,7 +65,7 @@ export default class NftApi extends AbsApi {
         callback(nftCollectionModel, nftModels);
     }
 
-    async fetchNftCollections(walletAddress: string, callback: (a_: NftCollectionModel[] | null, b_: NftModel[] | null) => void): Promise < void > {
+    async fetchNftCollections(walletAddress: string, callback: (a_: NftCollectionModel[] | null, b_: NftModel[] | null) => void): Promise<void> {
         const resNftCollectionModels = [];
         let resNftModels = [];
 
@@ -81,7 +83,7 @@ export default class NftApi extends AbsApi {
 
                     for (let i = 0; i < denomIds.length; ++i) {
                         // eslint-disable-next-line no-loop-func
-                        await new Promise < void >((resolve, reject) => {
+                        await new Promise<void>((resolve, reject) => {
                             const run = async () => {
                                 this.fetchNftCollection(denomIds[i], (nftCollectionModel, nftModels) => {
                                     if (nftCollectionModel !== null) {
@@ -120,6 +122,16 @@ export default class NftApi extends AbsApi {
                 nftModel.url = res.nfts[i].url;
             });
             callback(res.txHash);
+        });
+    }
+
+    async estimateFeeMintNft(nftModels: NftModel[], callback: (fee: Coin[]) => void) {
+        const req = new EstimateFeeMintNftReq(nftModels);
+
+        this.api.req(Actions.NFT.ESTIMATE_FEE_MINT_NFT, req, (json: any) => {
+            const res = new EstimateFeeMintNftRes(json.obj);
+
+            callback(res.fee);
         });
     }
 

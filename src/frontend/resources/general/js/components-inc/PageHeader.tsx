@@ -1,8 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
-import { WEBSITE, EXPLORER } from '../../../common/js/utilities/Links';
-
 import PagesGeneral from '../../../../../../builds/dev-generated/PagesGeneral';
 import WalletStore from '../../../common/js/stores/WalletStore';
 import PopupConnectWalletsStore from '../../../common/js/stores/PopupConnectWalletsStore';
@@ -22,6 +20,7 @@ import SvgClose from '../../../common/svg/close.svg';
 import './../../css/components-inc/page-header.css';
 import ProjectUtils from '../../../common/js/ProjectUtils';
 import S from '../../../common/js/utilities/Main';
+import Config from '../../../../../../builds/dev-generated/Config';
 
 interface Props {
     walletStore: WalletStore,
@@ -32,7 +31,7 @@ interface State {
     walletMenuOpen: boolean,
 }
 
-class PageHeader extends React.Component < Props, State > {
+class PageHeader extends React.Component<Props, State> {
 
     nodes: any;
 
@@ -78,9 +77,9 @@ class PageHeader extends React.Component < Props, State > {
 
         return (
             <header className={'PageHeader FlexRow FlexSplit'}>
-                <a href = { PagesGeneral.HOME } className={'HeaderLogo FlexRow'}>
+                <a href={PagesGeneral.HOME} className={'HeaderLogo FlexRow'}>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCudosLogoWithText }} />
-                    <div className = { 'Slogan' }>NFT Mint</div>
+                    <div className={'Slogan'}>NFT Mint</div>
                 </a>
                 <div className={'HeaderEnd FlexRow StartRight'}>
                     {keplrWallet.connected
@@ -91,41 +90,41 @@ class PageHeader extends React.Component < Props, State > {
                             </div>
                             <div className={'InfoBlock FlexRow'}>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgWallet }} />
-                                <div className = { 'WalletAddress Dots' } title = { keplrWallet.accountAddress }>{keplrWallet.accountAddress}</div>
+                                <div className={'WalletAddress Dots'} title={keplrWallet.accountAddress}>{keplrWallet.accountAddress}</div>
                             </div>
-                            <div ref = { this.nodes.walletMenuAnchor } className={`InfoBlock InfoBlockOptions FlexRow Clickable ${S.CSS.getActiveClassName(this.state.walletMenuOpen)}`} onClick = { this.onClickOpenWalletMenu }>
-                                { this.state.walletMenuOpen === false && (
+                            <div ref={this.nodes.walletMenuAnchor} className={`InfoBlock InfoBlockOptions FlexRow Clickable ${S.CSS.getActiveClassName(this.state.walletMenuOpen)}`} onClick={this.onClickOpenWalletMenu}>
+                                {this.state.walletMenuOpen === false && (
                                     <div className={'SVG Icon IconOptions'} dangerouslySetInnerHTML={{ __html: SvgMenuDots }} />
-                                ) }
-                                { this.state.walletMenuOpen === true && (
+                                )}
+                                {this.state.walletMenuOpen === true && (
                                     <div className={'SVG Icon IconOptions'} dangerouslySetInnerHTML={{ __html: SvgClose }} />
-                                ) }
+                                )}
                             </div>
                             <Popover
-                                anchorEl = { this.nodes.walletMenuAnchor.current }
-                                open = { this.state.walletMenuOpen }
-                                onClose = { this.onClickCloseWalletMenu }
-                                classes = { {
+                                anchorEl={this.nodes.walletMenuAnchor.current}
+                                open={this.state.walletMenuOpen}
+                                onClose={this.onClickCloseWalletMenu}
+                                classes={{
                                     'paper': 'PopoverWalletMenu',
-                                } } >
+                                }} >
 
                                 <>
                                     <div className={'SVG IconWallet'} dangerouslySetInnerHTML={{ __html: SvgWallet }} />
-                                    <div className = { 'WalletAddress Dots' } > { keplrWallet.accountAddress } </div>
-                                    <div className = { 'WalletActions' } >
-                                        <div className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgCopy }} onClick = { this.onClickCopeWalletAddress } />
+                                    <div className={'WalletAddress Dots'} > {keplrWallet.accountAddress} </div>
+                                    <div className={'WalletActions'} >
+                                        <div className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgCopy }} onClick={this.onClickCopeWalletAddress} />
                                         <a
-                                            href = { `${EXPLORER}/accounts/${keplrWallet.accountAddress}` }
-                                            target = '_blank'
-                                            rel = 'noreferrer'
+                                            href={`${Config.CUDOS_NETWORK.EXPLORER}/accounts/${keplrWallet.accountAddress}`}
+                                            target='_blank'
+                                            rel='noreferrer'
                                             className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
                                     </div>
-                                    <Actions height = { Actions.HEIGHT_52 } layout = { Actions.LAYOUT_COLUMN_FULL } >
+                                    <Actions height={Actions.HEIGHT_52} layout={Actions.LAYOUT_COLUMN_FULL} >
                                         <Button
-                                            onClick = { this.onClickDisconnectKeplr }
-                                            type = { Button.TYPE_ROUNDED }
-                                            color = { Button.COLOR_SCHEME_1 }
-                                            radius = { Button.RADIUS_MAX } >
+                                            onClick={this.onClickDisconnectKeplr}
+                                            type={Button.TYPE_ROUNDED}
+                                            color={Button.COLOR_SCHEME_1}
+                                            radius={Button.RADIUS_MAX} >
                                             Disconnect
                                         </Button>
                                     </Actions>
@@ -138,13 +137,13 @@ class PageHeader extends React.Component < Props, State > {
                                 Check <span className = { 'Link' }>cudos.org</span>
                                 <div className={'SVG IconOpenUrl'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} />
                             </a> */}
-                            <Actions height = { Actions.HEIGHT_60 }>
+                            <Actions height={Actions.HEIGHT_60}>
                                 <Button
-                                    onClick = { this.onClickConnectKeplr }
-                                    type = { Button.TYPE_ROUNDED }
-                                    color = { Button.COLOR_SCHEME_1 }
-                                    padding = { Button.PADDING_48 }
-                                    radius = { Button.RADIUS_MAX } >
+                                    onClick={this.onClickConnectKeplr}
+                                    type={Button.TYPE_ROUNDED}
+                                    color={Button.COLOR_SCHEME_1}
+                                    padding={Button.PADDING_48}
+                                    radius={Button.RADIUS_MAX} >
                                     Connect Wallet
                                 </Button>
                             </Actions>
