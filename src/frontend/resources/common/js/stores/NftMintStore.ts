@@ -193,7 +193,6 @@ export default class NftMintStore {
             throw new Error('Failed to connect signing client');
         }
 
-        let mintRes: any;
         const urls = nfts.map((nft: NftModel) => nft.url);
         const imageUrls = await this.nftApi.uploadFilesToIpfs(urls);
         for (let i = 0; i < nfts.length; i++) {
@@ -202,12 +201,7 @@ export default class NftMintStore {
             }
         }
         const nftInfos = nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
-        try {
-            mintRes = await client.nftMintMultipleTokens(nftInfos, this.walletStore.keplrWallet.accountAddress, NftApi.getGasPrice());
-        } catch (e) {
-            console.log(e);
-            throw e;
-        }
+        const mintRes = await client.nftMintMultipleTokens(nftInfos, this.walletStore.keplrWallet.accountAddress, NftApi.getGasPrice());
 
         // get the token ids from the mint transaction result
         // each log represents one message in the transaction

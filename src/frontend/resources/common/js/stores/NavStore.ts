@@ -27,8 +27,14 @@ export default class NavStore {
     }
 
     selectNftPage(page: number): void {
-        if (page === NavStore.MINT_PAGE_KEY) {
-            this.nftMintStore.reset(true);
+        switch (page) {
+            case NavStore.MY_NFTS_PAGE_KEY:
+                this.myNftsStore.reset();
+                break;
+            case NavStore.MINT_PAGE_KEY:
+                this.nftMintStore.reset(true);
+                break;
+            default:
         }
 
         this.nftPage = page;

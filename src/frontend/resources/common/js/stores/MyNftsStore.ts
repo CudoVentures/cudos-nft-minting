@@ -8,6 +8,7 @@ import NftApi from '../api/NftApi';
 import S from '../utilities/Main';
 import WalletStore from './WalletStore';
 import AppStore from './AppStore';
+import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
 
 export default class MyNftsStore {
 
@@ -40,16 +41,20 @@ export default class MyNftsStore {
         this.nftCollectionModels = []; // does not hold the cudos default collection
         this.nftsInCollectionsMap = new Map(); // holds denom ids to nfts map for all collections
 
-        this.viewPage = MyNftsStore.PAGE_SINGLE_NFTS;
-        this.viewNftModel = null;
-        this.viewNftCollectionModel = null;
-
-        this.filterString = S.Strings.EMPTY;
+        this.reset();
 
         this.initialized = false;
         this.timeoutHelper = new TimeoutHelper();
 
         makeAutoObservable(this);
+    }
+
+    reset() {
+        this.viewPage = MyNftsStore.PAGE_SINGLE_NFTS;
+        this.viewNftModel = null;
+        this.viewNftCollectionModel = null;
+
+        this.filterString = S.Strings.EMPTY;
     }
 
     isInitialized(): boolean {
@@ -106,6 +111,15 @@ export default class MyNftsStore {
 
     getNftsInCudosMainCollection() {
         return this.getNftsInCollection(Config.CUDOS_NETWORK.NFT_DENOM_ID);
+    }
+
+    getPreviewUrl(denomId: string, workerQueueHelper: WorkerQueueHelper) {
+        const nftModels = this.getNftsInCollection(denomId);
+        if (nftModels.length > 0) {
+            return nftModels[0].getPreviewUrl(workerQueueHelper);
+        }
+
+        return NftModel.UNKNOWN_PREVIEW_URL;
     }
 
     filter = () => {
