@@ -1,7 +1,6 @@
 manages stores between steps
 send as gift
-estimate tx
-disable actions while minting
 nftmintstore to mynftsstore
 
 explorer tx
+estimate tx

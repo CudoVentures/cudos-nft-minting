@@ -11,6 +11,7 @@ import NftModel from '../models/NftModel';
 import WalletStore from './WalletStore';
 import MyNftsStore from './MyNftsStore';
 import NftCollectionModel from '../models/NftCollectionModel';
+import AppStore from './AppStore';
 
 export default class NftMintStore {
 
@@ -18,6 +19,7 @@ export default class NftMintStore {
     static MINT_MODE_BACKEND: number = 2;
 
     nftApi: NftApi;
+    appStore: AppStore;
     myNftsStore: MyNftsStore;
     walletStore: WalletStore;
 
@@ -29,8 +31,9 @@ export default class NftMintStore {
 
     @observable transactionHash: string;
 
-    constructor(myNftsStore: MyNftsStore, walletStore: WalletStore) {
+    constructor(appStore: AppStore, myNftsStore: MyNftsStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
+        this.appStore = appStore;
         this.myNftsStore = myNftsStore;
         this.walletStore = walletStore;
 
@@ -95,6 +98,8 @@ export default class NftMintStore {
     async mintCollection(callBefore: () => void, success: () => void, error: () => void) {
         callBefore();
 
+        this.appStore.disableActions();
+
         try {
             const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
             const txRes = await client.nftIssueDenom(
@@ -128,23 +133,38 @@ export default class NftMintStore {
         } catch (e) {
             console.log(e);
             error();
+        } finally {
+            this.appStore.enableActions();
         }
     }
 
-    async mintNfts(local: number, callBefore: () => void, success: () => void, error: () => void): Promise<void> {
+    mintNfts(local: number, callBefore: () => void, success: () => void, error: () => void): void {
         callBefore();
+
         if (!this.isValidNftModels()) {
             error();
             return;
         }
 
+        const internalSuccess = () => {
+            this.appStore.enableActions();
+            success();
+        };
+
+        const internalError = () => {
+            this.appStore.enableActions();
+            error();
+        }
+
         try {
             switch (local) {
                 case NftMintStore.MINT_MODE_BACKEND:
-                    await this.mintBackend(success, error);
+                    this.appStore.disableActions();
+                    this.mintBackend(internalSuccess, internalError);
                     break;
                 case NftMintStore.MINT_MODE_LOCAL:
-                    await this.mintLocal(success, error);
+                    this.appStore.disableActions();
+                    this.mintLocal(internalSuccess, internalError);
                     break;
                 default:
                     throw Error('Unknown mint type');
@@ -154,8 +174,8 @@ export default class NftMintStore {
         }
     }
 
-    private async mintBackend(success: () => void, error: () => void) {
-        await this.nftApi.mintNfts(this.nfts, (txHash: string) => {
+    private mintBackend(success: () => void, error: () => void) {
+        this.nftApi.mintNfts(this.nfts, (txHash: string) => {
             this.transactionHash = txHash;
             success();
         }, error);
@@ -174,7 +194,7 @@ export default class NftMintStore {
 
         let mintRes: any;
         const urls = nfts.map((nft: NftModel) => nft.url);
-        await this.nftApi.uploadFiles(
+        this.nftApi.uploadFiles(
             urls,
             async (imageUrls: string[]) => {
                 for (let i = 0; i < nfts.length; i++) {
