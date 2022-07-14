@@ -146,7 +146,7 @@ export default class NftMintStore {
         }
     }
 
-    mintNfts = async (): Promise < void > => {
+    mintNfts = async (): Promise<void> => {
         if (!this.isValidNftModels()) {
             this.navMintStore.selectStepMintingFailed();
             return;
@@ -272,6 +272,7 @@ export default class NftMintStore {
         nft.url = url;
         nft.recipient = this.walletStore.keplrWallet.accountAddress;
 
+        nft.denomId = this.nftCollection.denomId;
         nft.fileName = fileName;
         nft.type = type;
         nft.sizeBytes = sizeBytes;

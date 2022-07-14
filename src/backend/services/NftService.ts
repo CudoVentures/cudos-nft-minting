@@ -69,7 +69,6 @@ export default class NftService {
                 nft.url = await this.imageUpload(nft.url);
             }
         }
-
         const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
 
         try {

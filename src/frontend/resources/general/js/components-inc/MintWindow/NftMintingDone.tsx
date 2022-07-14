@@ -47,7 +47,7 @@ class NftMintingDone extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_1}
                         padding={Button.PADDING_82}
-                        onClick={this.props.nftMintStore.navMintStore.reset()}>
+                        onClick={this.props.nftMintStore.reset.bind(this.props.nftMintStore, true)}>
                         Mint Another
                     </Button>
                 </Actions>

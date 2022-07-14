@@ -23,6 +23,7 @@ export default class NavStore {
 
     reset = () => {
         this.nftPage = NavStore.MY_NFTS_PAGE_KEY;
+        this.nftMintStore.reset(true);
     }
 
     selectNftPage(page: number): void {
