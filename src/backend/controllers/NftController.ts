@@ -46,7 +46,6 @@ export default class NftController {
                 urls[i] = await nftService.imageUpload(urls[i]);
             }
         }
-        console.log(`urls::: ${urls}`)
         context.res.set(new UploadImagesRes(urls));
     }
 }

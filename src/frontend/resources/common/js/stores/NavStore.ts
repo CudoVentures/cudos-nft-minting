@@ -50,6 +50,13 @@ export default class NavStore {
         this.collectionMinted = NavStore.COLLECTION_MINT_NONE;
     }
 
+    resetToMintPage() {
+        this.nftPage = NavStore.MINT_PAGE_KEY;
+        this.mintOption = S.NOT_EXISTS;
+        this.mintStep = NavStore.STEP_CHOOSE_OPTION;
+        this.collectionMinted = NavStore.COLLECTION_MINT_NONE;
+    }
+
     // page
     selectNftPage(page: number): void {
         if (page === NavStore.MINT_PAGE_KEY) {
