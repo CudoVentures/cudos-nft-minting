@@ -2,7 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import S from '../../../../common/js/utilities/Main';
-import NavStore from '../../../../common/js/stores/NavStore';
+import NftMintStore from '../../../../common/js/stores/NftMintStore';
 
 import OptionChoose from './OptionChoose';
 import CollectionDetails from './CollectionDetails';
@@ -19,17 +19,18 @@ import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
 import '../../../css/components-inc/NftMint/mint-window.css';
 
 interface Props {
-    navStore: NavStore
+    nftMintStore: NftMintStore;
 }
 
 class MintWindow extends React.Component<Props> {
 
     render() {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
         return (
             <div className={'MintWindow FlexColumn'}>
                 {this.renderMintStepNavMap()}
                 <div className={'MintStepPage'}>
-                    {/* {this.props.navStore.isInMintingStep() ? <span className={'SmallStepSign'}>STEP {this.props.navStore.getMintStepShowNumber()}</span> : ''} */}
                     {this.renderStepChooseOption()}
                     {this.renderStepUploadFile()}
                     {this.renderStepCollectionDetails()}
@@ -40,18 +41,18 @@ class MintWindow extends React.Component<Props> {
                     {this.renderMintingFailed()}
                 </div>
                 <div className={'FlexSplit StepNav'}>
-                    {this.props.navStore.shouldShowBackStep() === true && (
+                    {navMintStore.shouldShowBackStep() === true && (
                         <div
                             className={'FlexRow Clickable Active'}
-                            onClick={this.props.navStore.getPreviousStepFunction()} >
+                            onClick={navMintStore.getPreviousStepFunction()} >
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowLeft }}></div>
                             <span>Back</span>
                         </div>
                     )}
-                    {this.props.navStore.shouldShowNextStep() === true && (
-                        <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(this.props.navStore.isNextStepActive())}`}
-                            onClick={this.props.navStore.getNextStepFunction()} >
-                            <span>{this.props.navStore.getNextStepText()}</span>
+                    {navMintStore.shouldShowNextStep() === true && (
+                        <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(navMintStore.isNextStepActive())}`}
+                            onClick={navMintStore.getNextStepFunction()} >
+                            <span>{navMintStore.getNextStepText()}</span>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>
                         </div>
                     )}
@@ -61,7 +62,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderMintStepNavMap() {
-        const display = this.props.navStore.shouldShowMintStepNavMap();
+        const display = this.props.nftMintStore.navMintStore.shouldShowMintStepNavMap();
 
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
@@ -71,7 +72,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderStepChooseOption() {
-        const display = this.props.navStore.isMintStepChooseOption();
+        const display = this.props.nftMintStore.navMintStore.isMintStepChooseOption();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <OptionChoose />}
@@ -80,7 +81,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderStepUploadFile() {
-        const display = this.props.navStore.isMintStepUploadFile();
+        const display = this.props.nftMintStore.navMintStore.isMintStepUploadFile();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <UploadFiles />}
@@ -89,7 +90,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderStepCollectionDetails() {
-        const display = this.props.navStore.isMintStepCollectionDetails();
+        const display = this.props.nftMintStore.navMintStore.isMintStepCollectionDetails();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <CollectionDetails />}
@@ -97,7 +98,7 @@ class MintWindow extends React.Component<Props> {
         )
     }
     renderStepDetails() {
-        const display = this.props.navStore.isMintStepDetails();
+        const display = this.props.nftMintStore.navMintStore.isMintStepDetails();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <NftDetails />}
@@ -106,7 +107,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderStepFinish() {
-        const display = this.props.navStore.isMintStepFinish();
+        const display = this.props.nftMintStore.navMintStore.isMintStepFinish();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <NftFinish />}
@@ -115,7 +116,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderMintingInProgress() {
-        const display = this.props.navStore.isMintStepMinting();
+        const display = this.props.nftMintStore.navMintStore.isMintStepMinting();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <NftMinting />}
@@ -124,7 +125,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderMintingDone() {
-        const display = this.props.navStore.isMintStepDone();
+        const display = this.props.nftMintStore.navMintStore.isMintStepDone();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <NftMintingDone />}
@@ -133,7 +134,7 @@ class MintWindow extends React.Component<Props> {
     }
 
     renderMintingFailed() {
-        const display = this.props.navStore.isMintStepFailed();
+        const display = this.props.nftMintStore.navMintStore.isMintStepFailed();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <NftMintingFailed />}
@@ -142,4 +143,4 @@ class MintWindow extends React.Component<Props> {
     }
 }
 
-export default inject('navStore')((observer(MintWindow)));
+export default inject('nftMintStore')((observer(MintWindow)));

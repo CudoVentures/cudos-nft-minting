@@ -2,10 +2,10 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import BigNumber from 'bignumber.js'
 import S from '../../../../common/js/utilities/Main';
-import NftMintStore from '../../../../common/js/stores/NftMintStore';
-import NavStore from '../../../../common/js/stores/NavStore';
+import NftMintStore, { NavMintStore } from '../../../../common/js/stores/NftMintStore';
 import WalletStore from '../../../../common/js/stores/WalletStore';
 import AppStore from '../../../../common/js/stores/AppStore';
+import Config from '../../../../../../../builds/dev-generated/Config';
 
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
@@ -15,11 +15,9 @@ import NftStepWrapper from './NftStepWrapper';
 
 import SvgInfo from '../../../../common/svg/info.svg';
 import '../../../css/components-inc/NftMint/nft-finish.css';
-import Config from '../../../../../../../builds/dev-generated/Config';
 
 interface Props {
     nftMintStore: NftMintStore;
-    navStore: NavStore;
     walletStore: WalletStore;
     appStore: AppStore;
 }
@@ -43,11 +41,13 @@ class NftFinish extends React.Component<Props, State> {
     }
 
     async componentDidMount(): Promise<void> {
-        const locale = this.props.navStore.isMintOptionSingle() ? NftMintStore.MINT_MODE_BACKEND : NftMintStore.MINT_MODE_LOCAL;
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
+        const locale = navMintStore.isMintOptionSingle() ? NftMintStore.MINT_MODE_BACKEND : NftMintStore.MINT_MODE_LOCAL;
 
         await this.props.nftMintStore.esimateMintFees(locale, (estimate: BigNumber) => {
             const estimateNumber = Number(estimate.div(Config.CUDOS_NETWORK.DECIMAL_DIVIDER).toFixed(2));
-            if (this.props.navStore.isMintOptionMultiple()) {
+            if (navMintStore.isMintOptionMultiple()) {
                 const now = new Date();
                 now.setMinutes(0);
                 const coinId = 'cudos';
@@ -89,7 +89,7 @@ class NftFinish extends React.Component<Props, State> {
         return (
             <NftStepWrapper
                 className={'NftFinish'}
-                stepNumber={`Step ${this.props.navStore.getMintStepShowNumber()}`}
+                stepNumber={`Step ${this.props.nftMintStore.navMintStore.getMintStepShowNumber()}`}
                 stepName={'Summarised Details'} >
                 <div className={'FlexRow NftFinishHolder'}>
                     {this.renderSingleMintFinish()}
@@ -100,18 +100,19 @@ class NftFinish extends React.Component<Props, State> {
 
     renderSingleMintFinish(): any {
         const { appStore, nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
         const nftCollectionModel = nftMintStore.nftCollection;
         const nfts = this.props.nftMintStore.nfts;
 
         return (
             <>
                 <NftSidePreview
-                    imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].getPreviewUrl(appStore.workerQueueHelper) : ''}
-                    name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : nftCollectionModel.name} />
+                    imageUrl={navMintStore.isMintOptionSingle() ? nfts[0].getPreviewUrl(appStore.workerQueueHelper) : ''}
+                    name={navMintStore.isMintOptionSingle() ? nfts[0].name : nftCollectionModel.name} />
                 <div className={'FlexColumn FlexGrow'}>
                     <div className={'FlexColumn SummaryDetails'}>
                         <div className={'SummaryHeading'}>Minting details</div>
-                        {this.props.navStore.isMintOptionMultiple() === true && (
+                        {navMintStore.isMintOptionMultiple() === true && (
                             <div className={'FlexColumn DetailsRow'}>
                                 <div className={'DetailHeading'}>Collection Name</div>
                                 <div className={'DetailData'}>{nftCollectionModel.name}</div>
@@ -124,14 +125,14 @@ class NftFinish extends React.Component<Props, State> {
                             </div>
                             <div className={'FlexColumnt DetailColumn'}>
                                 <div className={'DetailHeading'}>Mint Type</div>
-                                <div className={'DetailData'}>{NavStore.getMintTypeText(this.props.navStore.mintOption)}</div>
+                                <div className={'DetailData'}>{NavMintStore.getMintTypeText(navMintStore.mintOption)}</div>
                             </div>
                             <div className={'FlexColumnt DetailColumn'}>
                                 <div className={'DetailHeading'}>Estimated Gas Fee</div>
                                 <div className={'DetailData FlexRow'}>
-                                    <div className={`FeeEstimate ${S.CSS.getClassName(this.props.navStore.isMintOptionSingle(), 'Crossed')}`}>{this.state.feeEstimate} CUDOS</div>
+                                    <div className={`FeeEstimate ${S.CSS.getClassName(navMintStore.isMintOptionSingle(), 'Crossed')}`}>{this.state.feeEstimate} CUDOS</div>
                                     <div className={'RealPrice FlexRow'}>
-                                        {this.props.navStore.isMintOptionSingle() ? (
+                                        {navMintStore.isMintOptionSingle() ? (
                                             <>
                                                 FREE
                                                 <div
@@ -159,7 +160,7 @@ class NftFinish extends React.Component<Props, State> {
                                 </div>
                             </div>
                         </div>
-                        {this.props.navStore.isMintOptionSingle() === true && (
+                        {navMintStore.isMintOptionSingle() === true && (
                             <div className={'FlexColumnt DetailColumn'}>
                                 <div className={'DetailHeading'}>Recipient</div>
                                 <div className={'DetailData'}>{nfts[0].recipient !== S.Strings.EMPTY ? nfts[0].recipient : this.props.walletStore.keplrWallet.accountAddress}</div>
@@ -172,14 +173,8 @@ class NftFinish extends React.Component<Props, State> {
                             radius={Button.RADIUS_MAX}
                             color={Button.COLOR_SCHEME_1}
                             padding={Button.PADDING_24}
-                            onClick={nftMintStore.mintNfts.bind(
-                                this.props.nftMintStore,
-                                this.props.navStore.isMintOptionSingle() ? NftMintStore.MINT_MODE_BACKEND : NftMintStore.MINT_MODE_LOCAL,
-                                this.props.navStore.selectStepMintingInProgress,
-                                this.props.navStore.selectStepMintingSucceeeded,
-                                this.props.navStore.selectStepMintingFailed,
-                            )} >
-                            {this.props.navStore.isMintOptionSingle() === true ? 'Mint NFT' : 'Mint Collection NFTs'}
+                            onClick={nftMintStore.mintNfts} >
+                            {navMintStore.isMintOptionSingle() === true ? 'Mint NFT' : 'Mint Collection NFTs'}
                         </Button>
                     </Actions>
                 </div>
@@ -187,4 +182,4 @@ class NftFinish extends React.Component<Props, State> {
         )
     }
 }
-export default inject('appStore', 'walletStore', 'navStore', 'nftMintStore')((observer(NftFinish)));
+export default inject('appStore', 'walletStore', 'nftMintStore')((observer(NftFinish)));

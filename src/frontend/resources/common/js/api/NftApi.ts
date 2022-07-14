@@ -110,22 +110,41 @@ export default class NftApi extends AbsApi {
         callback(resNftCollectionModels, resNftModels);
     }
 
-    mintNfts(nftModels: NftModel[], callback: (txHash: string) => void, error: () => void) {
-        const req = new MintNftReq(nftModels);
+    mintNfts(nftModels: NftModel[]): Promise < string > {
+        return new Promise < string >((resolve, reject) => {
+            const req = new MintNftReq(nftModels);
 
-        this.api.req(Actions.NFT.MINT, req, (json: any) => {
-            if (json.status !== 0) {
-                error();
-                return;
-            }
+            this.api.req(Actions.NFT.MINT, req, (json: any) => {
+                if (json.status !== 0) {
+                    reject();
+                    return;
+                }
 
-            const res = new MintNftRes(json.obj);
-            nftModels.forEach((nftModel, i) => {
-                nftModel.tokenId = res.nfts[i].tokenId;
-                nftModel.url = res.nfts[i].url;
+                const res = new MintNftRes(json.obj);
+                nftModels.forEach((nftModel, i) => {
+                    nftModel.tokenId = res.nfts[i].tokenId;
+                    nftModel.url = res.nfts[i].url;
+                });
+                resolve(res.txHash);
             });
-            callback(res.txHash);
         });
+
+    }
+
+    uploadFiles(files: string[]): Promise < string[] > {
+        return new Promise < string[] >((resolve, reject) => {
+            const req = new UploadImagesReq(files);
+            this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
+                if (json.status !== 0) {
+                    reject();
+                    return;
+                }
+
+                const res = new UploadImagesRes(json.obj);
+                resolve(res.urls);
+            });
+        });
+
     }
 
     async sendNft(nft: NftModel, recipientAddress: string, senderAddress: string, client: SigningStargateClient): Promise<string> {
@@ -157,19 +176,6 @@ export default class NftApi extends AbsApi {
         const price = Number(data[coinId].usd);
 
         return price;
-    }
-
-    uploadFiles(files: string[], callback: (urls: string[]) => void, error: () => void) {
-        const req = new UploadImagesReq(files);
-        this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
-            if (json.status !== 0) {
-                error();
-                return;
-            }
-
-            const res = new UploadImagesRes(json.obj);
-            callback(res.urls);
-        });
     }
 
 }

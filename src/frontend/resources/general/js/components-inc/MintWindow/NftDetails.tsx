@@ -4,7 +4,6 @@ import { inject, observer } from 'mobx-react';
 import S from '../../../../common/js/utilities/Main';
 import ProjectUtils from '../../../../common/js/ProjectUtils';
 import NftModel from '../../../../common/js/models/NftModel';
-import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 
 import Checkbox from '../../../../common/js/components-inc/Checkbox';
@@ -23,7 +22,6 @@ import WalletStore from '../../../../common/js/stores/WalletStore';
 interface Props {
     appStore: AppStore;
     nftMintStore: NftMintStore;
-    navStore: NavStore;
     walletStore: WalletStore;
 }
 
@@ -81,12 +79,12 @@ class NftDetails extends React.Component < Props, State > {
     }
 
     render() {
-        const navStore = this.props.navStore;
+        const navMintStore = this.props.nftMintStore.navMintStore;
 
         return (
             <NftStepWrapper
                 className = { 'NftDetails' }
-                stepNumber = { `Step ${navStore.getMintStepShowNumber()}` }
+                stepNumber = { `Step ${navMintStore.getMintStepShowNumber()}` }
                 stepName = { 'NFT Details' } >
                 { this.renderSingleNftDetails() }
                 { this.renderMultipleNftDetails() }
@@ -95,12 +93,12 @@ class NftDetails extends React.Component < Props, State > {
     }
 
     renderSingleNftDetails() {
-        const { appStore, navStore } = this.props;
-        if (navStore.isMintOptionSingle() !== true) {
+        const { appStore, nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
+        if (navMintStore.isMintOptionSingle() !== true) {
             return null;
         }
 
-        const nftMintStore = this.props.nftMintStore;
         const nftModel = nftMintStore.nfts[0];
 
         return (
@@ -145,8 +143,9 @@ class NftDetails extends React.Component < Props, State > {
     }
 
     renderMultipleNftDetails() {
-        const { appStore, navStore } = this.props;
-        if (navStore.isMintOptionMultiple() !== true) {
+        const { appStore, nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
+        if (navMintStore.isMintOptionMultiple() !== true) {
             return null;
         }
 
@@ -154,9 +153,9 @@ class NftDetails extends React.Component < Props, State > {
 
         return (
             <div className={'NftMultipleMint'} >
-                {nfts.map((nft: NftModel) => (
+                {nfts.map((nft: NftModel, i: number) => (
                     <div
-                        key = { nft.getIdsUniquePair() }
+                        key = { i }
                         className = { 'NftModel' } >
                         <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl(appStore.workerQueueHelper))} />
                         <div className = { 'NftFileName' } >{nft.fileName}</div>
@@ -175,4 +174,4 @@ class NftDetails extends React.Component < Props, State > {
     }
 }
 
-export default inject('appStore', 'navStore', 'nftMintStore', 'walletStore')((observer(NftDetails)));
+export default inject('appStore', 'nftMintStore', 'walletStore')((observer(NftDetails)));

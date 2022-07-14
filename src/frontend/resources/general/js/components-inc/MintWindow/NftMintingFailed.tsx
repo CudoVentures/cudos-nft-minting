@@ -3,18 +3,19 @@ import React from 'react';
 import Config from '../../../../../../../builds/dev-generated/Config';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
-import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import SvgSuccessfullWaves from '../../../../common/svg/unsuccessful-waves.svg';
 import '../../../css/components-inc/NftMint/nft-minting-failed.css';
 
 interface Props {
-    navStore: NavStore;
     nftMintStore: NftMintStore;
 }
 
 class NftMintingFailed extends React.Component<Props> {
+
     render() {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
         return (
             <div className={'NftMintingFailed FlexColumn FlexGrow'}>
                 <div className={'SVG Icon Size Background Wave'} dangerouslySetInnerHTML={{ __html: SvgSuccessfullWaves }}></div>
@@ -28,7 +29,7 @@ class NftMintingFailed extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_1}
                         padding={Button.PADDING_82}
-                        onClick={this.props.nftMintStore.mintNfts.bind(this.props.nftMintStore, this.props.navStore.selectStepMintingInProgress, this.props.navStore.selectStepMintingSucceeeded, this.props.navStore.selectStepMintingFailed)} >
+                        onClick={this.props.nftMintStore.mintNfts} >
                         Try Again
                     </Button>
                     <Button
@@ -36,13 +37,14 @@ class NftMintingFailed extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_3}
                         padding={Button.PADDING_82}
-                        onClick={this.props.navStore.selectFinishStep}>
+                        onClick={navMintStore.selectFinishStep}>
                         Go Back
                     </Button>
                 </Actions>
             </div>
         )
     }
+
 }
 
-export default inject('nftMintStore', 'navStore')((observer(NftMintingFailed)));
+export default inject('nftMintStore')((observer(NftMintingFailed)));

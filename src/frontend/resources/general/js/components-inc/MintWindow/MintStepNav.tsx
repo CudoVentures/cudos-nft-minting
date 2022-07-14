@@ -2,13 +2,13 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import S from '../../../../common/js/utilities/Main';
-import NavStore from '../../../../common/js/stores/NavStore';
+import NftMintStore, { NavMintStore } from '../../../../common/js/stores/NftMintStore';
 
 import SvgTick from '../../../../common/svg/tick.svg';
 import '../../../css/components-inc/NftMint/mint-step-nav.css';
 
 interface Props {
-    navStore: NavStore
+    nftMintStore: NftMintStore;
 }
 
 class MintStepNav extends React.Component<Props> {
@@ -19,51 +19,55 @@ class MintStepNav extends React.Component<Props> {
     static TEXT_FINISH = 'Finish';
 
     getMenuItems(): any[] {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
         const menuItems = [
             {
                 name: MintStepNav.TEXT_CHOOSE_OPTION,
-                showNumber: NavStore.STEP_CHOOSE_OPTION,
-                step: NavStore.STEP_CHOOSE_OPTION,
+                showNumber: NavMintStore.STEP_CHOOSE_OPTION,
+                step: NavMintStore.STEP_CHOOSE_OPTION,
             },
             {
                 name: MintStepNav.TEXT_UPLOAD_FILE,
-                showNumber: NavStore.STEP_UPLOAD_FILE,
-                step: NavStore.STEP_UPLOAD_FILE,
+                showNumber: NavMintStore.STEP_UPLOAD_FILE,
+                step: NavMintStore.STEP_UPLOAD_FILE,
             }];
 
-        if (this.props.navStore.isMintOptionMultiple()) {
+        if (navMintStore.isMintOptionMultiple()) {
             menuItems.push({
                 name: MintStepNav.TEXT_COLLECTION_DETAILS,
-                showNumber: NavStore.STEP_COLLECTION_DETAILS,
-                step: NavStore.STEP_COLLECTION_DETAILS,
+                showNumber: NavMintStore.STEP_COLLECTION_DETAILS,
+                step: NavMintStore.STEP_COLLECTION_DETAILS,
             });
         }
 
         menuItems.push({
             name: MintStepNav.TEXT_NFT_DETAILS,
-            showNumber: this.props.navStore.isMintOptionMultiple() ? NavStore.STEP_NFT_DETAILS : NavStore.STEP_NFT_DETAILS - 1,
-            step: NavStore.STEP_NFT_DETAILS,
+            showNumber: navMintStore.isMintOptionMultiple() ? NavMintStore.STEP_NFT_DETAILS : NavMintStore.STEP_NFT_DETAILS - 1,
+            step: NavMintStore.STEP_NFT_DETAILS,
         })
 
         menuItems.push({
             name: MintStepNav.TEXT_FINISH,
-            showNumber: this.props.navStore.isMintOptionMultiple() ? NavStore.STEP_FINISH : NavStore.STEP_FINISH - 1,
-            step: NavStore.STEP_FINISH,
+            showNumber: navMintStore.isMintOptionMultiple() ? NavMintStore.STEP_FINISH : NavMintStore.STEP_FINISH - 1,
+            step: NavMintStore.STEP_FINISH,
         })
 
         return menuItems;
     }
 
     render() {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
         return (
             <div className={'MintStepNav FlexRow '}>
                 <div className={'HorizontalLine'} />
                 {this.getMenuItems().map((step: any) => (
                     <div
                         key={step.step}
-                        className={`MintStep FlexColumn ${S.CSS.getClassName(step.step <= this.props.navStore.mintStep, 'BlueStep')} ${S.CSS.getClassName(step.showNumber === this.props.navStore.mintStep, 'CurrentStep')}`}>
+                        className={`MintStep FlexColumn ${S.CSS.getClassName(step.step <= navMintStore.mintStep, 'BlueStep')} ${S.CSS.getClassName(step.showNumber === navMintStore.mintStep, 'CurrentStep')}`}>
                         <div className={'NumberBox'} >
-                            {step.step < this.props.navStore.mintStep
+                            {step.step < navMintStore.mintStep
                                 ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
                                 : step.showNumber
                             }
@@ -76,4 +80,4 @@ class MintStepNav extends React.Component<Props> {
     }
 }
 
-export default inject('navStore')((observer(MintStepNav)));
+export default inject('nftMintStore')((observer(MintStepNav)));

@@ -3,7 +3,6 @@ import { inject, observer } from 'mobx-react';
 
 import S from '../../../../common/js/utilities/Main';
 import Config from '../../../../../../../builds/dev-generated/Config';
-import NavStore from '../../../../common/js/stores/NavStore';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import AlertStore from '../../../../common/js/stores/AlertStore';
 import AppStore from '../../../../common/js/stores/AppStore';
@@ -27,7 +26,6 @@ import '../../../css/components-inc/NftMint/upload-files.css';
 
 interface Props {
     appStore: AppStore;
-    navStore: NavStore;
     nftMintStore: NftMintStore;
     alertStore: AlertStore;
 }
@@ -59,7 +57,7 @@ class UploadFiles extends React.Component<Props> {
             'maxSize': 1 << 20, // 1MB
             'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .webp, webm, mp3, wav, ogg, gltf, glb',
             'controller': '#',
-            'multi': this.props.navStore.isMintOptionMultiple(),
+            'multi': this.props.nftMintStore.navMintStore.isMintOptionMultiple(),
             'progressWindow': false,
             'onExceedLimit': () => {
                 this.props.alertStore.show('Max files size is 1MB');
@@ -90,6 +88,8 @@ class UploadFiles extends React.Component<Props> {
     }
 
     render() {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
         this.uploadLinkInputStateHelper.updateValues([
             this.props.nftMintStore.imageUrlInputValue,
         ]);
@@ -97,9 +97,9 @@ class UploadFiles extends React.Component<Props> {
         return (
             <NftStepWrapper
                 className = { 'UploadFiles' }
-                stepNumber = { `Step ${this.props.navStore.getMintStepShowNumber()}` }
+                stepNumber = { `Step ${navMintStore.getMintStepShowNumber()}` }
                 stepName = { 'Upload File' } >
-                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(!this.props.nftMintStore.isNftsEmpty() && this.props.navStore.isMintOptionSingle())}`}>
+                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(!this.props.nftMintStore.isNftsEmpty() && navMintStore.isMintOptionSingle())}`}>
                     <FileUpload
                         uploadId={'OptionChoosePage'}
                         uploadParams={this.makeImageUploadParams()}>
@@ -181,12 +181,13 @@ class UploadFiles extends React.Component<Props> {
     }
 
     renderRows() {
-        const appStore = this.props.appStore;
+        const { appStore, nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
 
         return this.props.nftMintStore.nfts.map((nft: NftModel, index: number) => {
             let cells = [];
 
-            if (this.props.navStore.isMintOptionMultiple()) {
+            if (navMintStore.isMintOptionMultiple()) {
                 cells.push(Table.cell(
                     <Checkbox
                         value={this.props.nftMintStore.isNftSelected(index)}
@@ -214,9 +215,11 @@ class UploadFiles extends React.Component<Props> {
     }
 
     getTableLegend() {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
         let legends = [];
 
-        if (this.props.navStore.isMintOptionMultiple()) {
+        if (navMintStore.isMintOptionMultiple()) {
             legends.push((<Checkbox
                 value={this.props.nftMintStore.areAllNftsSelected()}
                 onChange={() => this.props.nftMintStore.onSelectAllNfts()}
@@ -234,7 +237,9 @@ class UploadFiles extends React.Component<Props> {
     }
 
     getTableWidths() {
-        if (this.props.navStore.isMintOptionMultiple()) {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
+        if (navMintStore.isMintOptionMultiple()) {
             return ['5%', '30%', '20%', '15%', '35%']
         }
 
@@ -242,7 +247,9 @@ class UploadFiles extends React.Component<Props> {
     }
 
     getTableAligns() {
-        if (this.props.navStore.isMintOptionMultiple()) {
+        const navMintStore = this.props.nftMintStore.navMintStore;
+
+        if (navMintStore.isMintOptionMultiple()) {
             return [
                 TableDesktop.ALIGN_CENTER,
                 TableDesktop.ALIGN_LEFT,
@@ -261,4 +268,4 @@ class UploadFiles extends React.Component<Props> {
     }
 }
 
-export default inject('appStore', 'alertStore', 'navStore', 'nftMintStore')((observer(UploadFiles)));
+export default inject('appStore', 'alertStore', 'nftMintStore')((observer(UploadFiles)));
