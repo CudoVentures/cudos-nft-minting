@@ -14,6 +14,7 @@ import SvgInfo from '../../../../common/svg/info.svg';
 import SvgTickCircle from '../../../../common/svg/tick-circle.svg';
 import SvgCloseBtnOutlined from '../../../../common/svg/close-btn-outlined.svg';
 import SvgLinkBox from '../../../../common/svg/link-box.svg';
+import S from '../../../../common/js/utilities/Main';
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -40,6 +41,11 @@ class CollectionDetails extends React.Component<Props> {
         nftCollectionModel.name = value;
     }
 
+    isMintButtonActive(): boolean {
+        const nftCollectionModel = this.props.nftMintStore.nftCollection;
+        return nftCollectionModel.denomId !== S.Strings.EMPTY && nftCollectionModel.name !== S.Strings.EMPTY;
+    }
+
     render() {
         const nftMintStore = this.props.nftMintStore;
         const navMintStore = nftMintStore.navMintStore;
@@ -51,7 +57,7 @@ class CollectionDetails extends React.Component<Props> {
                 stepNumber={`Step ${navMintStore.getMintStepShowNumber()}`}
                 stepName={'Collection Details'} >
                 <div className={'FlexRow DetailsHolder'}>
-                    <NftSidePreview name = { nftCollectionModel.name } />
+                    <NftSidePreview name={nftCollectionModel.name} />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'DetailsForm'}>
                         <Input
                             label={'Collection  Id'}
@@ -71,32 +77,44 @@ class CollectionDetails extends React.Component<Props> {
                             <div className={'Text'}>The cover image of the collection will be randomly selected from the uploaded NFTs in it.</div>
                         </div>
 
-                        {navMintStore.isCollectionMintedNone() === false ? (
-                            <div className={`ResultMessage FlexColumn ${navMintStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
-                                <div className={'Heading FlexRow'}>
-                                    { navMintStore.isCollectionMintedFail() ? (
+                        { navMintStore.isCollectionMintedNone() === false && (
+                            <>
+                                <div className={`ResultMessage FlexColumn ${navMintStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
+                                    <div className={'Heading FlexRow'}>
+                                        { navMintStore.isCollectionMintedFail() ? (
+                                            <>
+                                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCloseBtnOutlined }} />
+                                                <div>Collection minting failed!</div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
+                                                <div>Collection Was Minted Successfully!</div>
+                                            </>
+                                        ) }
+                                    </div>
+                                    { navMintStore.isCollectionMintedSuccess() && (
                                         <>
-                                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCloseBtnOutlined }} />
-                                            <div>Collection minting failed!</div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
-                                            <div>Collection Was Minted Successfully!</div>
+                                            <div className={'FlexRow TransacionInfo'}>
+                                                <div className={'InfoMessage'}>Check transaction details in Explorer</div>
+                                                <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
+                                            </div>
+                                            { navMintStore.isCollectionMintedSuccess() && (
+                                                <div className={'FlexRow TransacionInfo'}>
+                                                    <div className={'InfoMessage'}>Check transaction details in Explorer</div>
+                                                    <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
+                                                </div>
+                                            )}
                                         </>
                                     ) }
                                 </div>
-                                { navMintStore.isCollectionMintedSuccess() && (
-                                    <div className={'FlexRow TransacionInfo'}>
-                                        <div className={'InfoMessage'}>Check transaction details in Explorer</div>
-                                        <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
-                                    </div>
-                                ) }
-                            </div>
-                        ) : (
+                            </>
+                        ) }
+                        { navMintStore.isCollectionMintedSuccess() === false && (
                             <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
                                 <Button
                                     type={Button.TYPE_ROUNDED}
+                                    disabled={!this.isMintButtonActive()}
                                     radius={Button.RADIUS_MAX}
                                     color={Button.COLOR_SCHEME_1}
                                     padding={Button.PADDING_24}

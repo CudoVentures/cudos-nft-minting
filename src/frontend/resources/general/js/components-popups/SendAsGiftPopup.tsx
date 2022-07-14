@@ -24,7 +24,7 @@ interface Props extends PopupWindowProps {
     popupStore: PopupSendAsGiftStore;
 }
 
-class SendAsGiftPopup extends PopupWindow < Props > {
+class SendAsGiftPopup extends PopupWindow<Props> {
 
     getCssClassName() {
         return 'SendAsGiftPopup PopupPadding PopupBox';
@@ -43,7 +43,7 @@ class SendAsGiftPopup extends PopupWindow < Props > {
         this.props.popupStore.recipientAddress = value;
     }
 
-    onClickSendNft = () => {
+    onClickSendNft = async () => {
         const popupStore = this.props.popupStore;
         if (popupStore.inputStateHelper.getValues() === null) {
             return;
@@ -53,9 +53,10 @@ class SendAsGiftPopup extends PopupWindow < Props > {
 
         try {
             popupStore.markStatusProcessing();
-            setTimeout(() => {
-                popupStore.markStatusDoneSuccess();
-            }, 500);
+
+            await this.props.popupStore.sendNft();
+
+            popupStore.markStatusDoneSuccess()
         } finally {
             this.props.appStore.enableActions();
         }
@@ -68,11 +69,11 @@ class SendAsGiftPopup extends PopupWindow < Props > {
 
     renderContent() {
         return (
-            <div className = { 'PopupWindowContent' }>
-                { this.renderStatusInit() }
-                { this.renderStatusProcessing() }
-                { this.renderStatusDoneSuccess() }
-                { this.renderStatusDoneError() }
+            <div className={'PopupWindowContent'}>
+                {this.renderStatusInit()}
+                {this.renderStatusProcessing()}
+                {this.renderStatusDoneSuccess()}
+                {this.renderStatusDoneError()}
             </div>
         )
     }
@@ -89,49 +90,49 @@ class SendAsGiftPopup extends PopupWindow < Props > {
         ]);
 
         return (
-            <div className = { `StepInit FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}` } >
-                { display && (
+            <div className={`StepInit FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}`} >
+                {display && (
                     <>
-                        <div className = { 'Title' } >Send NFT as a GIFT</div>
-                        <div className = { 'SubTitle' } >Enter recepient address and they will receive it in their wallet.</div>
-                        <div className = { 'NftPreviewCnt' } >
-                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper)) } />
-                            <div className = { 'NftData FlexColumn' } >
-                                <div className = { 'NftDataRow' } >
+                        <div className={'Title'} >Send NFT as a GIFT</div>
+                        <div className={'SubTitle'} >Enter recepient address and they will receive it in their wallet.</div>
+                        <div className={'NftPreviewCnt'} >
+                            <div className={'NftPreview ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
+                            <div className={'NftData FlexColumn'} >
+                                <div className={'NftDataRow'} >
                                     <label>NFT Name</label>
                                     <div>{nftModel.name}</div>
                                 </div>
-                                <div className = { 'NftDataRow' } >
+                                <div className={'NftDataRow'} >
                                     <label>Estimated gas fee</label>
-                                    { popupStore.isGasFeeCalculated() === false && (
-                                        <LoadingIndicator size = { '16px' } margin = { 'auto' } />
-                                    ) }
-                                    { popupStore.isGasFeeCalculated() === true && (
+                                    {popupStore.isGasFeeCalculated() === false && (
+                                        <LoadingIndicator size={'16px'} margin={'auto'} />
+                                    )}
+                                    {popupStore.isGasFeeCalculated() === true && (
                                         <div>
                                             <span>{popupStore.gasFee} CUDOS</span>
-                                            <span className = { 'PrimaryColor PriceInUsd' }> $0.24 </span>
+                                            <span className={'PrimaryColor PriceInUsd'}> $0.24 </span>
                                         </div>
-                                    ) }
+                                    )}
                                 </div>
                             </div>
                         </div>
                         <Input
-                            label = { 'Recipient Address' }
-                            value = { inputStateHelper.values.get(PopupSendAsGiftStore.FIELDS[0]) }
-                            error = { inputStateHelper.errors.get(PopupSendAsGiftStore.FIELDS[0]) }
-                            onChange = {inputStateHelper.onChanges.get(PopupSendAsGiftStore.FIELDS[0])} />
+                            label={'Recipient Address'}
+                            value={inputStateHelper.values.get(PopupSendAsGiftStore.FIELDS[0])}
+                            error={inputStateHelper.errors.get(PopupSendAsGiftStore.FIELDS[0])}
+                            onChange={inputStateHelper.onChanges.get(PopupSendAsGiftStore.FIELDS[0])} />
                         <Actions
-                            className = { 'StepActions' }
-                            height = { Actions.HEIGHT_60 } >
+                            className={'StepActions'}
+                            height={Actions.HEIGHT_60} >
                             <Button
-                                padding = { Button.PADDING_96 }
-                                radius = { Button.RADIUS_MAX }
-                                onClick = { this.onClickSendNft } >
+                                padding={Button.PADDING_96}
+                                radius={Button.RADIUS_MAX}
+                                onClick={this.onClickSendNft} >
                                 Send GIFT
                             </Button>
                         </Actions>
                     </>
-                ) }
+                )}
             </div>
         )
     }
@@ -141,14 +142,14 @@ class SendAsGiftPopup extends PopupWindow < Props > {
         const display = popupStore.isStatusProcessing();
 
         return (
-            <div className = { `StepProcessing FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}` } >
-                { display && (
+            <div className={`StepProcessing FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}`} >
+                {display && (
                     <>
-                        <div className = { 'SVG Size SvgIconBackground' } dangerouslySetInnerHTML = {{ __html: SvgLoadingWaves }} />
-                        <div className = { 'Title' } >Processing...</div>
-                        <div className = { 'SubTitle' } >Please don’t close this window.<br />It will be ready in a second.</div>
+                        <div className={'SVG Size SvgIconBackground'} dangerouslySetInnerHTML={{ __html: SvgLoadingWaves }} />
+                        <div className={'Title'} >Processing...</div>
+                        <div className={'SubTitle'} >Please don’t close this window.<br />It will be ready in a second.</div>
                     </>
-                ) }
+                )}
             </div>
         )
     }
@@ -161,22 +162,22 @@ class SendAsGiftPopup extends PopupWindow < Props > {
         const display = popupStore.isStatusDoneSuccess();
 
         return (
-            <div className = { `StepDoneSuccess FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}` } >
-                { display && (
+            <div className={`StepDoneSuccess FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}`} >
+                {display && (
                     <>
-                        <div className = { 'SVG Size SvgIconBackground' } dangerouslySetInnerHTML = {{ __html: SvgLoadingWaves }} />
-                        <div className = { 'NftPreviewCnt' } >
-                            <div className = { 'NftPreview ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper)) } />
-                            <div className = { 'NftName' } >{nftModel.name}</div>
+                        <div className={'SVG Size SvgIconBackground'} dangerouslySetInnerHTML={{ __html: SvgLoadingWaves }} />
+                        <div className={'NftPreviewCnt'} >
+                            <div className={'NftPreview ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
+                            <div className={'NftName'} >{nftModel.name}</div>
                         </div>
-                        <div className = { 'Title' } >Success!</div>
-                        <div className = { 'SubTitle' } >NFT was gifted successfully.</div>
-                        <a href = { '' } className = { 'TxLink FlexRow' } target = '_blank' rel="noreferrer" >
+                        <div className={'Title'} >Success!</div>
+                        <div className={'SubTitle'} >NFT was gifted successfully.</div>
+                        <a href={''} className={'TxLink FlexRow'} target='_blank' rel="noreferrer" >
                             Check transaction details in Explorer
-                            <span className = { 'SVG IconOpenUrl PrimaryColor' } dangerouslySetInnerHTML = {{ __html: SvgOpenUrl }} />
+                            <span className={'SVG IconOpenUrl PrimaryColor'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
                         </a>
                     </>
-                ) }
+                )}
             </div>
         )
     }
@@ -186,37 +187,37 @@ class SendAsGiftPopup extends PopupWindow < Props > {
         const display = popupStore.isStatusDoneError();
 
         return (
-            <div className = { `StepDoneError FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}` } >
-                { display && (
+            <div className={`StepDoneError FlexColumn Transition ActiveDisplayHidden ${S.CSS.getActiveClassName(display)}`} >
+                {display && (
                     <>
-                        <div className = { 'SVG Size SvgIconBackground' } dangerouslySetInnerHTML = {{ __html: SvgFinishedWaves }} />
-                        <img src = { `${Config.URL.RESOURCES}/common/img/nfts/cone.png` } className = { 'Cone' } />
-                        <div className = { 'Title' } >Transaction Failed!!</div>
-                        <div className = { 'SubTitle' } >NFT was not gifted.<br />Please check the details or try again.</div>
-                        <a href = { '' } className = { 'TxLink FlexRow' } target = '_blank' rel="noreferrer" >
+                        <div className={'SVG Size SvgIconBackground'} dangerouslySetInnerHTML={{ __html: SvgFinishedWaves }} />
+                        <img src={`${Config.URL.RESOURCES}/common/img/nfts/cone.png`} className={'Cone'} />
+                        <div className={'Title'} >Transaction Failed!!</div>
+                        <div className={'SubTitle'} >NFT was not gifted.<br />Please check the details or try again.</div>
+                        <a href={''} className={'TxLink FlexRow'} target='_blank' rel="noreferrer" >
                             Check transaction details in Explorer
-                            <span className = { 'SVG IconOpenUrl PrimaryColor' } dangerouslySetInnerHTML = {{ __html: SvgOpenUrl }} />
+                            <span className={'SVG IconOpenUrl PrimaryColor'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
                         </a>
                         <Actions
-                            className = { 'StepActions' }
-                            height = { Actions.HEIGHT_60 }
-                            layout = { Actions.LAYOUT_COLUMN_FULL } >
+                            className={'StepActions'}
+                            height={Actions.HEIGHT_60}
+                            layout={Actions.LAYOUT_COLUMN_FULL} >
                             <Button
-                                padding = { Button.PADDING_96 }
-                                radius = { Button.RADIUS_MAX }
-                                onClick = { this.onClickSendNft } >
+                                padding={Button.PADDING_96}
+                                radius={Button.RADIUS_MAX}
+                                onClick={this.onClickSendNft} >
                                 Try again
                             </Button>
                             <Button
-                                padding = { Button.PADDING_96 }
-                                radius = { Button.RADIUS_MAX }
-                                color = { Button.COLOR_SCHEME_3 }
-                                onClick = { this.onClickBack } >
+                                padding={Button.PADDING_96}
+                                radius={Button.RADIUS_MAX}
+                                color={Button.COLOR_SCHEME_3}
+                                onClick={this.onClickBack} >
                                 Go Back
                             </Button>
                         </Actions>
                     </>
-                ) }
+                )}
             </div>
         )
     }
