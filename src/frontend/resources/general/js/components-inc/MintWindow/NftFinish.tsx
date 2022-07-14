@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-
+import BigNumber from 'bignumber.js'
 import S from '../../../../common/js/utilities/Main';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import NavStore from '../../../../common/js/stores/NavStore';
@@ -15,6 +15,7 @@ import NftStepWrapper from './NftStepWrapper';
 
 import SvgInfo from '../../../../common/svg/info.svg';
 import '../../../css/components-inc/NftMint/nft-finish.css';
+import Config from '../../../../../../../builds/dev-generated/Config';
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -42,15 +43,18 @@ class NftFinish extends React.Component<Props, State> {
     }
 
     async componentDidMount(): Promise<void> {
-        const estimate = await this.props.nftMintStore.esimateMintFees();
-        let feeEstimateInDollars = 0;
-        if (this.props.navStore.isMintOptionMultiple()) {
-            // TODO: make real estimation
-            feeEstimateInDollars = 1;
-        }
+        await this.props.nftMintStore.esimateMintFees((estimate: BigNumber) => {
+            let feeEstimateInDollars = 0;
+            if (this.props.navStore.isMintOptionMultiple()) {
+                // TODO: make real estimation
+                feeEstimateInDollars = 1;
+            }
 
-        this.setState({ feeEstimate: estimate, feeEstimateInDollars });
-
+            this.setState({
+                feeEstimate: estimate.div(Config.CUDOS_NETWORK.DECIMAL_MULTIPLIER).toFixed(2),
+                feeEstimateInDollars,
+            });
+        });
     }
 
     onShowFreeInfo = (e) => {

@@ -117,9 +117,12 @@ export default class NftService {
             }
         }
 
+        // TODO: fix data
+        const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, 'wefwef', nftModel.recipient));
+
         try {
+
             const { wallet, sender, client } = await this.getSigner();
-            const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, nftModel.url, 'ergererherh', sender));
 
             const { msgs, fee } = await client.nftModule.msgMintMultipleNFT(
                 nftInfos,

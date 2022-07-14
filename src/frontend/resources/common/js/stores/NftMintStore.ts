@@ -65,7 +65,7 @@ export default class NftMintStore {
     }
 
     // estimate
-    async esimateMintFees(): Promise < number > {
+    async esimateMintFees(callback: (fee: number) => void): Promise<number> {
         try {
             const signer = this.walletStore.keplrWallet.offlineSigner;
             const sender = this.walletStore.keplrWallet.accountAddress;
@@ -74,7 +74,7 @@ export default class NftMintStore {
             const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
 
             this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
-                return Number(fee[0].amount)
+                callback(Number(fee[0].amount));
             })
         } catch (e) {
             console.log(e);
@@ -219,7 +219,7 @@ export default class NftMintStore {
     }
 
     // images
-    async addNftFromUpload(url: string, fileName: string, type: string, sizeBytes: number): Promise < void > {
+    async addNftFromUpload(url: string, fileName: string, type: string, sizeBytes: number): Promise<void> {
         const searchFor = 'base64,';
         const binaryString = window.atob(url.substring(url.indexOf(searchFor) + searchFor.length));
         const bytes = new Uint8Array(binaryString.length);
@@ -229,7 +229,7 @@ export default class NftMintStore {
         await this.addNftModel(url, fileName, type, sizeBytes, bytes.buffer);
     }
 
-    async addNftFromLink(): Promise < void > {
+    async addNftFromLink(): Promise<void> {
         let url = this.imageUrlInputValue;
         this.imageUrlInputValue = S.Strings.EMPTY;
 
@@ -249,7 +249,7 @@ export default class NftMintStore {
         }
     }
 
-    private async addNftModel(url: string, fileName: string, type: string, sizeBytes: number, arrayBuffer: ArrayBuffer): Promise < void > {
+    private async addNftModel(url: string, fileName: string, type: string, sizeBytes: number, arrayBuffer: ArrayBuffer): Promise<void> {
         const nft = new NftModel();
 
         nft.denomId = this.nftCollection.denomId;
