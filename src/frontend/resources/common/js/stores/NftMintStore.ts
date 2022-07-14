@@ -74,7 +74,9 @@ export default class NftMintStore {
             if (local === NftMintStore.MINT_MODE_LOCAL) {
                 const { signer, sender, client } = await this.walletStore.getSignerData();
 
-                const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
+                const nftInfos = this.nfts.map((nftModel: NftModel) => {
+                    return new NftInfo(nftModel.denomId, nftModel.name, nftModel.url.substring(0, Math.min(nftModel.url.length, 256)), nftModel.data, sender)
+                });
 
                 const { msgs, fee } = await client.nftModule.msgMintMultipleNFT(
                     nftInfos,
@@ -127,10 +129,9 @@ export default class NftMintStore {
 
             this.nftCollection.denomId = tokenIdAttr.value;
             this.nfts.forEach((nftModel) => {
-                nftModel.denomId = this.nftApi.denomId;
+                nftModel.denomId = this.nftCollection.denomId;
             })
             this.transactionHash = txRes.transactionHash;
-
             success();
         } catch (e) {
             console.log(e);
