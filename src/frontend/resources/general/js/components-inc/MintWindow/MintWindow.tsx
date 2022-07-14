@@ -57,6 +57,13 @@ class MintWindow extends React.Component<Props> {
         return null;
     }
 
+    getNextStepText(): string {
+        const { nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
+
+        return navMintStore.isMintStepDone() ? 'Go to My NFTs' : 'Next Step';
+    }
+
     render() {
         const navMintStore = this.props.nftMintStore.navMintStore;
 
@@ -84,8 +91,8 @@ class MintWindow extends React.Component<Props> {
                     )}
                     {navMintStore.shouldShowNextStep() === true && (
                         <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(navMintStore.isNextStepActive())}`}
-                            onClick={navMintStore.getNextStepFunction()} >
-                            <span>{navMintStore.getNextStepText()}</span>
+                            onClick = { this.getNextStepHandler() } >
+                            <span>{this.getNextStepText()}</span>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>
                         </div>
                     )}

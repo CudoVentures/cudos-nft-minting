@@ -9,8 +9,6 @@ import S from '../utilities/Main';
 import WalletStore from './WalletStore';
 import AppStore from './AppStore';
 
-const emptyStore = false;
-
 export default class MyNftsStore {
 
     static PAGE_SINGLE_NFTS: number = 1;

@@ -9,7 +9,6 @@ import Config from '../../../../../../builds/dev-generated/Config';
 import NftApi from '../api/NftApi';
 import NftModel from '../models/NftModel';
 import WalletStore from './WalletStore';
-import MyNftsStore from './MyNftsStore';
 import NftCollectionModel from '../models/NftCollectionModel';
 import AppStore from './AppStore';
 
@@ -25,7 +24,6 @@ export default class NftMintStore {
 
     nftApi: NftApi;
     appStore: AppStore;
-    myNftsStore: MyNftsStore;
     walletStore: WalletStore;
     navMintStore: NavMintStore;
 
@@ -40,12 +38,11 @@ export default class NftMintStore {
 
     transactionHash: string;
 
-    constructor(appStore: AppStore, myNftsStore: MyNftsStore, walletStore: WalletStore) {
+    constructor(appStore: AppStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
         this.appStore = appStore;
-        this.myNftsStore = myNftsStore;
         this.walletStore = walletStore;
-        this.navMintStore = new NavMintStore(this, myNftsStore);
+        this.navMintStore = new NavMintStore(this);
 
         this.reset(false);
 
@@ -372,11 +369,9 @@ export class NavMintStore {
     mintStep: number;
     collectionMinted: number;
     nftMintStore: NftMintStore;
-    myNftsStore: MyNftsStore;
 
-    constructor(nftMintStore: NftMintStore, myNftsStore: MyNftsStore) {
+    constructor(nftMintStore: NftMintStore) {
         this.nftMintStore = nftMintStore;
-        this.myNftsStore = myNftsStore;
         this.reset();
 
         makeAutoObservable(this);
@@ -395,11 +390,6 @@ export class NavMintStore {
 
     selectNextStep = () => {
         ++this.mintStep;
-    }
-
-    selectFirstMintStep = () => {
-        this.nftMintStore.reset();
-        this.mintStep = NavMintStore.STEP_CHOOSE_OPTION;
     }
 
     selectNftDetailsStep = () => {
@@ -478,10 +468,6 @@ export class NavMintStore {
         return this.isInMintingStep();
     }
 
-    getNextStepText(): string {
-        return this.isMintStepDone() ? 'Go to My NFTs' : 'Next Step';
-    }
-
     getPreviousStepFunction() {
         if (this.isMintStepDetails() && this.isMintOptionSingle()) {
             return () => { this.mintStep = NavMintStore.STEP_UPLOAD_FILE };
@@ -526,7 +512,7 @@ export class NavMintStore {
             case NavMintStore.MINT_OPTION_MULTIPLE:
                 return 'Create Collection';
             default:
-                return '';
+                return S.Strings.EMPTY;
         }
     }
 
@@ -537,7 +523,7 @@ export class NavMintStore {
             case NavMintStore.MINT_OPTION_MULTIPLE:
                 return 'Collection';
             default:
-                return '';
+                return S.Strings.EMPTY;
         }
     }
 

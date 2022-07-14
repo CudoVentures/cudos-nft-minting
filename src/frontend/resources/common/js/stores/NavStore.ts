@@ -34,11 +34,11 @@ export default class NavStore {
         this.nftPage = page;
     }
 
-    selectNftMintPage() {
+    selectNftMintPage = () => {
         this.selectNftPage(NavStore.MINT_PAGE_KEY);
     }
 
-    selectMyNftPage() {
+    selectMyNftPage = () => {
         this.selectNftPage(NavStore.MY_NFTS_PAGE_KEY);
     }
 

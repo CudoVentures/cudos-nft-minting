@@ -33,7 +33,7 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
         const appStore = new AppStore();
         const walletStore = new WalletStore();
         const myNftsStore = new MyNftsStore(appStore, walletStore);
-        const nftMintStore = new NftMintStore(appStore, myNftsStore, walletStore);
+        const nftMintStore = new NftMintStore(appStore, walletStore);
         const navStore = new NavStore(nftMintStore, myNftsStore);
 
         ReactDOM.render(
