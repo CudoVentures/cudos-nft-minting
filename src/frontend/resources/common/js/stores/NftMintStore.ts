@@ -1,6 +1,7 @@
 import { makeObservable, observable } from 'mobx';
-import { GasPrice, SigningStargateClient, estimateFee, Coin } from 'cudosjs';
+import { SigningStargateClient, estimateFee, Coin } from 'cudosjs';
 import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
+import BigNumber from 'bignumber.js';
 
 import S from '../utilities/Main';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -65,17 +66,25 @@ export default class NftMintStore {
     }
 
     // estimate
-    async esimateMintFees(callback: (fee: number) => void): Promise<number> {
+    async esimateMintFees(local: number, callback: (fee: BigNumber) => void) {
         try {
-            const signer = this.walletStore.keplrWallet.offlineSigner;
-            const sender = this.walletStore.keplrWallet.accountAddress;
-            const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, signer);
+            if (local === NftMintStore.MINT_MODE_LOCAL) {
+                const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
+                const { signer, sender, client } = await this.walletStore.getSignerData();
 
-            const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
+                const { msgs, fee } = await client.nftModule.msgMintMultipleNFT(
+                    nftInfos,
+                    sender,
+                    '',
+                    this.walletStore.getGasPrice(),
+                )
 
-            this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
-                callback(Number(fee[0].amount));
-            })
+                callback(new BigNumber(fee.amount[0].amount));
+            } if (local === NftMintStore.MINT_MODE_BACKEND) {
+                this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
+                    callback(new BigNumber(fee[0].amount));
+                })
+            }
         } catch (e) {
             console.log(e);
             throw new Error('Failed to connect signing client');
@@ -94,7 +103,7 @@ export default class NftMintStore {
                 this.nftCollection.name,
                 S.Strings.EMPTY,
                 S.Strings.EMPTY,
-                GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
+                this.walletStore.getGasPrice(),
             );
 
             const log = JSON.parse(txRes.rawLog);
@@ -175,7 +184,7 @@ export default class NftMintStore {
                     mintRes = await client.nftMintMultipleTokens(
                         nftInfos,
                         this.walletStore.keplrWallet.accountAddress,
-                        GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
+                        this.walletStore.getGasPrice(),
                     )
                     console.log(mintRes);
                 } catch (e) {

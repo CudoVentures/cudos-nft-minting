@@ -43,17 +43,32 @@ class NftFinish extends React.Component<Props, State> {
     }
 
     async componentDidMount(): Promise<void> {
-        await this.props.nftMintStore.esimateMintFees((estimate: BigNumber) => {
-            let feeEstimateInDollars = 0;
-            if (this.props.navStore.isMintOptionMultiple()) {
-                // TODO: make real estimation
-                feeEstimateInDollars = 1;
-            }
+        const locale = this.props.navStore.isMintOptionSingle() ? NftMintStore.MINT_MODE_BACKEND : NftMintStore.MINT_MODE_LOCAL;
 
-            this.setState({
-                feeEstimate: estimate.div(Config.CUDOS_NETWORK.DECIMAL_MULTIPLIER).toFixed(2),
-                feeEstimateInDollars,
-            });
+        await this.props.nftMintStore.esimateMintFees(locale, (estimate: BigNumber) => {
+            const estimateNumber = Number(estimate.div(Config.CUDOS_NETWORK.DECIMAL_DIVIDER).toFixed(2));
+            if (this.props.navStore.isMintOptionMultiple()) {
+                const now = new Date();
+                now.setMinutes(0);
+                const coinId = 'cudos';
+                const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`;
+                fetch(url).then((res) => {
+                    res.json().then((data) => {
+                        data = data[coinId];
+                        console.log(data);
+                        this.setState({
+                            feeEstimate: estimateNumber,
+                            feeEstimateInDollars: data.toFixed(3),
+                        });
+                    });
+                }).catch((e) => {
+                    console.log(e);
+                })
+            } else {
+                this.setState({
+                    feeEstimate: estimateNumber,
+                });
+            }
         });
     }
 

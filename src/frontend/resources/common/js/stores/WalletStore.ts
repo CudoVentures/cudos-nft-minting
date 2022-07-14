@@ -1,5 +1,5 @@
 import { makeAutoObservable, makeObservable, observable } from 'mobx';
-import { KeplrWallet } from 'cudosjs';
+import { GasPrice, KeplrWallet, SigningStargateClient } from 'cudosjs';
 import Config from '../../../../../../builds/dev-generated/Config';
 import S from '../utilities/Main';
 
@@ -53,4 +53,15 @@ export default class WalletStore {
         }
     }
 
+    async getSignerData() {
+        const signer = this.keplrWallet.offlineSigner;
+        const sender = this.keplrWallet.accountAddress;
+        const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, signer);
+
+        return { signer, sender, client };
+    }
+
+    getGasPrice() {
+        return GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
+    }
 }

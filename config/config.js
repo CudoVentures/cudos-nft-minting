@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
 const path = require('path');
+const BigNumber = require('bignumber.js');
 
 let envPath = path.join(__dirname, '.env');
 if (process.env.ENV_FILENAME) {
@@ -205,6 +206,7 @@ const Config = {
         API: process.env.API,
         GAS_PRICE: process.env.GAS_PRICE,
         DENOM: 'acudos',
+        DECIMAL_DIVIDER: (new BigNumber(10)).pow(18),
         EXPLORER: process.env.EXPLORER,
         STAKING: process.env.STAKING,
         NFT_DENOM_ID: process.env.NFT_DENOM_ID,
