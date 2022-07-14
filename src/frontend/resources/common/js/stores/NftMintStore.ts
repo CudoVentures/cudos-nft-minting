@@ -1,5 +1,6 @@
 import { makeObservable, observable } from 'mobx';
 import { GasPrice, SigningStargateClient } from 'cudosjs';
+import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 
 import S from '../utilities/Main';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -7,7 +8,6 @@ import Config from '../../../../../../builds/dev-generated/Config';
 import NftApi from '../api/NftApi';
 import NftModel from '../models/NftModel';
 import WalletStore from './WalletStore';
-import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 import MyNftsStore from './MyNftsStore';
 
 export default class NftMintStore {
@@ -40,12 +40,14 @@ export default class NftMintStore {
     }
 
     reset() {
-        this.recipientFieldActive = S.INT_FALSE;
         this.imageUrlInputValue = S.Strings.EMPTY;
+        this.recipientFieldActive = S.INT_FALSE;
 
+        this.denomId = S.Strings.EMPTY;
         this.collectionName = S.Strings.EMPTY;
         this.nfts = [];
         this.selectedNfts = [];
+
         this.transactionHash = S.Strings.EMPTY;
     }
 
@@ -85,12 +87,7 @@ export default class NftMintStore {
         }
     }
 
-    async mintNfts(
-        local: number,
-        callBefore: () => void,
-        success: () => void,
-        error: () => void,
-    ): Promise<void> {
+    async mintNfts(local: number, callBefore: () => void, success: () => void, error: () => void): Promise < void > {
         callBefore();
         const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
         const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
@@ -116,24 +113,25 @@ export default class NftMintStore {
         })
 
         try {
-            if (local === NftMintStore.MINT_MODE_BACKEND) {
-                await this.nftApi.mintNfts(
-                    this.nfts,
-                    (txHash: string) => {
+            switch (local) {
+                case NftMintStore.MINT_MODE_BACKEND:
+                    await this.nftApi.mintNfts(this.nfts, (txHash: string) => {
                         this.transactionHash = txHash;
                         success();
-                    },
-                    error,
-                );
-            } else if (local === NftMintStore.MINT_MODE_LOCAL) {
-                await this.mintNftsFrontend(success, error);
+                    }, error);
+                    break;
+                case NftMintStore.MINT_MODE_LOCAL:
+                    await this.mintLocal(success, error);
+                    break;
+                default:
+                    throw Error('Unknown mint type');
             }
         } catch (e) {
             error();
         }
     }
 
-    private async mintNftsFrontend(success: () => void, error: () => void) {
+    private async mintLocal(success: () => void, error: () => void) {
         const nfts = this.nfts;
 
         let client: SigningStargateClient;
