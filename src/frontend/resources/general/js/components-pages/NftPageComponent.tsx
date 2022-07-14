@@ -18,6 +18,7 @@ import LoadingIndicator from '../../../common/js/components-core/LoadingIndicato
 
 import './../../css/components-pages/page-nft-component.css';
 import SendAsGiftPopup from '../components-popups/SendAsGiftPopup';
+import NftModel from '../../../common/js/models/NftModel';
 
 interface Props extends ContextPageComponentProps {
     nftMintStore: NftMintStore,
@@ -48,7 +49,7 @@ export default class NftPageComponent extends ContextPageComponent<Props> {
         const { navStore, walletStore } = this.props;
 
         if (walletStore.isKeplrConnected() === false) {
-            return <LoadingIndicator margin = { 'auto' } />
+            return <LoadingIndicator margin={'auto'} />
         }
 
         return (
@@ -79,7 +80,7 @@ export default class NftPageComponent extends ContextPageComponent<Props> {
 
     renderPopups(): any[] {
         return super.renderPopups().concat([
-            <SendAsGiftPopup key = { 1 } />,
+            <SendAsGiftPopup key={1} />,
         ]);
     }
 }

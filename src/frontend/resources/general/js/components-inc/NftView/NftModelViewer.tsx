@@ -16,7 +16,7 @@ interface Props {
     nftCollectionModel: NftCollectionModel | null;
 }
 
-class NftModelViewer extends React.Component < Props > {
+class NftModelViewer extends React.Component<Props> {
 
     static defaultProps: any;
 
@@ -28,14 +28,16 @@ class NftModelViewer extends React.Component < Props > {
         const nftModel = this.props.nftModel;
 
         return (
-            <div className = { 'NftModelViewer' } >
-                <div className = { 'NavigationBack FlexRow' } onClick = { this.onClickBack } >
-                    <div className = { 'SVG IconBack' } dangerouslySetInnerHTML = {{ __html: SvgArrowLeft }} />
+            <div className={'NftModelViewer'} >
+                <div className={'NavigationBack FlexRow'} onClick={this.onClickBack} >
+                    <div className={'SVG IconBack'} dangerouslySetInnerHTML={{ __html: SvgArrowLeft }} />
                     Back to My NFTs
                 </div>
                 <NftViewer
-                    nftModel = { nftModel }
-                    nftCollectionModel = { this.props.nftCollectionModel } />
+                    nftModel={nftModel}
+                    nftCollectionModel={this.props.nftCollectionModel}
+                    onSendAsGiftSuccess={this.onClickBack}
+                />
             </div>
         )
     }

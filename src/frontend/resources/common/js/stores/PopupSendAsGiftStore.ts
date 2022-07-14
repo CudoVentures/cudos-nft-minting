@@ -7,6 +7,8 @@ import S from '../utilities/Main';
 import PopupStore from './PopupStore';
 import WalletStore from './WalletStore';
 import BigNumber from 'bignumber.js';
+import MyNftsStore from './MyNftsStore';
+import NftCollectionModel from '../models/NftCollectionModel';
 
 export default class PopupSendAsGiftStore extends PopupStore {
 
@@ -19,6 +21,7 @@ export default class PopupSendAsGiftStore extends PopupStore {
 
     @observable nftModel: NftModel;
     @observable recipientAddress: string;
+    @observable recipientAddressError: boolean;
     @observable status: number;
     @observable gasFee: number;
     @observable feeInUsd: number;
@@ -26,14 +29,17 @@ export default class PopupSendAsGiftStore extends PopupStore {
 
     inputStateHelper: InputStateHelper;
     calculateFeeTimeout: NodeJS.Timeout;
+    onSendAsGiftSuccess: () => void;
 
     nftApi: NftApi;
     walletStore: WalletStore;
+    myNftsStore: MyNftsStore;
 
-    constructor(walletStore: WalletStore, nftApi: NftApi) {
+    constructor(walletStore: WalletStore, myNftsStore: MyNftsStore) {
         super();
         this.nftModel = null;
         this.recipientAddress = S.Strings.EMPTY;
+        this.recipientAddressError = false;
         this.status = PopupSendAsGiftStore.STATUS_INIT;
         this.gasFee = S.NOT_EXISTS;
         this.txHash = S.Strings.EMPTY;
@@ -41,6 +47,7 @@ export default class PopupSendAsGiftStore extends PopupStore {
 
         this.nftApi = new NftApi();
         this.walletStore = walletStore;
+        this.myNftsStore = myNftsStore;
 
         makeObservable(this);
     }
@@ -81,9 +88,10 @@ export default class PopupSendAsGiftStore extends PopupStore {
         this.status = PopupSendAsGiftStore.STATUS_DONE_ERROR;
     }
 
-    showSignal(nftModel: NftModel) {
+    showSignal(nftModel: NftModel, onSendAsGiftSuccess: () => void) {
         this.nftModel = nftModel;
         this.recipientAddress = S.Strings.EMPTY;
+        this.recipientAddressError = false;
         this.status = PopupSendAsGiftStore.STATUS_INIT;
         this.gasFee = S.NOT_EXISTS;
         this.inputStateHelper = new InputStateHelper(PopupSendAsGiftStore.FIELDS, (key, value) => {
@@ -99,6 +107,8 @@ export default class PopupSendAsGiftStore extends PopupStore {
             this.estimateFee();
         }, 2000);
 
+        this.onSendAsGiftSuccess = onSendAsGiftSuccess;
+
         this.show();
     }
 
@@ -106,6 +116,7 @@ export default class PopupSendAsGiftStore extends PopupStore {
         super.hide();
         this.nftModel = null;
         this.recipientAddress = S.Strings.EMPTY;
+        this.recipientAddressError = false;
         this.status = PopupSendAsGiftStore.STATUS_INIT;
         clearTimeout(this.calculateFeeTimeout);
     }
@@ -119,13 +130,36 @@ export default class PopupSendAsGiftStore extends PopupStore {
             sender,
             client,
         );
+
+        this.onSuccessfulNftTransfer();
+        this.onSendAsGiftSuccess();
+    }
+
+    onSuccessfulNftTransfer() {
+        const myNftsStore = this.myNftsStore;
+        const collections = myNftsStore.nftCollectionModels;
+        const nftsMap = myNftsStore.nftsInCollectionsMap;
+
+        const nft = this.nftModel;
+
+        let nftsInCollection = nftsMap.get(nft.denomId);
+
+        nftsInCollection = nftsInCollection.filter((nftModel: NftModel) => nftModel.tokenId !== nft.tokenId);
+        nftsMap.set(nft.denomId, nftsInCollection);
+
+        if (nftsInCollection.length === 0) {
+            collections.filter((collection: NftCollectionModel) => collection.denomId !== nft.denomId);
+            nftsMap.delete(nft.denomId);
+        }
+
+        myNftsStore.nftCollectionModels = collections;
+        myNftsStore.filter();
     }
 
     async estimateFee() {
         try {
             const { signer, sender, client } = await this.walletStore.getSignerData();
 
-            console.log(sender);
             const fee = await this.nftApi.estimateFeeSendNft(
                 this.nftModel,
                 sender,
@@ -135,7 +169,6 @@ export default class PopupSendAsGiftStore extends PopupStore {
 
             this.gasFee = Number((new BigNumber(fee.amount)).div(Config.CUDOS_NETWORK.DECIMAL_DIVIDER).toFixed(2));
         } catch (e) {
-            console.log(e);
             this.gasFee = S.NOT_EXISTS;
         }
         try {
