@@ -9,6 +9,7 @@ import NftApi from '../api/NftApi';
 import NftModel from '../models/NftModel';
 import WalletStore from './WalletStore';
 import MyNftsStore from './MyNftsStore';
+import NftCollectionModel from '../models/NftCollectionModel';
 
 export default class NftMintStore {
 
@@ -19,12 +20,9 @@ export default class NftMintStore {
     myNftsStore: MyNftsStore;
     walletStore: WalletStore;
 
-    // @observable isImageLinkValid: boolean;
     @observable imageUrlInputValue: string;
-    @observable recipientFieldActive: number;
 
-    @observable denomId: string;
-    @observable collectionName: string;
+    @observable nftCollection: NftCollectionModel;
     @observable nfts: NftModel[];
     @observable selectedNfts: number[];
 
@@ -40,16 +38,39 @@ export default class NftMintStore {
         makeObservable(this);
     }
 
+    // utils
+    getTxHashLink(): string {
+        return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
+    }
+
     reset() {
-        this.recipientFieldActive = S.INT_FALSE;
         this.imageUrlInputValue = S.Strings.EMPTY;
 
-        this.collectionName = S.Strings.EMPTY;
+        this.nftCollection = null;
         this.nfts = [];
         this.selectedNfts = [];
+
         this.transactionHash = S.Strings.EMPTY;
     }
 
+    // nav
+    selectSingleMintOption() {
+        this.reset();
+        this.nftCollection = NftCollectionModel.instanceCudosMainCollection();
+    }
+
+    selectMultipleMintOption() {
+        this.reset();
+        this.nftCollection = new NftCollectionModel();
+    }
+
+    // estimate
+    async esimateMintFees(): Promise<number> {
+        // TODO: estimate fees correctly
+        return 1;
+    }
+
+    // minting
     async mintCollection(callBefore: () => void, success: () => void, error: () => void) {
         callBefore();
 
@@ -57,10 +78,10 @@ export default class NftMintStore {
             const client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC, this.walletStore.keplrWallet.offlineSigner);
             const txRes = await client.nftIssueDenom(
                 this.walletStore.keplrWallet.accountAddress,
-                this.collectionName,
-                this.collectionName,
-                this.collectionName,
-                this.collectionName,
+                this.nftCollection.denomId,
+                this.nftCollection.name,
+                S.Strings.EMPTY,
+                S.Strings.EMPTY,
                 GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM),
             );
 
@@ -76,7 +97,7 @@ export default class NftMintStore {
                 throw Error('Failed to get token id attribute from attribute event.');
             }
 
-            this.denomId = tokenIdAttr.value;
+            // this.denomId = tokenIdAttr.value;
             this.transactionHash = txRes.transactionHash;
 
             success();
@@ -86,52 +107,52 @@ export default class NftMintStore {
         }
     }
 
-    async mintNfts(
-        local: number,
-        callBefore: () => void,
-        success: () => void,
-        error: () => void,
-    ): Promise<void> {
+    async mintNfts(local: number, callBefore: () => void, success: () => void, error: () => void): Promise<void> {
         callBefore();
         if (!this.isValidNftModels()) {
             error();
             return;
         }
 
-        if (this.denomId === S.Strings.EMPTY) {
-            this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
-        }
+        // if (this.denomId === S.Strings.EMPTY) {
+        //     this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+        // }
 
-        this.nfts.forEach((nft: NftModel) => {
-            if (nft.recipient === S.Strings.EMPTY) {
-                nft.recipient = this.walletStore.keplrWallet.accountAddress;
-            }
+        // this.nfts.forEach((nft: NftModel) => {
+        //     if (nft.recipient === S.Strings.EMPTY) {
+        //         nft.recipient = this.walletStore.keplrWallet.accountAddress;
+        //     }
 
-            nft.denomId = this.denomId;
+        //     nft.denomId = this.denomId;
 
-            // TODO: get real checksum
-            nft.data = 'some checksum'
-        })
+        //     // TODO: get real checksum
+        //     nft.data = 'some checksum'
+        // })
 
         try {
-            if (local === NftMintStore.MINT_MODE_BACKEND) {
-                await this.nftApi.mintNfts(
-                    this.nfts,
-                    (txHash: string) => {
-                        this.transactionHash = txHash;
-                        success();
-                    },
-                    error,
-                );
-            } else if (local === NftMintStore.MINT_MODE_LOCAL) {
-                await this.mintNftsFrontend(success, error);
+            switch (local) {
+                case NftMintStore.MINT_MODE_BACKEND:
+                    await this.mintBackend(success, error);
+                    break;
+                case NftMintStore.MINT_MODE_LOCAL:
+                    await this.mintLocal(success, error);
+                    break;
+                default:
+                    throw Error('Unknown mint type');
             }
         } catch (e) {
             error();
         }
     }
 
-    private async mintNftsFrontend(success: () => void, error: () => void) {
+    private async mintBackend(success: () => void, error: () => void) {
+        await this.nftApi.mintNfts(this.nfts, (txHash: string) => {
+            this.transactionHash = txHash;
+            success();
+        }, error);
+    }
+
+    private async mintLocal(success: () => void, error: () => void) {
         const nfts = this.nfts;
 
         let client: SigningStargateClient;
@@ -153,7 +174,6 @@ export default class NftMintStore {
                     }
                 }
                 const nftInfos = nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
-                console.log(nftInfos);
                 try {
                     mintRes = await client.nftMintMultipleTokens(
                         nftInfos,
@@ -191,22 +211,11 @@ export default class NftMintStore {
         );
     }
 
-    // checks if the form fields are filled right
     isValidNftModels(): boolean {
-        const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
-        const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
-        const missingRecipient = this.nfts.find((nft: NftModel) => nft.recipient === '' || !nft.name);
-
-        if (missingUri !== undefined) {
-            return false;
-        }
-
-        if (missingName !== undefined) {
-            return false;
-        }
-
-        if (this.isRecipientFieldActive() && missingRecipient !== undefined) {
-            return false;
+        for (let i = this.nfts.length; i-- > 0;) {
+            if (this.nfts[i].isValidForSubmit() === false) {
+                return false;
+            }
         }
 
         return true;
@@ -233,10 +242,13 @@ export default class NftMintStore {
         return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
     }
 
-    addNewImage(url: string, fileName: string, type: string, sizeBytes: number): void {
+    addNftModel(url: string, fileName: string, type: string, sizeBytes: number): void {
         const nft = new NftModel();
 
+        nft.denomId = this.nftCollection.denomId;
         nft.url = url;
+        nft.recipient = this.walletStore.keplrWallet.accountAddress;
+
         nft.fileName = fileName;
         nft.type = type;
         nft.sizeBytes = sizeBytes;
@@ -247,13 +259,13 @@ export default class NftMintStore {
 
     async getImageFromUrl(): Promise<void> {
         let url = this.imageUrlInputValue;
+        this.imageUrlInputValue = S.Strings.EMPTY;
 
-        this.imageUrlInputValue = '';
+        if (!url.startsWith('http')) {
+            url = `http://${url}`;
+        }
 
         try {
-            if (!url.startsWith('http')) {
-                url = `http://${url}`;
-            }
             const imageRes = await fetch(url);
             let contentType = imageRes.headers.get('Content-Type');
             contentType = contentType.slice(contentType.indexOf('/') + 1);
@@ -262,7 +274,7 @@ export default class NftMintStore {
             const nft = new NftModel();
 
             nft.url = url;
-            nft.fileName = 'linkedImage';
+            nft.fileName = `NFT-${Date.now()}`;
             nft.type = contentType;
             nft.sizeBytes = contentLength;
             nft.updatePreviewUrl();
@@ -271,9 +283,9 @@ export default class NftMintStore {
         } catch (e) {
             throw Error('Could not fetch file.');
         }
-
     }
 
+    // credit
     removeNft(indexToRemove: number): void {
         this.nfts = this.nfts.filter((image: NftModel, index: number) => index !== indexToRemove);
         this.selectedNfts = [];
@@ -322,12 +334,4 @@ export default class NftMintStore {
         return this.nfts.length === 0;
     }
 
-    toggleAddressFieldActive(): void {
-        this.recipientFieldActive = this.isRecipientFieldActive() === true ? S.INT_FALSE : S.INT_TRUE;
-        this.nfts[0].recipient = S.Strings.EMPTY;
-    }
-
-    isRecipientFieldActive(): boolean {
-        return this.recipientFieldActive === S.INT_TRUE;
-    }
 }

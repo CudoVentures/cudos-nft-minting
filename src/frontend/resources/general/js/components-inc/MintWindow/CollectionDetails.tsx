@@ -30,24 +30,40 @@ class CollectionDetails extends React.Component<Props> {
         this.anchorEl = null;
     }
 
+    onChangeDenomId = (value) => {
+        const nftMintStore = this.props.nftMintStore;
+        const nftCollectionModel = nftMintStore.nftCollection;
+        nftCollectionModel.denomId = value;
+    }
+
     onChangeCollectionName = (value) => {
-        this.props.nftMintStore.collectionName = value;
+        const nftMintStore = this.props.nftMintStore;
+        const nftCollectionModel = nftMintStore.nftCollection;
+        nftCollectionModel.name = value;
     }
 
     render() {
+        const nftMintStore = this.props.nftMintStore;
+        const nftCollectionModel = nftMintStore.nftCollection;
+
         return (
             <NftStepWrapper
                 className={'CollectionDetails'}
                 stepNumber={`Step ${this.props.navStore.getMintStepShowNumber()}`}
                 stepName={'Collection Details'} >
                 <div className={'FlexRow DetailsHolder'}>
-                    <NftSidePreview imageUrl={''} name={this.props.nftMintStore.collectionName} />
+                    <NftSidePreview name = { nftCollectionModel.name } />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'DetailsForm'}>
                         <Input
-                            className={'CollectionName'}
+                            label={'Collection  Id'}
+                            placeholder={'E.g. Cool NFT Collection'}
+                            value={nftCollectionModel.denomId}
+                            readOnly={!this.props.navStore.isCollectionMintedNone()}
+                            onChange={this.onChangeDenomId} />
+                        <Input
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
-                            value={this.props.nftMintStore.collectionName}
+                            value={nftCollectionModel.name}
                             readOnly={!this.props.navStore.isCollectionMintedNone()}
                             onChange={this.onChangeCollectionName} />
 
@@ -85,12 +101,7 @@ class CollectionDetails extends React.Component<Props> {
                                     radius={Button.RADIUS_MAX}
                                     color={Button.COLOR_SCHEME_1}
                                     padding={Button.PADDING_24}
-                                    onClick={this.props.nftMintStore.mintCollection.bind(
-                                        this.props.nftMintStore,
-                                        this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
-                                        this.props.navStore.collectionMintSuccess.bind(this.props.navStore),
-                                        this.props.navStore.collectionMintFail.bind(this.props.navStore),
-                                    )}>
+                                    onClick={this.props.nftMintStore.mintCollection.bind(this.props.nftMintStore, this.props.navStore.selectStepMintingInProgress, this.props.navStore.collectionMintSuccess, this.props.navStore.collectionMintFail)}>
                                     Mint Collection
                                 </Button>
                             </Actions>

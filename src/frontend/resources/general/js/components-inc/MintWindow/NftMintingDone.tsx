@@ -39,7 +39,7 @@ class NftMintingDone extends React.Component<Props> {
                 </div>
                 <div className={'Heading4'} >Minting is Done!</div>
                 <div className={'Description'}>Minting was successful! Check the details from the link below.</div>
-                <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.props.nftMintStore.transactionHash}`} className={'TransactionLink FlexRow'}>
+                <a href = { this.props.nftMintStore.getTxHashLink() } className={'TransactionLink FlexRow'}>
                     <div>Check transaction details in Explorer</div>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
                 </a>
@@ -49,8 +49,7 @@ class NftMintingDone extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_1}
                         padding={Button.PADDING_82}
-                        onClick={this.props.navStore.selectFirstMintStep.bind(this.props.navStore)}
-                    >
+                        onClick={this.props.navStore.selectFirstMintStep}>
                         Mint Another
                     </Button>
                 </Actions>

@@ -79,27 +79,28 @@ class NftFinish extends React.Component<Props, State> {
     }
 
     renderSingleMintFinish(): any {
-        const appStore = this.props.appStore;
+        const { appStore, nftMintStore } = this.props;
+        const nftCollectionModel = nftMintStore.nftCollection;
         const nfts = this.props.nftMintStore.nfts;
 
         return (
             <>
                 <NftSidePreview
                     imageUrl={this.props.navStore.isMintOptionSingle() ? nfts[0].getPreviewUrl(appStore.workerQueueHelper) : ''}
-                    name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : this.props.nftMintStore.collectionName} />
+                    name={this.props.navStore.isMintOptionSingle() ? nfts[0].name : nftCollectionModel.name} />
                 <div className={'FlexColumn FlexGrow'}>
                     <div className={'FlexColumn SummaryDetails'}>
                         <div className={'SummaryHeading'}>Minting details</div>
                         {this.props.navStore.isMintOptionMultiple() === true && (
                             <div className={'FlexColumn DetailsRow'}>
                                 <div className={'DetailHeading'}>Collection Name</div>
-                                <div className={'DetailData'}>{this.props.nftMintStore.collectionName}</div>
+                                <div className={'DetailData'}>{nftCollectionModel.name}</div>
                             </div>
                         )}
                         <div className={'FlexRow DetailsRow'}>
                             <div className={'FlexColumnt DetailColumn'}>
                                 <div className={'DetailHeading'}>Items</div>
-                                <div className={'DetailData'}>{this.props.nftMintStore.nfts.length}</div>
+                                <div className={'DetailData'}>{nftMintStore.nfts.length}</div>
                             </div>
                             <div className={'FlexColumnt DetailColumn'}>
                                 <div className={'DetailHeading'}>Mint Type</div>
@@ -151,12 +152,12 @@ class NftFinish extends React.Component<Props, State> {
                             radius={Button.RADIUS_MAX}
                             color={Button.COLOR_SCHEME_1}
                             padding={Button.PADDING_24}
-                            onClick={this.props.nftMintStore.mintNfts.bind(
+                            onClick={nftMintStore.mintNfts.bind(
                                 this.props.nftMintStore,
                                 this.props.navStore.isMintOptionSingle() ? NftMintStore.MINT_MODE_BACKEND : NftMintStore.MINT_MODE_LOCAL,
-                                this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
-                                this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
-                                this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
+                                this.props.navStore.selectStepMintingInProgress,
+                                this.props.navStore.selectStepMintingSucceeeded,
+                                this.props.navStore.selectStepMintingFailed,
                             )} >
                             {this.props.navStore.isMintOptionSingle() === true ? 'Mint NFT' : 'Mint Collection NFTs'}
                         </Button>

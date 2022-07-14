@@ -28,13 +28,7 @@ class NftMintingFailed extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_1}
                         padding={Button.PADDING_82}
-                        onClick={this.props.nftMintStore.mintNfts.bind(
-                            this.props.nftMintStore,
-                            this.props.navStore.selectStepMintingInProgress.bind(this.props.navStore),
-                            this.props.navStore.selectStepMintingSucceeeded.bind(this.props.navStore),
-                            this.props.navStore.selectStepMintingFailed.bind(this.props.navStore),
-                        )}
-                    >
+                        onClick={this.props.nftMintStore.mintNfts.bind(this.props.nftMintStore, this.props.navStore.selectStepMintingInProgress, this.props.navStore.selectStepMintingSucceeeded, this.props.navStore.selectStepMintingFailed)} >
                         Try Again
                     </Button>
                     <Button
@@ -42,8 +36,7 @@ class NftMintingFailed extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_3}
                         padding={Button.PADDING_82}
-                        onClick={this.props.navStore.selectFinishStep.bind(this.props.navStore)}
-                    >
+                        onClick={this.props.navStore.selectFinishStep}>
                         Go Back
                     </Button>
                 </Actions>
