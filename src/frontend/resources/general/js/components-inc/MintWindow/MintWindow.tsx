@@ -2,7 +2,8 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import S from '../../../../common/js/utilities/Main';
-import NftMintStore from '../../../../common/js/stores/NftMintStore';
+import NftMintStore, { NavMintStore } from '../../../../common/js/stores/NftMintStore';
+import NavStore from '../../../../common/js/stores/NavStore';
 
 import OptionChoose from './OptionChoose';
 import CollectionDetails from './CollectionDetails';
@@ -19,10 +20,42 @@ import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
 import '../../../css/components-inc/NftMint/mint-window.css';
 
 interface Props {
+    navStore: NavStore;
     nftMintStore: NftMintStore;
 }
 
 class MintWindow extends React.Component<Props> {
+
+    getNextStepHandler() {
+        const { navStore, nftMintStore } = this.props;
+        const navMintStore = nftMintStore.navMintStore;
+
+        if (navMintStore.isNextStepActive()) {
+            // for these cases return standard ++step
+            // choose option step standard function
+            if (navMintStore.isMintStepChooseOption()
+                // upload files step standard function
+                || (navMintStore.isMintStepUploadFile() && navMintStore.isMintOptionMultiple())
+                // collection details step standard function
+                || navMintStore.isMintStepCollectionDetails()
+                // details step standard function
+                || navMintStore.isMintStepDetails()) {
+                return navMintStore.selectNextStep;
+            }
+
+            // on single nft mint option, jump pass collection details directly to mint details
+            if (navMintStore.isMintStepUploadFile() && navMintStore.isMintOptionSingle()) {
+                return navMintStore.selectNftDetailsStep;
+            }
+
+            // on mint success jump to my nfts
+            if (navMintStore.isMintStepDone()) {
+                return navStore.selectMyNftPage;
+            }
+        }
+
+        return null;
+    }
 
     render() {
         const navMintStore = this.props.nftMintStore.navMintStore;
@@ -143,4 +176,4 @@ class MintWindow extends React.Component<Props> {
     }
 }
 
-export default inject('nftMintStore')((observer(MintWindow)));
+export default inject('navStore', 'nftMintStore')((observer(MintWindow)));

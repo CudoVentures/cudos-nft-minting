@@ -173,10 +173,10 @@ export default class NftMintStore {
             } else if (this.navMintStore.isMintOptionMultiple() === true) {
                 await this.mintFrontend();
             }
+            this.navMintStore.selectStepMintingSucceeeded();
         } catch (e) {
             this.navMintStore.selectStepMintingFailed();
         } finally {
-            this.navMintStore.selectStepMintingSucceeeded();
             this.appStore.enableActions();
         }
     }
@@ -402,6 +402,10 @@ export class NavMintStore {
         this.mintStep = NavMintStore.STEP_CHOOSE_OPTION;
     }
 
+    selectNftDetailsStep = () => {
+        this.mintStep = NavMintStore.STEP_NFT_DETAILS;
+    }
+
     selectFinishStep = () => {
         this.mintStep = NavMintStore.STEP_FINISH;
     }
@@ -484,38 +488,6 @@ export class NavMintStore {
         }
 
         return this.selectPreviousStep;
-    }
-
-    getNextStepFunction() {
-        if (this.isNextStepActive()) {
-
-            // for these cases return standard ++step
-            // choose option step standard function
-            if (this.isMintStepChooseOption()
-                // upload files step standard function
-                || (this.isMintStepUploadFile() && this.isMintOptionMultiple())
-                // collection details step standard function
-                || this.isMintStepCollectionDetails()
-                // details step standard function
-                || this.isMintStepDetails()) {
-                return this.selectNextStep;
-            }
-
-            // on single nft mint option, jump pass collection details directly to mint details
-            if (this.isMintStepUploadFile() && this.isMintOptionSingle()) {
-                return () => { this.mintStep = NavMintStore.STEP_NFT_DETAILS };
-            }
-
-            // on mint success jump to my nfts
-            if (this.isMintStepDone()) {
-                return () => {
-                    // this.selectMyNftPage();
-                    this.nftMintStore.reset();
-                }
-            }
-        }
-
-        return null;
     }
 
     // option

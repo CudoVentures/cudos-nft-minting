@@ -8,7 +8,7 @@
     height: 0;
     padding-bottom: 100%;
     border-radius: 10px;
-    background: var(--color-gray-light);
+    background-color: var(--color-gray-light);
     position: relative;
     margin-bottom: 5px;
 }
