@@ -144,7 +144,6 @@ class NftDetails extends React.Component < Props, State > {
                     </LayoutBlock>
                 </div>
             </NftStepWrapper>
-
         )
     }
 

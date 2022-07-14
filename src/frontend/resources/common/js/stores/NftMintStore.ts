@@ -222,22 +222,17 @@ export default class NftMintStore {
     }
 
     // images
-    addNftModel(url: string, fileName: string, type: string, sizeBytes: number): void {
-        const nft = new NftModel();
-
-        nft.denomId = this.nftCollection.denomId;
-        nft.url = url;
-        nft.recipient = this.walletStore.keplrWallet.accountAddress;
-
-        nft.fileName = fileName;
-        nft.type = type;
-        nft.sizeBytes = sizeBytes;
-        nft.updatePreviewUrl();
-
-        this.nfts.push(nft);
+    async addNftFromUpload(url: string, fileName: string, type: string, sizeBytes: number): Promise < void > {
+        const searchFor = 'base64,';
+        const binaryString = window.atob(url.substring(url.indexOf(searchFor) + searchFor.length));
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = binaryString.length; i-- > 0;) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        await this.addNftModel(url, fileName, type, sizeBytes, bytes.buffer);
     }
 
-    async getImageFromUrl(): Promise<void> {
+    async addNftFromLink(): Promise < void > {
         let url = this.imageUrlInputValue;
         this.imageUrlInputValue = S.Strings.EMPTY;
 
@@ -251,18 +246,29 @@ export default class NftMintStore {
             contentType = contentType.slice(contentType.indexOf('/') + 1);
             const contentLength = Number(imageRes.headers.get('Content-Length'));
 
-            const nft = new NftModel();
-
-            nft.url = url;
-            nft.fileName = `NFT-${Date.now()}`;
-            nft.type = contentType;
-            nft.sizeBytes = contentLength;
-            nft.updatePreviewUrl();
-
-            this.nfts.push(nft);
+            await this.addNftModel(url, `NFT-${Date.now()}`, contentType, contentLength, await imageRes.arrayBuffer());
         } catch (e) {
             throw Error('Could not fetch file.');
         }
+    }
+
+    private async addNftModel(url: string, fileName: string, type: string, sizeBytes: number, arrayBuffer: ArrayBuffer): Promise < void > {
+        const nft = new NftModel();
+
+        nft.denomId = this.nftCollection.denomId;
+        nft.url = url;
+        nft.recipient = this.walletStore.keplrWallet.accountAddress;
+
+        nft.fileName = fileName;
+        nft.type = type;
+        nft.sizeBytes = sizeBytes;
+        nft.updatePreviewUrl();
+
+        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer))
+        nft.data = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+
+        this.nfts.push(nft);
     }
 
     // credit
