@@ -123,7 +123,7 @@ class UploadFiles extends React.Component<Props> {
                             label = { 'Add file from link' }
                             className={'LinkInput'}
                             inputType={InputType.TEXT}
-                            placeholder={'www.mywebsite.com/item'}
+                            placeholder={'https://www.mywebsite.com/item'}
                             value = { this.uploadLinkInputStateHelper.values.get(FIELDS[0]) }
                             error = { this.uploadLinkInputStateHelper.errors.get(FIELDS[0]) }
                             onChange = {this.uploadLinkInputStateHelper.onChanges.get(FIELDS[0])}

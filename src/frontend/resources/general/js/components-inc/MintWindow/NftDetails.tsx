@@ -81,11 +81,16 @@ class NftDetails extends React.Component < Props, State > {
     }
 
     render() {
+        const navStore = this.props.navStore;
+
         return (
-            <div className={'NftDetails'}>
+            <NftStepWrapper
+                className = { 'NftDetails' }
+                stepNumber = { `Step ${navStore.getMintStepShowNumber()}` }
+                stepName = { 'NFT Details' } >
                 { this.renderSingleNftDetails() }
                 { this.renderMultipleNftDetails() }
-            </div>
+            </NftStepWrapper>
         )
     }
 
@@ -99,51 +104,43 @@ class NftDetails extends React.Component < Props, State > {
         const nftModel = nftMintStore.nfts[0];
 
         return (
-            <NftStepWrapper
-                className = { 'NftDetails' }
-                stepNumber = { `Step ${navStore.getMintStepShowNumber()}` }
-                stepName = { 'NFT Details' } >
-                <div className={'FlexRow DetailsHolder'}>
-                    <NftSidePreview
-                        imageUrl={nftModel.getPreviewUrl(appStore.workerQueueHelper)}
-                        name={nftModel.name} />
-                    <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
-                        <Input
-                            className={'NftName'}
-                            label={'Nft Name'}
-                            placeholder={'E.g. Cool NFT'}
-                            value = { nftModel.name }
-                            onChange = { this.onChangeNftName.bind(this, nftModel) } />
-                        <div className={'FlexRow'}>
-                            <Checkbox
-                                value={this.state.recipientFieldActive}
-                                onChange={this.onToggleRecipient}
-                                label={'I want to send this NFT as a gift'} />
-                            <div className={'SVG Icon Clickable'}
-                                dangerouslySetInnerHTML={{ __html: SvgInfo }}
-                                onClick={ this.onShowGiftInfo } />
-                            <Popover
-                                anchorEl = { this.state.anchorEl }
-                                open = { this.state.anchorEl !== null }
-                                onClose = { this.onHideGiftInfo }
-                                transformOrigin = {{
-                                    'vertical': 'top',
-                                    'horizontal': 'left',
-                                }} >
+            <div className={'FlexRow NftSingleMint'}>
+                <NftSidePreview imageUrl={nftModel.getPreviewUrl(appStore.workerQueueHelper)} name={nftModel.name} />
+                <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'NftDetailsForm'}>
+                    <Input
+                        label={'Nft Name'}
+                        placeholder={'E.g. Cool NFT'}
+                        value = { nftModel.name }
+                        onChange = { this.onChangeNftName.bind(this, nftModel) } />
+                    <div className={'FlexRow'} >
+                        <Checkbox
+                            value={this.state.recipientFieldActive}
+                            onChange={this.onToggleRecipient}
+                            label={'I want to send this NFT as a gift'} />
+                        <div className={'SVG Icon Clickable'}
+                            dangerouslySetInnerHTML={{ __html: SvgInfo }}
+                            onClick={ this.onShowGiftInfo } />
+                        <Popover
+                            anchorEl = { this.state.anchorEl }
+                            open = { this.state.anchorEl !== null }
+                            onClose = { this.onHideGiftInfo }
+                            transformOrigin = {{
+                                'vertical': 'top',
+                                'horizontal': 'left',
+                            }} >
                                 This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
-                            </Popover>
-                        </div>
-                        { this.state.recipientFieldActive === S.INT_TRUE && (
-                            <Input
-                                className={'NftRecepient'}
-                                label={'Recipient Address'}
-                                placeholder={'cudos1...'}
-                                value = { nftModel.recipient }
-                                onChange = {this.onChangeNftRecipient.bind(this, nftModel) } />
-                        ) }
-                    </LayoutBlock>
-                </div>
-            </NftStepWrapper>
+                        </Popover>
+                    </div>
+                    { this.state.recipientFieldActive === S.INT_TRUE && (
+                        <Input
+                            className={'NftRecepient'}
+                            label={'Recipient Address'}
+                            placeholder={'cudos1...'}
+                            value = { nftModel.recipient }
+                            onChange = {this.onChangeNftRecipient.bind(this, nftModel) } />
+                    ) }
+                </LayoutBlock>
+            </div>
         )
     }
 
@@ -156,17 +153,19 @@ class NftDetails extends React.Component < Props, State > {
         const nfts: NftModel[] = this.props.nftMintStore.nfts;
 
         return (
-            <div className={'CollectionModels'} >
-                {nfts.map((nft: NftModel, i: number) => (
+            <div className={'NftMultipleMint'} >
+                {nfts.map((nft: NftModel) => (
                     <div
-                        key={i}
-                        className={'NftModel'}>
+                        key = { nft.getIdsUniquePair() }
+                        className = { 'NftModel' } >
                         <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl(appStore.workerQueueHelper))} />
+                        <div className = { 'NftFileName' } >{nft.fileName}</div>
                         <Input
                             className={'NameInput'}
                             inputType={InputType.TEXT}
                             placeholder={'Add name...'}
                             value={nft.name}
+                            title={nft.name}
                             margin={InputMargin.DENSE}
                             onChange={this.onChangeNftName.bind(this, nft)} />
                     </div>))
