@@ -94,6 +94,8 @@ export default class PopupSendAsGiftStore extends PopupStore {
         this.recipientAddressError = false;
         this.status = PopupSendAsGiftStore.STATUS_INIT;
         this.gasFee = S.NOT_EXISTS;
+        this.onSendAsGiftSuccess = onSendAsGiftSuccess;
+
         this.inputStateHelper = new InputStateHelper(PopupSendAsGiftStore.FIELDS, (key, value) => {
             switch (key) {
                 case PopupSendAsGiftStore.FIELDS[0]:
@@ -102,12 +104,11 @@ export default class PopupSendAsGiftStore extends PopupStore {
                 default:
             }
         });
+
         clearTimeout(this.calculateFeeTimeout);
         this.calculateFeeTimeout = setTimeout(() => {
             this.estimateFee();
         }, 2000);
-
-        this.onSendAsGiftSuccess = onSendAsGiftSuccess;
 
         this.show();
     }
@@ -131,29 +132,8 @@ export default class PopupSendAsGiftStore extends PopupStore {
             client,
         );
 
-        this.onSuccessfulNftTransfer();
+        this.myNftsStore.removeNftModel(this.nftModel);
         this.onSendAsGiftSuccess();
-    }
-
-    onSuccessfulNftTransfer() {
-        const myNftsStore = this.myNftsStore;
-        const collections = myNftsStore.nftCollectionModels;
-        const nftsMap = myNftsStore.nftsInCollectionsMap;
-
-        const nft = this.nftModel;
-
-        let nftsInCollection = nftsMap.get(nft.denomId);
-
-        nftsInCollection = nftsInCollection.filter((nftModel: NftModel) => nftModel.tokenId !== nft.tokenId);
-        nftsMap.set(nft.denomId, nftsInCollection);
-
-        if (nftsInCollection.length === 0) {
-            collections.filter((collection: NftCollectionModel) => collection.denomId !== nft.denomId);
-            nftsMap.delete(nft.denomId);
-        }
-
-        myNftsStore.nftCollectionModels = collections;
-        myNftsStore.filter();
     }
 
     async estimateFee() {

@@ -17,6 +17,8 @@ export default class WalletStore {
             GAS_PRICE: Config.CUDOS_NETWORK.GAS_PRICE,
         });
 
+        window.addEventListener('keplr_keystorechange', this.onChangeAccount);
+
         makeAutoObservable(this);
         makeObservable(this.keplrWallet, {
             'connected': observable,
@@ -51,6 +53,11 @@ export default class WalletStore {
         } else {
             await this.connectKeplr();
         }
+    }
+
+    onChangeAccount = () => {
+        console.log(this.keplrWallet.accountAddress);
+        window.location.reload();
     }
 
     async getSignerData() {

@@ -127,18 +127,6 @@ export default class MyNftsStore {
         this.filteredNftCollectionModels = FilterHelper.filter(this.nftCollectionModels, this.filterString) as NftCollectionModel[];
     }
 
-    onMintNft(nftCollectionModel: NftCollectionModel, nftModels: NftModel[]) {
-        if (nftCollectionModel !== null) {
-            this.nftCollectionModels.pushIfNotExist(nftCollectionModel, (t1, t2) => {
-                return t1.denomId === t2.denomId;
-            })
-        }
-
-        if (nftModels !== null) {
-            this.updateNftsInCollectionsMap(nftModels);
-        }
-    }
-
     async fetchNfts() {
         let nftModels = [];
 
@@ -156,6 +144,22 @@ export default class MyNftsStore {
         this.filter();
 
         this.initialized = true;
+    }
+
+    removeNftModel(nftModel: NftModel) {
+        const nftModels = this.getNftsInCollection(nftModel.denomId);
+
+        const cache = this.nftsInCollectionsMap;
+        this.nftsInCollectionsMap = null;
+
+        nftModels.removeElement(nftModel, (t1, t2) => {
+            return t1.tokenId === t2.tokenId;
+        });
+        cache.set(nftModel.denomId, nftModels);
+
+        this.nftsInCollectionsMap = cache;
+
+        this.filter();
     }
 
     initializeNftsInCollectionsMap(nftModels: NftModel[]) {

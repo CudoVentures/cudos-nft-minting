@@ -64,9 +64,7 @@ class SendAsGiftPopup extends PopupWindow<Props> {
 
         try {
             popupStore.markStatusProcessing();
-
             await popupStore.sendNft();
-
             popupStore.markStatusDoneSuccess()
         } catch (e) {
             popupStore.markStatusDoneError();
