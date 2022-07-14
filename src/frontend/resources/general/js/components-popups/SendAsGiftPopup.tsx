@@ -172,7 +172,7 @@ class SendAsGiftPopup extends PopupWindow<Props> {
                         </div>
                         <div className={'Title'} >Success!</div>
                         <div className={'SubTitle'} >NFT was gifted successfully.</div>
-                        <a href={''} className={'TxLink FlexRow'} target='_blank' rel="noreferrer" >
+                        <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.props.popupStore.txHash}`} className={'TxLink FlexRow'} target='_blank' rel="noreferrer" >
                             Check transaction details in Explorer
                             <span className={'SVG IconOpenUrl PrimaryColor'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
                         </a>

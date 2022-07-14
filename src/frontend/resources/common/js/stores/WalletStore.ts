@@ -60,8 +60,4 @@ export default class WalletStore {
 
         return { signer, sender, client };
     }
-
-    getGasPrice() {
-        return GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
-    }
 }

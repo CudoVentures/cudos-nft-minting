@@ -167,7 +167,7 @@ export default class NftModel implements Filterable {
         model.name = json.name ?? model.name;
         model.url = json.uri ?? model.url;
         model.data = json.data ?? model.data;
-        model.recipient = json.recipient ?? model.recipient;
+        model.recipient = json.owner ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
 
         return model;

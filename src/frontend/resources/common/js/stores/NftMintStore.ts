@@ -80,13 +80,13 @@ export default class NftMintStore {
             if (local === NftMintStore.MINT_MODE_LOCAL) {
                 const { signer, sender, client } = await this.walletStore.getSignerData();
 
-                const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, 'example uri', 'random', sender));
+                const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url.substring(0, Math.min(nftModel.url.length, 256)), nftModel.data, sender));
 
                 const { msgs, fee } = await client.nftModule.msgMintMultipleNFT(
                     nftInfos,
                     sender,
                     '',
-                    this.walletStore.getGasPrice(),
+                    NftApi.getGasPrice(),
                 )
 
                 callback(new BigNumber(fee.amount[0].amount));
@@ -116,7 +116,7 @@ export default class NftMintStore {
                 S.Strings.EMPTY,
                 // TODO: do correct symbol
                 this.nftCollection.denomId,
-                this.walletStore.getGasPrice(),
+                NftApi.getGasPrice(),
             );
 
             const log = JSON.parse(txRes.rawLog);
@@ -133,7 +133,7 @@ export default class NftMintStore {
 
             this.nftCollection.denomId = tokenIdAttr.value;
             this.nfts.forEach((nftModel) => {
-                nftModel.denomId = this.nftApi.denomId;
+                nftModel.denomId = this.nftCollection.denomId;
             })
             this.transactionHash = txRes.transactionHash;
 
@@ -169,8 +169,9 @@ export default class NftMintStore {
         }
     }
 
+    // TODO: fix
     private async mintBackend() {
-        this.transactionHash = await this.nftApi.mintNfts(this.nfts);
+        this.nftApi.mintNfts(this.nfts, (txHash: string) => { this.transactionHash = txHash });
     }
 
     private async mintFrontend() {
@@ -197,7 +198,7 @@ export default class NftMintStore {
             mintRes = await client.nftMintMultipleTokens(
                 nftInfos,
                 this.walletStore.keplrWallet.accountAddress,
-                this.walletStore.getGasPrice(),
+                NftApi.getGasPrice(),
             )
         } catch (e) {
             console.log(e);

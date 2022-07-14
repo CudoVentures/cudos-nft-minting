@@ -77,11 +77,11 @@ class CollectionDetails extends React.Component<Props> {
                             <div className={'Text'}>The cover image of the collection will be randomly selected from the uploaded NFTs in it.</div>
                         </div>
 
-                        { navMintStore.isCollectionMintedNone() === false && (
+                        {navMintStore.isCollectionMintedNone() === false && (
                             <>
                                 <div className={`ResultMessage FlexColumn ${navMintStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
                                     <div className={'Heading FlexRow'}>
-                                        { navMintStore.isCollectionMintedFail() ? (
+                                        {navMintStore.isCollectionMintedFail() ? (
                                             <>
                                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCloseBtnOutlined }} />
                                                 <div>Collection minting failed!</div>
@@ -91,26 +91,20 @@ class CollectionDetails extends React.Component<Props> {
                                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }} />
                                                 <div>Collection Was Minted Successfully!</div>
                                             </>
-                                        ) }
+                                        )}
                                     </div>
-                                    { navMintStore.isCollectionMintedSuccess() && (
+                                    {navMintStore.isCollectionMintedSuccess() && (
                                         <>
                                             <div className={'FlexRow TransacionInfo'}>
                                                 <div className={'InfoMessage'}>Check transaction details in Explorer</div>
                                                 <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
                                             </div>
-                                            { navMintStore.isCollectionMintedSuccess() && (
-                                                <div className={'FlexRow TransacionInfo'}>
-                                                    <div className={'InfoMessage'}>Check transaction details in Explorer</div>
-                                                    <a href={this.props.nftMintStore.getTxHashLink()}><div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }} /></a>
-                                                </div>
-                                            )}
                                         </>
-                                    ) }
+                                    )}
                                 </div>
                             </>
-                        ) }
-                        { navMintStore.isCollectionMintedSuccess() === false && (
+                        )}
+                        {navMintStore.isCollectionMintedSuccess() === false && (
                             <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
                                 <Button
                                     type={Button.TYPE_ROUNDED}
@@ -122,7 +116,7 @@ class CollectionDetails extends React.Component<Props> {
                                     Mint Collection
                                 </Button>
                             </Actions>
-                        ) }
+                        )}
                     </LayoutBlock>
                 </div>
             </NftStepWrapper >
