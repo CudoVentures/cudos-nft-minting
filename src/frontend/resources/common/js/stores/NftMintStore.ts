@@ -39,6 +39,10 @@ export default class NftMintStore {
         makeObservable(this);
     }
 
+    getTxHashLink(): string {
+        return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
+    }
+
     reset() {
         this.imageUrlInputValue = S.Strings.EMPTY;
         this.recipientFieldActive = S.INT_FALSE;
@@ -87,11 +91,15 @@ export default class NftMintStore {
         }
     }
 
+    // estimate
+    async esimateMintFees(): Promise<number> {
+        // TODO: estimate fees correctly
+        return 1;
+    }
+
+    // minting
     async mintNfts(local: number, callBefore: () => void, success: () => void, error: () => void): Promise < void > {
         callBefore();
-        const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
-        const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
-
         if (!this.isValidNftModels()) {
             error();
             return;
@@ -115,10 +123,7 @@ export default class NftMintStore {
         try {
             switch (local) {
                 case NftMintStore.MINT_MODE_BACKEND:
-                    await this.nftApi.mintNfts(this.nfts, (txHash: string) => {
-                        this.transactionHash = txHash;
-                        success();
-                    }, error);
+                    await this.mintBackend(success, error);
                     break;
                 case NftMintStore.MINT_MODE_LOCAL:
                     await this.mintLocal(success, error);
@@ -129,6 +134,13 @@ export default class NftMintStore {
         } catch (e) {
             error();
         }
+    }
+
+    private async mintBackend(success: () => void, error: () => void) {
+        await this.nftApi.mintNfts(this.nfts, (txHash: string) => {
+            this.transactionHash = txHash;
+            success();
+        }, error);
     }
 
     private async mintLocal(success: () => void, error: () => void) {
@@ -170,7 +182,7 @@ export default class NftMintStore {
                 // each log represents one message in the transaction
                 const log = JSON.parse(mintRes.rawLog);
                 for (let i = 0; i < log.length; i++) {
-                    // each message has a few events, the get the one with the correct type
+                // each message has a few events, the get the one with the correct type
                     const attributeEvent = log[i].events.find((event: any) => event.type === 'mint_nft');
 
                     if (attributeEvent === undefined) {
@@ -191,36 +203,17 @@ export default class NftMintStore {
         );
     }
 
-    // checks if the form fields are filled right
-    isValidNftModels(): boolean {
-        const missingUri = this.nfts.find((nft: NftModel) => nft.url === '' || !nft.url);
-        const missingName = this.nfts.find((nft: NftModel) => nft.name === '' || !nft.name);
-        const missingRecipient = this.nfts.find((nft: NftModel) => nft.recipient === '' || !nft.name);
-
-        if (missingUri !== undefined) {
-            return false;
-        }
-
-        if (missingName !== undefined) {
-            return false;
-        }
-
-        if (this.isRecipientFieldActive() && missingRecipient !== undefined) {
-            return false;
+    private isValidNftModels(): boolean {
+        for (let i = this.nfts.length; i-- > 0;) {
+            if (this.nfts[i].isValidForSubmit(this.isRecipientFieldActive()) === false) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    async esimateMintFees(): Promise<number> {
-        // TODO: estimate fees correctly
-        return 1;
-    }
-
-    getTxHashLink(): string {
-        return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
-    }
-
+    // images
     addNewImage(url: string, fileName: string, type: string, sizeBytes: number): void {
         const nft = new NftModel();
 
@@ -262,6 +255,7 @@ export default class NftMintStore {
 
     }
 
+    // credit
     removeNft(indexToRemove: number): void {
         this.nfts = this.nfts.filter((image: NftModel, index: number) => index !== indexToRemove);
         this.selectedNfts = [];
@@ -310,6 +304,7 @@ export default class NftMintStore {
         return this.nfts.length === 0;
     }
 
+    // recipient
     toggleAddressFieldActive(): void {
         this.recipientFieldActive = this.isRecipientFieldActive() === true ? S.INT_FALSE : S.INT_TRUE;
         this.nfts[0].recipient = S.Strings.EMPTY;

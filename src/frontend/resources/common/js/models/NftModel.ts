@@ -102,6 +102,22 @@ export default class NftModel implements Filterable {
         }
     }
 
+    isValidForSubmit(shouldCheckForRecipient: boolean): boolean {
+        if (this.url === S.Strings.EMPTY) {
+            return false;
+        }
+
+        if (shouldCheckForRecipient === true && this.recipient === S.Strings.EMPTY) {
+            return false;
+        }
+
+        if (this.name === S.Strings.EMPTY) {
+            return false;
+        }
+
+        return true;
+    }
+
     clone(): NftModel {
         return Object.assign(new NftModel(), this);
     }
