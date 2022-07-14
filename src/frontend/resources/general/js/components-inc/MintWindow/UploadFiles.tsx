@@ -68,7 +68,7 @@ class UploadFiles extends React.Component<Props> {
                 this.props.alertStore.show('You have selected an unsupported file type');
             },
             'onUpload': (base64File, response, files: any[], i: number) => {
-                this.props.nftMintStore.addNewImage(base64File, files[i].name, files[i].type, files[i].size);
+                this.props.nftMintStore.addNftModel(base64File, files[i].name, files[i].type, files[i].size);
             },
         }
     }

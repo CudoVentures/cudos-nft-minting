@@ -187,7 +187,7 @@ export default class NavStore {
             return () => { this.mintStep = NavStore.STEP_UPLOAD_FILE };
         }
 
-        return () => this.selectPreviousStep();
+        return this.selectPreviousStep;
     }
 
     getNextStepFunction() {
@@ -202,7 +202,7 @@ export default class NavStore {
                 || this.isMintStepCollectionDetails()
                 // details step standard function
                 || this.isMintStepDetails()) {
-                return () => this.selectNextStep();
+                return this.selectNextStep;
             }
 
             // on single nft mint option, jump pass collection details directly to mint details
@@ -214,7 +214,7 @@ export default class NavStore {
             if (this.isMintStepDone()) {
                 return () => {
                     this.selectMyNftPage();
-                    this.nftMintStore.reset.bind(this.nftMintStore);
+                    this.nftMintStore.reset();
                 }
             }
         }
@@ -241,8 +241,14 @@ export default class NavStore {
         return showNumber;
     }
 
-    selectMintOption(option: number): void {
-        this.mintOption = option;
+    selectSingleMintOption(): void {
+        this.mintOption = NavStore.MINT_OPTION_SINGLE;
+        this.nftMintStore.selectSingleMintOption();
+    }
+
+    selectMultipleMintOption(): void {
+        this.mintOption = NavStore.MINT_OPTION_MULTIPLE;
+        this.nftMintStore.selectMultipleMintOption();
     }
 
     static getMintOptionText(mintOption: number): string {
@@ -283,12 +289,12 @@ export default class NavStore {
         return this.collectionMinted === NavStore.COLLECTION_MINT_FAIL;
     }
 
-    collectionMintSuccess() {
+    collectionMintSuccess = () => {
         this.mintStep = NavStore.STEP_COLLECTION_DETAILS;
         this.collectionMinted = NavStore.COLLECTION_MINT_SUCCESS;
     }
 
-    collectionMintFail() {
+    collectionMintFail = () => {
         this.mintStep = NavStore.STEP_COLLECTION_DETAILS;
         this.collectionMinted = NavStore.COLLECTION_MINT_FAIL;
     }

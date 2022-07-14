@@ -1,3 +1,4 @@
+import { makeAutoObservable } from 'mobx';
 import Config from '../../../../../../builds/dev-generated/Config';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
@@ -8,8 +9,19 @@ export default class NftCollectionModel implements Filterable {
     name: string;
 
     constructor() {
-        this.denomId = S.Strings.NOT_EXISTS;
+        this.denomId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
+
+        makeAutoObservable(this);
+    }
+
+    static instanceCudosMainCollection() {
+        const model = new NftCollectionModel();
+
+        model.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
+        model.name = 'Cudos one collection';
+
+        return model;
     }
 
     getFilterableString(): string {

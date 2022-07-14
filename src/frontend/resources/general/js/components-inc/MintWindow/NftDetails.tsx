@@ -18,15 +18,18 @@ import SvgInfo from '../../../../common/svg/info.svg';
 import '../../../css/components-inc/NftMint/nft-details.css';
 import InputStateHelper from '../../../../common/js/helpers/InputStateHelper';
 import AppStore from '../../../../common/js/stores/AppStore';
+import WalletStore from '../../../../common/js/stores/WalletStore';
 
 interface Props {
     appStore: AppStore;
     nftMintStore: NftMintStore;
     navStore: NavStore;
+    walletStore: WalletStore;
 }
 
 interface State {
     anchorEl: any;
+    recipientFieldActive: number;
 }
 
 class NftDetails extends React.Component < Props, State > {
@@ -36,6 +39,7 @@ class NftDetails extends React.Component < Props, State > {
 
         this.state = {
             'anchorEl': null,
+            'recipientFieldActive': S.INT_FALSE,
         }
     }
 
@@ -60,53 +64,44 @@ class NftDetails extends React.Component < Props, State > {
     }
 
     onToggleRecipient = () => {
-        this.props.nftMintStore.toggleAddressFieldActive();
+        const nftMintStore = this.props.nftMintStore;
+        const nftModel = nftMintStore.nfts[0];
+
+        if (this.state.recipientFieldActive === S.INT_TRUE) {
+            nftModel.setRecipient(this.props.walletStore.keplrWallet.accountAddress);
+            this.setState({
+                recipientFieldActive: S.INT_FALSE,
+            });
+        } else {
+            nftModel.setRecipient(S.Strings.EMPTY);
+            this.setState({
+                recipientFieldActive: S.INT_TRUE,
+            });
+        }
     }
 
     render() {
         return (
             <div className={'NftDetails'}>
-                {this.props.navStore.isMintOptionSingle()
-                    ? this.renderSingleNftDetails()
-                    : this.renderMultipleNftDetails()}
-            </div>
-        )
-    }
-
-    renderMultipleNftDetails() {
-        const appStore = this.props.appStore;
-        const nfts: NftModel[] = this.props.nftMintStore.nfts;
-
-        return (
-            <div className={'CollectionModels'} >
-                {nfts.map((nft: NftModel, i: number) => (
-                    <div
-                        key={i}
-                        className={'NftModel'}>
-                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl(appStore.workerQueueHelper))} />
-                        <Input
-                            className={'NameInput'}
-                            inputType={InputType.TEXT}
-                            placeholder={'Add name...'}
-                            value={nft.name}
-                            margin={InputMargin.DENSE}
-                            onChange={this.onChangeNftName.bind(this, nft)}
-                        />
-                    </div>))
-                }
+                { this.renderSingleNftDetails() }
+                { this.renderMultipleNftDetails() }
             </div>
         )
     }
 
     renderSingleNftDetails() {
-        const appStore = this.props.appStore;
+        const { appStore, navStore } = this.props;
+        if (navStore.isMintOptionSingle() !== true) {
+            return null;
+        }
+
         const nftMintStore = this.props.nftMintStore;
-        const nftModel = this.props.nftMintStore.nfts[0];
+        const nftModel = nftMintStore.nfts[0];
 
         return (
             <NftStepWrapper
                 className = { 'NftDetails' }
-                stepNumber = { `Step ${this.props.navStore.getMintStepShowNumber()}` }
+                stepNumber = { `Step ${navStore.getMintStepShowNumber()}` }
                 stepName = { 'NFT Details' } >
                 <div className={'FlexRow DetailsHolder'}>
                     <NftSidePreview
@@ -121,7 +116,7 @@ class NftDetails extends React.Component < Props, State > {
                             onChange = { this.onChangeNftName.bind(this, nftModel) } />
                         <div className={'FlexRow'}>
                             <Checkbox
-                                value={nftMintStore.recipientFieldActive}
+                                value={this.state.recipientFieldActive}
                                 onChange={this.onToggleRecipient}
                                 label={'I want to send this NFT as a gift'} />
                             <div className={'SVG Icon Clickable'}
@@ -138,7 +133,7 @@ class NftDetails extends React.Component < Props, State > {
                                 This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
                             </Popover>
                         </div>
-                        { nftMintStore.isRecipientFieldActive() === true && (
+                        { this.state.recipientFieldActive === S.INT_TRUE && (
                             <Input
                                 className={'NftRecepient'}
                                 label={'Recipient Address'}
@@ -151,8 +146,35 @@ class NftDetails extends React.Component < Props, State > {
             </NftStepWrapper>
 
         )
+    }
 
+    renderMultipleNftDetails() {
+        const { appStore, navStore } = this.props;
+        if (navStore.isMintOptionMultiple() !== true) {
+            return null;
+        }
+
+        const nfts: NftModel[] = this.props.nftMintStore.nfts;
+
+        return (
+            <div className={'CollectionModels'} >
+                {nfts.map((nft: NftModel, i: number) => (
+                    <div
+                        key={i}
+                        className={'NftModel'}>
+                        <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl(appStore.workerQueueHelper))} />
+                        <Input
+                            className={'NameInput'}
+                            inputType={InputType.TEXT}
+                            placeholder={'Add name...'}
+                            value={nft.name}
+                            margin={InputMargin.DENSE}
+                            onChange={this.onChangeNftName.bind(this, nft)} />
+                    </div>))
+                }
+            </div>
+        )
     }
 }
 
-export default inject('appStore', 'navStore', 'nftMintStore')((observer(NftDetails)));
+export default inject('appStore', 'navStore', 'nftMintStore', 'walletStore')((observer(NftDetails)));

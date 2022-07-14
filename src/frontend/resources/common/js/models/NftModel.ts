@@ -64,6 +64,26 @@ export default class NftModel implements Filterable {
         return this.type !== S.Strings.EMPTY;
     }
 
+    isValidForSubmit(): boolean {
+        if (this.url === S.Strings.EMPTY) {
+            return false;
+        }
+
+        if (this.recipient === S.Strings.EMPTY) {
+            return false;
+        }
+
+        if (this.name === S.Strings.EMPTY) {
+            return false;
+        }
+
+        return true;
+    }
+
+    setRecipient(recipient: string) {
+        this.recipient = recipient;
+    }
+
     getFilterableString(): string {
         return this.name;
     }
@@ -100,22 +120,6 @@ export default class NftModel implements Filterable {
         } else {
             this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL;
         }
-    }
-
-    isValidForSubmit(shouldCheckForRecipient: boolean): boolean {
-        if (this.url === S.Strings.EMPTY) {
-            return false;
-        }
-
-        if (shouldCheckForRecipient === true && this.recipient === S.Strings.EMPTY) {
-            return false;
-        }
-
-        if (this.name === S.Strings.EMPTY) {
-            return false;
-        }
-
-        return true;
     }
 
     clone(): NftModel {

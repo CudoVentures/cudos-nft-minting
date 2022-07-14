@@ -30,24 +30,40 @@ class CollectionDetails extends React.Component<Props> {
         this.anchorEl = null;
     }
 
+    onChangeDenomId = (value) => {
+        const nftMintStore = this.props.nftMintStore;
+        const nftCollectionModel = nftMintStore.nftCollection;
+        nftCollectionModel.denomId = value;
+    }
+
     onChangeCollectionName = (value) => {
-        this.props.nftMintStore.collectionName = value;
+        const nftMintStore = this.props.nftMintStore;
+        const nftCollectionModel = nftMintStore.nftCollection;
+        nftCollectionModel.name = value;
     }
 
     render() {
+        const nftMintStore = this.props.nftMintStore;
+        const nftCollectionModel = nftMintStore.nftCollection;
+
         return (
             <NftStepWrapper
                 className={'CollectionDetails'}
                 stepNumber={`Step ${this.props.navStore.getMintStepShowNumber()}`}
                 stepName={'Collection Details'} >
                 <div className={'FlexRow DetailsHolder'}>
-                    <NftSidePreview imageUrl={''} name={this.props.nftMintStore.collectionName} />
+                    <NftSidePreview name = { nftCollectionModel.name } />
                     <LayoutBlock direction={LayoutBlock.DIRECTION_COLUMN} className={'DetailsForm'}>
                         <Input
-                            className={'CollectionName'}
+                            label={'Collection  Id'}
+                            placeholder={'E.g. Cool NFT Collection'}
+                            value={nftCollectionModel.denomId}
+                            readOnly={!this.props.navStore.isCollectionMintedNone()}
+                            onChange={this.onChangeDenomId} />
+                        <Input
                             label={'Collection Name'}
                             placeholder={'E.g. Cool NFT Collection'}
-                            value={this.props.nftMintStore.collectionName}
+                            value={nftCollectionModel.name}
                             readOnly={!this.props.navStore.isCollectionMintedNone()}
                             onChange={this.onChangeCollectionName} />
 
