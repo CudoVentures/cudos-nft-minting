@@ -1,4 +1,3 @@
-manages stores between steps
 refactor uploadImages
 move upload logic to api
 empty collection
