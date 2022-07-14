@@ -8,7 +8,6 @@ import NftMintStore from '../../../../common/js/stores/NftMintStore';
 
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
-import NavStore from '../../../../common/js/stores/NavStore';
 import SvgMintingWaves from '../../../../common/svg/finished-waves.svg';
 import SvgLinkBox from '../../../../common/svg/link-box.svg';
 import SvgTwitter from '../../../../common/svg/twitter.svg';
@@ -16,7 +15,6 @@ import '../../../css/components-inc/NftMint/nft-minting-done.css';
 
 interface Props {
     appStore: AppStore;
-    navStore: NavStore;
     nftMintStore: NftMintStore;
 }
 
@@ -49,7 +47,7 @@ class NftMintingDone extends React.Component<Props> {
                         radius={Button.RADIUS_MAX}
                         color={Button.COLOR_SCHEME_1}
                         padding={Button.PADDING_82}
-                        onClick={this.props.navStore.resetToMintPage.bind(this.props.navStore)}>
+                        onClick={this.props.nftMintStore.navMintStore.reset()}>
                         Mint Another
                     </Button>
                 </Actions>
@@ -62,4 +60,4 @@ class NftMintingDone extends React.Component<Props> {
     }
 }
 
-export default inject('appStore', 'nftMintStore', 'navStore')((observer(NftMintingDone)));
+export default inject('appStore', 'nftMintStore')((observer(NftMintingDone)));
