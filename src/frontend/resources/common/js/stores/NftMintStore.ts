@@ -36,7 +36,7 @@ export default class NftMintStore {
     selectedNfts: number[];
 
     collectionInputError: string;
-    nftsInputErrors: Map<number, string>[];
+    nftsInputErrors: boolean[];
 
     transactionHash: string;
 

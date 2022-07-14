@@ -30,7 +30,7 @@ interface State {
     recipientFieldActive: number;
 }
 
-class NftDetails extends React.Component < Props, State > {
+class NftDetails extends React.Component<Props, State> {
 
     constructor(props) {
         super(props);
@@ -45,8 +45,16 @@ class NftDetails extends React.Component < Props, State > {
         nftModel.name = value;
     }
 
-    onChangeNftRecipient = (nftModel: NftModel, value) => {
-        nftModel.recipient = value;
+    onChangeNftRecipient = (index: number, value) => {
+        const nfts = this.props.nftMintStore.nfts;
+        const nftErrors = this.props.nftMintStore.nftsInputErrors;
+
+        nfts[index].recipient = value;
+        if (value.length !== 44 || !/^cudos1[a-z0-9]*$/.test(value)) {
+            nftErrors[index] = true;
+        } else {
+            nftErrors[index] = false;
+        }
     }
 
     onShowGiftInfo = (e) => {
@@ -83,11 +91,11 @@ class NftDetails extends React.Component < Props, State > {
 
         return (
             <NftStepWrapper
-                className = { 'NftDetails' }
-                stepNumber = { `Step ${navMintStore.getMintStepShowNumber()}` }
-                stepName = { 'NFT Details' } >
-                { this.renderSingleNftDetails() }
-                { this.renderMultipleNftDetails() }
+                className={'NftDetails'}
+                stepNumber={`Step ${navMintStore.getMintStepShowNumber()}`}
+                stepName={'NFT Details'} >
+                {this.renderSingleNftDetails()}
+                {this.renderMultipleNftDetails()}
             </NftStepWrapper>
         )
     }
@@ -99,7 +107,9 @@ class NftDetails extends React.Component < Props, State > {
             return null;
         }
 
-        const nftModel = nftMintStore.nfts[0];
+        const index = 0;
+        const nftModel = nftMintStore.nfts[index];
+        const nftInputError = nftMintStore.nftsInputErrors[index];
 
         return (
             <div className={'FlexRow NftSingleMint'}>
@@ -108,8 +118,8 @@ class NftDetails extends React.Component < Props, State > {
                     <Input
                         label={'Nft Name'}
                         placeholder={'E.g. Cool NFT'}
-                        value = { nftModel.name }
-                        onChange = { this.onChangeNftName.bind(this, nftModel) } />
+                        value={nftModel.name}
+                        onChange={this.onChangeNftName.bind(this, nftModel)} />
                     <div className={'FlexRow'} >
                         <Checkbox
                             value={this.state.recipientFieldActive}
@@ -117,26 +127,29 @@ class NftDetails extends React.Component < Props, State > {
                             label={'I want to send this NFT as a gift'} />
                         <div className={'SVG Icon Clickable'}
                             dangerouslySetInnerHTML={{ __html: SvgInfo }}
-                            onClick={ this.onShowGiftInfo } />
+                            onClick={this.onShowGiftInfo} />
                         <Popover
-                            anchorEl = { this.state.anchorEl }
-                            open = { this.state.anchorEl !== null }
-                            onClose = { this.onHideGiftInfo }
-                            transformOrigin = {{
+                            anchorEl={this.state.anchorEl}
+                            open={this.state.anchorEl !== null}
+                            onClose={this.onHideGiftInfo}
+                            transformOrigin={{
                                 'vertical': 'top',
                                 'horizontal': 'left',
                             }} >
-                                This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
+                            This options allows you to send the minted NFT as a gift to anyone. Just add their wallet address and the Minted NFT will be received to them.
                         </Popover>
                     </div>
-                    { this.state.recipientFieldActive === S.INT_TRUE && (
+                    {this.state.recipientFieldActive === S.INT_TRUE && (
                         <Input
                             className={'NftRecepient'}
                             label={'Recipient Address'}
                             placeholder={'cudos1...'}
-                            value = { nftModel.recipient }
-                            onChange = {this.onChangeNftRecipient.bind(this, nftModel) } />
-                    ) }
+                            value={nftModel.recipient}
+                            onChange={this.onChangeNftRecipient.bind(this, index)}
+                            error={nftInputError}
+                            helperText={nftInputError ? 'Address must start with \'cudos1\' and be 44 symbols long' : ''}
+                        />
+                    )}
                 </LayoutBlock>
             </div>
         )
@@ -155,10 +168,10 @@ class NftDetails extends React.Component < Props, State > {
             <div className={'NftMultipleMint'} >
                 {nfts.map((nft: NftModel, i: number) => (
                     <div
-                        key = { i }
-                        className = { 'NftModel' } >
+                        key={i}
+                        className={'NftModel'} >
                         <div className={'NftImg ImgCoverNode Transition'} style={ProjectUtils.makeBgImgStyle(nft.getPreviewUrl(appStore.workerQueueHelper))} />
-                        <div className = { 'NftFileName' } >{nft.fileName}</div>
+                        <div className={'NftFileName'} >{nft.fileName}</div>
                         <Input
                             className={'NameInput'}
                             inputType={InputType.TEXT}
