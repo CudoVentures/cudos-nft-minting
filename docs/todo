@@ -1,5 +1,7 @@
 manages stores between steps
-send as gift
 nftmintstore to mynftsstore
 
 explorer tx
+
+remove nft from my nfts after send as gift
+input validation

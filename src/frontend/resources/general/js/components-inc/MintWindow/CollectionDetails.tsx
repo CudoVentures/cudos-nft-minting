@@ -33,6 +33,11 @@ class CollectionDetails extends React.Component<Props> {
         const nftMintStore = this.props.nftMintStore;
         const nftCollectionModel = nftMintStore.nftCollection;
         nftCollectionModel.denomId = value;
+        if (!NftMintStore.LOWER_ALPHANUMERIC_START_WITH_LETTER_REGEX.test(value) && value !== S.Strings.EMPTY) {
+            nftMintStore.collectionInputError = 'Accepts only lowercase alphanumeric characters, and must begin with an english letter'
+        } else {
+            nftMintStore.collectionInputError = S.Strings.EMPTY;
+        }
     }
 
     onChangeCollectionName = (value) => {
@@ -64,6 +69,8 @@ class CollectionDetails extends React.Component<Props> {
                             placeholder={'E.g. Cool NFT Collection'}
                             value={nftCollectionModel.denomId}
                             readOnly={!navMintStore.isCollectionMintedNone()}
+                            error={nftMintStore.collectionInputError !== S.Strings.EMPTY}
+                            helperText={nftMintStore.collectionInputError !== S.Strings.EMPTY ? nftMintStore.collectionInputError : ''}
                             onChange={this.onChangeDenomId} />
                         <Input
                             label={'Collection Name'}

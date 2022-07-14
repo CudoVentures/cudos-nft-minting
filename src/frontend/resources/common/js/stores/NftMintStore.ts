@@ -15,8 +15,13 @@ import AppStore from './AppStore';
 
 export default class NftMintStore {
 
+    static LOWER_ALPHANUMERIC_START_WITH_LETTER_REGEX = /^[a-z][a-z0-9]*$/;
+
     static MINT_MODE_LOCAL: number = 1;
     static MINT_MODE_BACKEND: number = 2;
+
+    static INPUT_NFT_NAME: number = 3;
+    static INPUT_NFT_RECIPIENT: number = 4;
 
     nftApi: NftApi;
     appStore: AppStore;
@@ -29,6 +34,9 @@ export default class NftMintStore {
     nftCollection: NftCollectionModel;
     nfts: NftModel[];
     selectedNfts: number[];
+
+    collectionInputError: string;
+    nftsInputErrors: Map<number, string>[];
 
     transactionHash: string;
 
@@ -57,6 +65,10 @@ export default class NftMintStore {
         this.selectedNfts = [];
 
         this.transactionHash = S.Strings.EMPTY;
+
+        this.collectionInputError = S.Strings.EMPTY;
+
+        this.nftsInputErrors = [];
 
         if (resetNavStore === true) {
             this.navMintStore.reset();
