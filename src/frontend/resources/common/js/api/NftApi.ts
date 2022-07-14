@@ -36,7 +36,7 @@ export default class NftApi extends AbsApi {
         this.queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
     }
 
-    async fetchNftCollection(denomId: string, callback: (a_: NftCollectionModel | null, b_: NftModel[] | null) => void): Promise<void> {
+    async fetchNftCollection(owner: string, denomId: string, callback: (a_: NftCollectionModel | null, b_: NftModel[] | null) => void): Promise<void> {
         let nftCollectionModel = null;
         let nftModels = null;
 
@@ -53,7 +53,7 @@ export default class NftApi extends AbsApi {
                         const nftModel = NftModel.fromChain(nftJson);
                         nftModel.denomId = nftCollectionModel.denomId;
                         return nftModel;
-                    });
+                    }).filter((nft: NftModel) => nft.recipient === owner);
                 }
             }
 
@@ -88,7 +88,7 @@ export default class NftApi extends AbsApi {
                         // eslint-disable-next-line no-loop-func
                         await new Promise<void>((resolve, reject) => {
                             const run = async () => {
-                                this.fetchNftCollection(denomIds[i], (nftCollectionModel, nftModels) => {
+                                this.fetchNftCollection(walletAddress, denomIds[i], (nftCollectionModel, nftModels) => {
                                     if (nftCollectionModel !== null) {
                                         resNftCollectionModels.push(nftCollectionModel);
                                         resNftModels = resNftModels.concat(nftModels);

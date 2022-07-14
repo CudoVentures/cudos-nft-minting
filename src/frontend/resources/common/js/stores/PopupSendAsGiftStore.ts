@@ -125,15 +125,17 @@ export default class PopupSendAsGiftStore extends PopupStore {
         try {
             const { signer, sender, client } = await this.walletStore.getSignerData();
 
+            console.log(sender);
             const fee = await this.nftApi.estimateFeeSendNft(
                 this.nftModel,
-                this.recipientAddress,
+                sender,
                 sender,
                 client,
             );
 
             this.gasFee = Number((new BigNumber(fee.amount)).div(Config.CUDOS_NETWORK.DECIMAL_DIVIDER).toFixed(2));
         } catch (e) {
+            console.log(e);
             this.gasFee = S.NOT_EXISTS;
         }
         try {
