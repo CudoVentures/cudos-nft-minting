@@ -181,9 +181,8 @@ export default class NftMintStore {
         }
     }
 
-    // TODO: fix
     private async mintBackend() {
-        this.nftApi.mintNfts(this.nfts, (txHash: string) => { this.transactionHash = txHash });
+        this.transactionHash = await this.nftApi.mintNfts(this.nfts);
     }
 
     private async mintFrontend() {
