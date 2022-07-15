@@ -74,15 +74,27 @@ export default class NftApi extends AbsApi {
                 await this.init();
             }
 
-            // const resOwner = await this.queryClient.getNftOwner(walletAddress);
+            const denomIdsSet = new Set < string >();
+
+            const resOwner = await this.queryClient.getNftOwner(walletAddress);
+            if (resOwner.owner !== undefined) {
+                if (resOwner.owner.idCollections !== undefined) {
+                    resOwner.owner.idCollections.forEach((idCollection: IDCollection) => {
+                        denomIdsSet.add(idCollection.denomId);
+                    });
+                }
+            }
+
             const resDenoms = await this.queryClient.getNftDenoms();
-            const denomIds = resDenoms.denoms.filter((denom: Denom) => {
+            resDenoms.denoms.filter((denom: Denom) => {
                 return denom.creator === walletAddress
             }).map((denom) => {
                 return NftCollectionModel.fromChain(denom).denomId
+            }).forEach((denomId) => {
+                denomIdsSet.add(denomId);
             });
 
-            denomIds.push(Config.CUDOS_NETWORK.NFT_DENOM_ID);
+            const denomIds = Array.from(denomIdsSet);
             for (let i = 0; i < denomIds.length; ++i) {
                 // eslint-disable-next-line no-loop-func
                 await new Promise<void>((resolve, reject) => {

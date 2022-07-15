@@ -7,10 +7,12 @@ export default class NftCollectionModel implements Filterable {
 
     denomId: string;
     name: string;
+    own: boolean;
 
     constructor() {
         this.denomId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
+        this.own = false;
 
         makeAutoObservable(this);
     }
@@ -36,6 +38,7 @@ export default class NftCollectionModel implements Filterable {
         return {
             'denomId': this.denomId,
             'name': this.name,
+            'own': this.own,
         }
     }
 
@@ -48,6 +51,7 @@ export default class NftCollectionModel implements Filterable {
 
         model.denomId = json.denomId ?? model.denomId;
         model.name = json.name ?? model.name;
+        model.own = json.own ?? model.own;
 
         return model;
     }
