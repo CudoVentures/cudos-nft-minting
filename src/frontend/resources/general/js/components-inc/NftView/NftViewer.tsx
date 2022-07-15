@@ -14,6 +14,7 @@ import Button from '../../../../common/js/components-inc/Button';
 
 import SvgTwitter from '../../../../common/svg/twitter.svg';
 import '../../../css/components-inc/NftView/nft-viewer.css'
+import Config from '../../../../../../../builds/dev-generated/Config';
 
 interface Props {
     appStore: AppStore;
@@ -24,12 +25,24 @@ interface Props {
     onSendAsGiftSuccess: () => void;
 }
 
-class NftViewer extends React.Component<Props> {
+interface State {
+    nftTxHash: string;
+}
+
+class NftViewer extends React.Component<Props, State> {
 
     static defaultProps: any;
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            nftTxHash: S.Strings.EMPTY,
+        }
+    }
+
     componentDidMount(): void {
-        // TO DO: get the tx hash
+        this.getTxHash();
     }
 
     onClickSendAsGift = () => {
@@ -60,8 +73,11 @@ class NftViewer extends React.Component<Props> {
         return S.Strings.EMPTY;
     }
 
-    getTxHash(): string {
-        return '0x23124'
+    getTxHash(): void {
+        this.props.myNftsStore.getNftTxHash(this.props.nftModel).then((txHash: string) => {
+            console.log(txHash);
+            this.setState({ nftTxHash: txHash });
+        });
     }
 
     getId(): string {
@@ -96,7 +112,7 @@ class NftViewer extends React.Component<Props> {
                     <div className={'TxInfo FlexColumn'} >
                         <div className={'TxInfoRow FlexSplit'} >
                             <label>Transation Hash</label>
-                            <a href={'#'} className={'TxInfoBlue StartRight'} > {this.getTxHash()} </a>
+                            <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.nftTxHash}`} className={'TxInfoBlue StartRight'} > {this.state.nftTxHash} </a>
                         </div>
                         <div className={'TxInfoRow FlexSplit'} >
                             <label>Token Standart</label>
@@ -144,7 +160,7 @@ class NftViewer extends React.Component<Props> {
         if (nftCollectionModel !== null) {
             return (
                 <div>
-                    <div className = { 'Img ImgCoverNode' } style = { ProjectUtils.makeBgImgStyle(myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper)) } />
+                    <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper))} />
                 </div>
             )
         }

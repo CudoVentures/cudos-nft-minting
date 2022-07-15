@@ -177,6 +177,23 @@ export default class NftApi extends AbsApi {
         });
     }
 
+    async getTokenTx(nftModel: NftModel): Promise<string> {
+        const data = {
+            operationName: 'MyQuery',
+            query: `query MyQuery {\n  nft_mint(where: {denom_id: {_eq: "${nftModel.denomId}"}, token_id: {_eq: "${nftModel.tokenId}"}}) {\n    transaction_hash\n    transaction {\n      height\n    }\n  }\n}`,
+            variables: null,
+        };
+
+        const request = {
+            method: 'POST',
+            body: JSON.stringify(data),
+        }
+
+        const res = await (await fetch('http://34.122.182.3:8080/v1/graphql', request)).json();
+        const txHash = res.data.nft_mint[0].transaction_hash;
+        return txHash;
+    }
+
     async getCudosPriceInUsd(): Promise<number> {
         const coinId = 'cudos';
         const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`;
