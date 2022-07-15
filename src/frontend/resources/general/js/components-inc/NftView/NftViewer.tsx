@@ -12,6 +12,7 @@ import ProjectUtils from '../../../../common/js/ProjectUtils';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 
+import SvgDownload from '../../../../common/svg/download.svg';
 import SvgTwitter from '../../../../common/svg/twitter.svg';
 import '../../../css/components-inc/NftView/nft-viewer.css'
 import Config from '../../../../../../../builds/dev-generated/Config';
@@ -107,6 +108,10 @@ class NftViewer extends React.Component<Props, State> {
                             <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgTwitter }} />
                             Share on Twitter
                         </div> */}
+                        <a href = { nftModel.url } className = { 'StartRight FlexRow Share' } target = '_blank' rel = 'noreferrer' >
+                            <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgDownload }} />
+                            Downlaod
+                        </a>
                     </div>
                     <div className={'NftName'} > {this.getName()} </div>
                     <div className={'TxInfo FlexColumn'} >

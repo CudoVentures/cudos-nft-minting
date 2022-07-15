@@ -23,6 +23,8 @@ import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import SvgTrash from '../../../../common/svg/trash.svg';
 import SvgUploadFile from '../../../../common/svg/upload-file.svg';
 import '../../../css/components-inc/NftMint/upload-files.css';
+import GeneralApi from '../../../../common/js/api/GeneralApi';
+import Response from '../../../../../../../builds/dev-generated/utilities/network/ResponseConsts';
 
 interface Props {
     appStore: AppStore;
@@ -75,6 +77,7 @@ class UploadFiles extends React.Component<Props> {
                 this.props.alertStore.show('You have selected an unsupported file type');
             },
             'onUpload': async (base64File, response, files: any[], i: number) => {
+                this.imageUrlInputValue = S.Strings.EMPTY;
                 await this.props.nftMintStore.addNftFromUpload(base64File, files[i].name, files[i].type, files[i].size);
             },
         }
@@ -86,11 +89,13 @@ class UploadFiles extends React.Component<Props> {
         }
 
         try {
-            const imageRes = await fetch(this.imageUrlInputValue);
-            const imageArrayBuffer = await imageRes.arrayBuffer();
+            const ajax = await new GeneralApi(null, null, this.props.alertStore.show).download(this.imageUrlInputValue);
+
+            const imageArrayBuffer = ajax.responseText
             const file = new File([imageArrayBuffer], `NFT-${Date.now()}`, {
-                type: imageRes.headers.get('content-type'),
+                type: ajax.getResponseHeader('content-type'),
             });
+            console.log(file);
             const uploader = this.nodes.fileUpload.current.getUploader();
             uploader.uploadFiles([file]);
 
@@ -104,11 +109,6 @@ class UploadFiles extends React.Component<Props> {
 
             // await this.props.nftMintStore.addNftFromLink(this.imageUrlInputValue);
         } catch (e) {
-            if (e.message.indexOf('Failed to fetch') !== -1) {
-                this.props.alertStore.show('There was a problem download the file. Please, download it manually and upload it.');
-            } else {
-                this.props.alertStore.show(e.message);
-            }
         }
     }
 
