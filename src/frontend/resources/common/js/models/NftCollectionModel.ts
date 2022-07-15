@@ -34,6 +34,10 @@ export default class NftCollectionModel implements Filterable {
         return this.denomId === Config.CUDOS_NETWORK.NFT_DENOM_ID;
     }
 
+    isOwn(): boolean {
+        return this.own;
+    }
+
     toJson(): any {
         return {
             'denomId': this.denomId,
