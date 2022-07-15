@@ -26,8 +26,12 @@ export default class WorkerQueueHelper {
 
         while (this.queue.length > 0) {
             const runnable = this.queue.shift();
-            const result = await runnable.run();
-            await runnable.onFinish(result);
+            try {
+                const result = await runnable.run();
+                await runnable.onFinish(result);
+            } catch (e) {
+                await runnable.onFinish('null');
+            }
         }
 
         this.working = false;

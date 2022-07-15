@@ -55,14 +55,14 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
                         <div className={'IntroCnt'} >
                             <div className={'IntroBlockTitle'}>Start Minting NFTs On CUDOS Network</div>
                             <div className={'IntroBlockDesc'}>CUDOS NFT Minet is the world&apos;s simplest NFT creation service on CUDOS Network. Try it out yourself</div>
-                            <Actions height = { Actions.HEIGHT_60 } layout = { Actions.LAYOUT_ROW_LEFT } >
+                            <Actions height={Actions.HEIGHT_60} layout={Actions.LAYOUT_ROW_LEFT} >
                                 <Button
                                     className={'ButtonStartMinting'}
                                     href={walletStore.isKeplrConnected() === true ? PagesGeneral.NFT : undefined}
                                     onClick={walletStore.isKeplrConnected() === true ? undefined : this.onClickStartMintingWithoutWallet}
                                     type={Button.TYPE_ROUNDED}
-                                    padding = { Button.PADDING_48 }
-                                    radius = { Button.RADIUS_MAX } >
+                                    padding={Button.PADDING_48}
+                                    radius={Button.RADIUS_MAX} >
                                     Start Minting
                                 </Button>
                             </Actions>
@@ -83,7 +83,7 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
 
     renderPopups(): any[] {
         return super.renderPopups().concat([
-            <ConnectWalletsPopup key = { 1 } />,
+            <ConnectWalletsPopup key={1} />,
         ])
     }
 }

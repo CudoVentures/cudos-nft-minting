@@ -94,11 +94,12 @@ export default class NftModel implements Filterable {
 
     getPreviewUrl(workerQueueHelper: WorkerQueueHelper): string {
         if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
+            this.type = 'null';
             workerQueueHelper.pushAndExecute(new Runnable(async () => {
                 const res = await fetch(this.url);
                 return res.headers.get('content-type');
             }, (type: string | null) => {
-                this.type = type;
+                this.type = type ?? 'null';
                 this.updatePreviewUrl();
             }));
         }

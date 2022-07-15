@@ -138,9 +138,17 @@ export default class NftService {
 
     async imageUpload(file: string): Promise<string> {
         try {
+            if (!file.includes(';base64,')) {
+                throw new StateException(Response.S_STATUS_RUNTIME_ERROR, 'File not in base 64 format');
+            }
+
             const base64Buffer = file.substring(file.indexOf(',') + 1);
             const documentBuffer = Buffer.from(base64Buffer, 'base64');
             const authorization = `Basic ${Buffer.from(`${Config.INFURA.ID}:${Config.INFURA.SECRET}`).toString('base64')}`;
+
+            if (base64Buffer.length > (2 << 20)) {
+                throw new StateException(Response.S_STATUS_RUNTIME_ERROR, `File too big: ${base64Buffer.length} bytes`);
+            }
 
             const ipfs: IPFSHTTPClient = create({
                 url: Config.INFURA.HOST,
@@ -152,7 +160,7 @@ export default class NftService {
                     authorization,
                 },
             });
-            const url = `https://ipfs.infura.io/ipfs/${added.path}`
+            const url = `https://ipfs.io/ipfs/${added.path}`
 
             return url;
         } catch (error) {
