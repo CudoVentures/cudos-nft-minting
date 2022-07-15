@@ -75,7 +75,7 @@ export default class NftApi extends AbsApi {
                 await this.init();
             }
 
-            const denomIdsSet = new Set < string >();
+            const denomIdsSet = new Set<string>();
 
             const resOwner = await this.queryClient.getNftOwner(walletAddress);
             if (resOwner.owner !== undefined) {
@@ -120,8 +120,8 @@ export default class NftApi extends AbsApi {
         callback(resNftCollectionModels, resNftModels);
     }
 
-    mintNftsInCudosCollection(nftModels: NftModel[]): Promise < string > {
-        return new Promise < string >((resolve, reject) => {
+    mintNftsInCudosCollection(nftModels: NftModel[]): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
             const req = new MintNftReq(nftModels);
 
             this.api.req(Actions.NFT.MINT, req, (json: any) => {
@@ -141,8 +141,8 @@ export default class NftApi extends AbsApi {
 
     }
 
-    uploadFilesToIpfs(files: string[]): Promise < string[] > {
-        return new Promise < string[] >((resolve, reject) => {
+    uploadFilesToIpfs(files: string[]): Promise<string[]> {
+        return new Promise<string[]>((resolve, reject) => {
             const req = new UploadImagesReq(files);
             this.api.req(Actions.NFT.IMAGES_UPLOAD, req, (json: any) => {
                 if (json.status !== 0) {
@@ -177,7 +177,7 @@ export default class NftApi extends AbsApi {
         });
     }
 
-    async getCudosPriceInUsd(): Promise < number > {
+    async getCudosPriceInUsd(): Promise<number> {
         const coinId = 'cudos';
         const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`;
         const res = await fetch(url);

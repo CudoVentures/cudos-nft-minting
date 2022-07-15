@@ -96,9 +96,9 @@ class UploadFiles extends React.Component<Props> {
 
         return (
             <NftStepWrapper
-                className = { 'UploadFiles' }
-                stepNumber = { `Step ${navMintStore.getMintStepShowNumber()}` }
-                stepName = { 'Upload File' } >
+                className={'UploadFiles'}
+                stepNumber={`Step ${navMintStore.getMintStepShowNumber()}`}
+                stepName={'Upload File'} >
                 <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(!this.props.nftMintStore.isNftsEmpty() && navMintStore.isMintOptionSingle())}`}>
                     <FileUpload
                         uploadId={'OptionChoosePage'}
@@ -118,17 +118,17 @@ class UploadFiles extends React.Component<Props> {
                             </div>
                         </div>
                     </FileUpload>
-                    <LayoutBlock className = { 'FileFromLink' } direction = { LayoutBlock.DIRECTION_ROW } >
+                    <LayoutBlock className={'FileFromLink'} direction={LayoutBlock.DIRECTION_ROW} >
                         <Input
-                            label = { 'Add file from link' }
+                            label={'Add file from link'}
                             className={'LinkInput'}
                             inputType={InputType.TEXT}
                             placeholder={'https://www.mywebsite.com/item'}
-                            value = { this.uploadLinkInputStateHelper.values.get(FIELDS[0]) }
-                            error = { this.uploadLinkInputStateHelper.errors.get(FIELDS[0]) }
-                            onChange = {this.uploadLinkInputStateHelper.onChanges.get(FIELDS[0])}
-                            margin={InputMargin.NORMAL}/>
-                        <Actions className = { 'UploadActions' } height={Actions.HEIGHT_42}>
+                            value={this.uploadLinkInputStateHelper.values.get(FIELDS[0])}
+                            error={this.uploadLinkInputStateHelper.errors.get(FIELDS[0])}
+                            onChange={this.uploadLinkInputStateHelper.onChanges.get(FIELDS[0])}
+                            margin={InputMargin.NORMAL} />
+                        <Actions className={'UploadActions'} height={Actions.HEIGHT_42}>
                             <Button
                                 color={Button.COLOR_SCHEME_1}
                                 radius={Button.RADIUS_MAX}
