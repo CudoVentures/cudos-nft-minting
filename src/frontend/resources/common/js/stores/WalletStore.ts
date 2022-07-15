@@ -17,7 +17,7 @@ export default class WalletStore {
             GAS_PRICE: Config.CUDOS_NETWORK.GAS_PRICE,
         });
 
-        window.addEventListener('keplr_keystorechange', this.onChangeAccount);
+        this.keplrWallet.addAddressChangeCallback(this.onChangeAccount);
 
         makeAutoObservable(this);
         makeObservable(this.keplrWallet, {
