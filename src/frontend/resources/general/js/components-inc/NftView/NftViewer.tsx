@@ -113,7 +113,9 @@ class NftViewer extends React.Component<Props, State> {
                             </a>
                         )}
                     </div>
-                    <div className={'NftName'} > {this.getName()} </div>
+                    <div className={'NftName FlexRow'} >
+                        <span className = { 'Dots' } title = { this.getName() } > {this.getName()} </span>
+                    </div>
                     <div className={'TxInfo FlexColumn'} >
                         <div className={'TxInfoRow FlexSplit'} >
                             <label>Transation Hash</label>

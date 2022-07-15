@@ -36,8 +36,14 @@
 }
 
 .NftViewer .NftDataCnt .NftName {
+    display: flex;
     font-size: 40px; font-weight: 700;
     margin-bottom: 20px;
+}
+
+.NftViewer .NftDataCnt .NftName span {
+    width: 0;
+    flex: 1 1 auto;
 }
 
 .NftViewer .NftDataCnt .TxInfo {

@@ -26,13 +26,17 @@
 }
 
 .SendAsGiftPopup .StepInit .NftPreviewCnt .NftData {
+    flex: 1 1 auto;
     margin-bottom: 16px;
 }
 
 .SendAsGiftPopup .StepInit .NftPreviewCnt .NftData .NftDataRow {
     display: flex; flex-direction: column;
-    align-items: flex-start;
     margin-bottom: 16px;
+}
+
+.SendAsGiftPopup .StepInit .NftPreviewCnt .NftData .NftDataRow:nth-child(2) {
+    align-items: flex-start;
 }
 
 .SendAsGiftPopup .StepInit .NftPreviewCnt .NftData .NftDataRow  label {
@@ -42,6 +46,15 @@
 
 .SendAsGiftPopup .StepInit .NftPreviewCnt .NftData .NftDataRow  div {
     font-weight: 600;
+}
+
+.SendAsGiftPopup .StepInit .NftPreviewCnt .NftData .NftDataRow  div.NftName {
+    display: flex;
+}
+
+.SendAsGiftPopup .StepInit .NftPreviewCnt .NftData .NftDataRow  div.NftName span {
+    width: 0;
+    flex: 1 1 auto;
 }
 
 .SendAsGiftPopup .StepInit .NftPreviewCnt .NftData .NftDataRow  .PriceInUsd {
@@ -76,6 +89,7 @@
 }
 
 .SendAsGiftPopup .StepDoneSuccess .NftPreviewCnt {
+    width: 163px;
     position: relative;
     align-self: center;
     padding: 20px;
@@ -86,7 +100,7 @@
 }
 
 .SendAsGiftPopup .StepDoneSuccess .NftPreviewCnt .NftPreview {
-    width: 163px; height: 163px;
+    width: 100%; height: 163px;
 }
 
 .SendAsGiftPopup .StepDoneSuccess .NftPreviewCnt .NftName {

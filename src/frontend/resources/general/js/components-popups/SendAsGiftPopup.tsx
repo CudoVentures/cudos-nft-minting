@@ -111,7 +111,9 @@ class SendAsGiftPopup extends PopupWindow<Props> {
                             <div className={'NftData FlexColumn'} >
                                 <div className={'NftDataRow'} >
                                     <label>NFT Name</label>
-                                    <div>{nftModel.name}</div>
+                                    <div className = { 'NftName' }>
+                                        <span className = { 'Dots' } title = { nftModel.name }>{nftModel.name}</span>
+                                    </div>
                                 </div>
                                 <div className={'NftDataRow'} >
                                     <label>Estimated gas fee</label>
@@ -180,7 +182,7 @@ class SendAsGiftPopup extends PopupWindow<Props> {
                         <div className={'SVG Size SvgIconBackground'} dangerouslySetInnerHTML={{ __html: SvgLoadingWaves }} />
                         <div className={'NftPreviewCnt'} >
                             <div className={'NftPreview ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
-                            <div className={'NftName'} >{nftModel.name}</div>
+                            <div className={'NftName Dots'} title = { nftModel.name } >{nftModel.name}</div>
                         </div>
                         <div className={'Title'} >Success!</div>
                         <div className={'SubTitle'} >NFT was gifted successfully.</div>
