@@ -31,6 +31,7 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
 
     static layout(componentNode: React.ReactNode) {
         const appStore = new AppStore();
+        const alertStore = new AlertStore();
         const walletStore = new WalletStore();
         const myNftsStore = new MyNftsStore(appStore, walletStore);
         const nftMintStore = new NftMintStore(appStore, walletStore);
@@ -41,7 +42,7 @@ export default class PageComponent<Pr extends PageComponentProps, St = {}, SS = 
                 <Provider
                     appStore={appStore}
                     accountSessionStore={new AccountSessionStore()}
-                    alertStore={new AlertStore()}
+                    alertStore={alertStore}
                     popupConnectWalletsStore={new PopupConnectWalletsStore()}
                     popupSendAsGiftStore={new PopupSendAsGiftStore(walletStore, myNftsStore)}
                     walletStore={walletStore}

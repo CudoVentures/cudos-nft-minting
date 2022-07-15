@@ -1,4 +1,4 @@
-// version 3.6.1
+// version 3.6.2
 export default class Uploader {
 
     static isSupported() {
@@ -235,11 +235,12 @@ class UploaderImpl {
                 error = true;
             }
             if (this.exts.length > 0) {
-                dotIndex = this.files[i].name.lastIndexOf('.');
-                ext = (dotIndex === -1 ? '.' : this.files[i].name.substring(dotIndex));
-                ext = ext.toLowerCase();
+                const fileMimeTypeLowerCase = this.files[i].type.toLowerCase();
                 for (j = this.exts.length - 1; j >= 0; --j) {
-                    if (this.exts[j] === ext) { break; }
+                    const extWithoutDot = this.exts[j].replace('.', '').toLowerCase();
+                    if (fileMimeTypeLowerCase.indexOf(extWithoutDot) !== -1) {
+                        break;
+                    }
                 }
                 if (j === -1) {
                     if (this.onExtError !== null) {

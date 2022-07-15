@@ -47,6 +47,10 @@ class FilesUpload extends React.Component < React.PropsWithChildren < Props >, S
         document.body.removeEventListener('dragover', this.onDragOverWrapper);
     }
 
+    getUploader() {
+        return this.nodes.uploader.current.uploader;
+    }
+
     onDrop = (e) => {
 
         e.preventDefault();

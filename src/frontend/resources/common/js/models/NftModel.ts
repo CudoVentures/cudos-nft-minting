@@ -97,7 +97,7 @@ export default class NftModel implements Filterable {
             workerQueueHelper.pushAndExecute(new Runnable(async () => {
                 const res = await fetch(this.url);
                 return res.headers.get('content-type');
-            }, (type: string) => {
+            }, (type: string | null) => {
                 this.type = type;
                 this.updatePreviewUrl();
             }));

@@ -34,18 +34,27 @@ const FIELDS = ['link'];
 
 class UploadFiles extends React.Component<Props> {
 
+    imageUrlInputValue: string;
+
+    nodes: any;
+
     tableHelper: TableHelper;
     uploadLinkInputStateHelper: InputStateHelper;
 
     constructor(props: Props) {
         super(props);
 
-        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], () => { });
+        this.imageUrlInputValue = S.Strings.EMPTY;
 
+        this.nodes = {
+            'fileUpload': React.createRef(),
+        };
+
+        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], () => { });
         this.uploadLinkInputStateHelper = new InputStateHelper(FIELDS, (key, value) => {
             switch (key) {
                 case FIELDS[0]:
-                    this.props.nftMintStore.imageUrlInputValue = value;
+                    this.imageUrlInputValue = value;
                     break;
                 default:
             }
@@ -77,21 +86,41 @@ class UploadFiles extends React.Component<Props> {
         }
 
         try {
-            await this.props.nftMintStore.addNftFromLink();
+            const imageRes = await fetch(this.imageUrlInputValue);
+            const imageArrayBuffer = await imageRes.arrayBuffer();
+            const file = new File([imageArrayBuffer], `NFT-${Date.now()}`, {
+                type: imageRes.headers.get('content-type'),
+            });
+            const uploader = this.nodes.fileUpload.current.getUploader();
+            uploader.uploadFiles([file]);
+
+            // const fileReader = new FileReader();
+            // fileReader.onload = () => {
+            //     console.log(fileReader.result);
+            //     const uploader = this.nodes.fileUpload.current.getUploader();
+            //     this.nodes.fileUpload.current.uploadBase64(fileReader.result);
+            // }
+            // fileReader.readAsDataURL(imageBlob);
+
+            // await this.props.nftMintStore.addNftFromLink(this.imageUrlInputValue);
         } catch (e) {
-            this.props.alertStore.show(e.message);
+            if (e.message.indexOf('Failed to fetch') !== -1) {
+                this.props.alertStore.show('There was a problem download the file. Please, download it manually and upload it.');
+            } else {
+                this.props.alertStore.show(e.message);
+            }
         }
     }
 
     onChangeUploadUrl = (value: string) => {
-        this.props.nftMintStore.imageUrlInputValue = value;
+        this.imageUrlInputValue = value;
     }
 
     render() {
         const navMintStore = this.props.nftMintStore.navMintStore;
 
         this.uploadLinkInputStateHelper.updateValues([
-            this.props.nftMintStore.imageUrlInputValue,
+            this.imageUrlInputValue,
         ]);
 
         return (
@@ -101,6 +130,7 @@ class UploadFiles extends React.Component<Props> {
                 stepName = { 'Upload File' } >
                 <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(!this.props.nftMintStore.isNftsEmpty() && navMintStore.isMintOptionSingle())}`}>
                     <FileUpload
+                        ref = { this.nodes.fileUpload }
                         uploadId={'OptionChoosePage'}
                         uploadParams={this.makeImageUploadParams()}>
                         <div className={'UploadFileBox FlexRow'}>

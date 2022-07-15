@@ -23,11 +23,10 @@ export default class NftMintStore {
     static INPUT_NFT_RECIPIENT: number = 4;
 
     nftApi: NftApi;
+
     appStore: AppStore;
     walletStore: WalletStore;
     navMintStore: NavMintStore;
-
-    imageUrlInputValue: string;
 
     nftCollection: NftCollectionModel;
     nfts: NftModel[];
@@ -55,8 +54,6 @@ export default class NftMintStore {
     }
 
     reset(resetNavStore: boolean) {
-        this.imageUrlInputValue = S.Strings.EMPTY;
-
         this.nftCollection = null;
         this.nfts = [];
         this.selectedNfts = [];
@@ -245,25 +242,22 @@ export default class NftMintStore {
         await this.addNftModel(url, fileName, type, sizeBytes, bytes.buffer);
     }
 
-    async addNftFromLink(): Promise<void> {
-        let url = this.imageUrlInputValue;
-        this.imageUrlInputValue = S.Strings.EMPTY;
+    // async addNftFromLink(url: string): Promise<void> {
+    //     if (!url.startsWith('http')) {
+    //         url = `http://${url}`;
+    //     }
 
-        if (!url.startsWith('http')) {
-            url = `http://${url}`;
-        }
+    //     try {
+    //         const imageRes = await fetch(url);
+    //         let contentType = imageRes.headers.get('Content-Type');
+    //         contentType = contentType.slice(contentType.indexOf('/') + 1);
+    //         const contentLength = Number(imageRes.headers.get('Content-Length'));
 
-        try {
-            const imageRes = await fetch(url);
-            let contentType = imageRes.headers.get('Content-Type');
-            contentType = contentType.slice(contentType.indexOf('/') + 1);
-            const contentLength = Number(imageRes.headers.get('Content-Length'));
-
-            await this.addNftModel(url, `NFT-${Date.now()}`, contentType, contentLength, await imageRes.arrayBuffer());
-        } catch (e) {
-            throw Error('Could not fetch file.');
-        }
-    }
+    //         await this.addNftModel(url, `NFT-${Date.now()}`, contentType, contentLength, await imageRes.arrayBuffer());
+    //     } catch (e) {
+    //         throw Error('Could not fetch file.');
+    //     }
+    // }
 
     private async addNftModel(url: string, fileName: string, type: string, sizeBytes: number, arrayBuffer: ArrayBuffer): Promise<void> {
         const nft = new NftModel();
