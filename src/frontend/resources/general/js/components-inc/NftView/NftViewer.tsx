@@ -42,7 +42,9 @@ class NftViewer extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        this.getTxHash();
+        try {
+            this.getTxHash();
+        } catch (e) { }
     }
 
     onClickSendAsGift = () => {
@@ -75,7 +77,6 @@ class NftViewer extends React.Component<Props, State> {
 
     getTxHash(): void {
         this.props.myNftsStore.getNftTxHash(this.props.nftModel).then((txHash: string) => {
-            console.log(txHash);
             this.setState({ nftTxHash: txHash });
         });
     }

@@ -189,7 +189,7 @@ export default class NftApi extends AbsApi {
             body: JSON.stringify(data),
         }
 
-        const res = await (await fetch('http://34.122.182.3:8080/v1/graphql', request)).json();
+        const res = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, request)).json();
         const txHash = res.data.nft_mint[0].transaction_hash;
         return txHash;
     }

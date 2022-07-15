@@ -28,6 +28,7 @@ const envVariables = [
     'GAS_PRICE',
     'EXPLORER',
     'STAKING',
+    'GRAPHQL',
     'NFT_DENOM_ID',
     'SIGNER_MNEMONIC',
     'INFURA_HOST',
@@ -209,6 +210,7 @@ const Config = {
         DECIMAL_DIVIDER: (new BigNumber(10)).pow(18),
         EXPLORER: process.env.EXPLORER,
         STAKING: process.env.STAKING,
+        GRAPHQL: process.env.GRAPHQL,
         NFT_DENOM_ID: process.env.NFT_DENOM_ID,
     },
     CUDOS_SIGNER: {
