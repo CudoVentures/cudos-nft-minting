@@ -117,7 +117,7 @@ class NftViewer extends React.Component<Props, State> {
                     <div className={'TxInfo FlexColumn'} >
                         <div className={'TxInfoRow FlexSplit'} >
                             <label>Transation Hash</label>
-                            <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.nftTxHash}`} className={'TxInfoBlue StartRight'} > {this.state.nftTxHash} </a>
+                            <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.nftTxHash}`} className={'TxInfoBlue StartRight'} target='_blank' rel='noreferrer' > {this.state.nftTxHash} </a>
                         </div>
                         <div className={'TxInfoRow FlexSplit'} >
                             <label>Token Standart</label>
