@@ -184,7 +184,7 @@ class SendAsGiftPopup extends PopupWindow<Props> {
                         </div>
                         <div className={'Title'} >Success!</div>
                         <div className={'SubTitle'} >NFT was gifted successfully.</div>
-                        <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.props.popupStore.txHash}`} className={'TxLink FlexRow'} target='_blank' rel="noreferrer" >
+                        <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.props.popupStore.txHash}`} className={'TxLink FlexRow'} target='_blank' rel = 'noreferrer' >
                             Check transaction details in Explorer
                             <span className={'SVG IconOpenUrl PrimaryColor'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
                         </a>
@@ -206,7 +206,7 @@ class SendAsGiftPopup extends PopupWindow<Props> {
                         <img src={`${Config.URL.RESOURCES}/common/img/nfts/cone.png`} className={'Cone'} />
                         <div className={'Title'} >Transaction Failed!!</div>
                         <div className={'SubTitle'} >NFT was not gifted.<br />Please check the details or try again.</div>
-                        <a href={''} className={'TxLink FlexRow'} target='_blank' rel="noreferrer" >
+                        <a href={''} className={'TxLink FlexRow'} target='_blank' rel='noreferrer' >
                             Check transaction details in Explorer
                             <span className={'SVG IconOpenUrl PrimaryColor'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
                         </a>

@@ -33,12 +33,12 @@ class NftMintingDone extends React.Component<Props> {
                         <div className={'NftImageHolder'}>
                             <div className={'NftImage ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(nftModel.getPreviewUrl(appStore.workerQueueHelper))} />
                         </div>
-                        <div className={'NftName'}>{navMintStore.isMintOptionSingle() ? nftModel.name : nftCollectionModel.name}</div>
+                        <div className={'NftName Dots'}>{navMintStore.isMintOptionSingle() ? nftModel.name : nftCollectionModel.name}</div>
                     </div>
                 </div>
                 <div className={'Heading4'} >Minting is Done!</div>
                 <div className={'Description'}>Minting was successful! Check the details from the link below.</div>
-                <a href={this.props.nftMintStore.getTxHashLink()} className={'TransactionLink FlexRow'}>
+                <a href={this.props.nftMintStore.getTxHashLink()} className={'TransactionLink FlexRow'} target = '_blank' rel = 'noreferrer'>
                     <div>Check transaction details in Explorer</div>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
                 </a>

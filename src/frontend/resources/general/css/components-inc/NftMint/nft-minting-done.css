@@ -19,6 +19,7 @@
 }
 
 .NftMintingDone .NftBoxRow .NftBox {
+    width: 168px;
     padding: 20px;
     background-color: #fff;
     position: relative;
@@ -28,7 +29,7 @@
 }
 
 .NftMintingDone .NftBoxRow .NftBox .NftImageHolder {
-    width: 168px;
+    width: 100%;
 }
 
 .NftMintingDone .NftBoxRow .NftBox .NftImageHolder .NftImage {

@@ -18,7 +18,7 @@ export default class NftSidePreview extends React.Component < Props > {
         return (
             <div className={`FlexColumn NftPreview ${this.props.imageUrl === '' ? 'EmptyPicture' : ''}`}>
                 <div className={'SquareHolder ImgCoverNode'} style = { ProjectUtils.makeBgImgStyle(this.props.imageUrl) } />
-                <div className={'NftName'}>{this.props.name === '' ? 'No name' : this.props.name}</div>
+                <div className={'NftName Dots'}>{this.props.name === '' ? 'No name' : this.props.name}</div>
             </div>
         )
     }

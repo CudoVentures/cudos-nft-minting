@@ -89,6 +89,7 @@ class UploadFiles extends React.Component<Props> {
         }
 
         try {
+            this.props.appStore.disableActions();
             const ajax = await new GeneralApi(null, null, this.props.alertStore.show).download(this.imageUrlInputValue);
 
             const imageArrayBuffer = ajax.responseText
@@ -109,6 +110,8 @@ class UploadFiles extends React.Component<Props> {
 
             // await this.props.nftMintStore.addNftFromLink(this.imageUrlInputValue);
         } catch (e) {
+        } finally {
+            this.props.appStore.enableActions();
         }
     }
 
