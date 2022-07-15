@@ -7,6 +7,7 @@ export default class Response {
     static S_STATUS_CUDOS_NETWORK_ERROR: number;
     static S_STATUS_INVALID_NFT_ERROR: number;
     static S_STATUS_INFURA_ERROR: number;
+    static S_STATUS_WRONG_URL: number;
 
     status: number;
     obj: any;
@@ -35,3 +36,4 @@ Response.S_STATUS_RUNTIME_ERROR = 3;
 Response.S_STATUS_CUDOS_NETWORK_ERROR = 4;
 Response.S_STATUS_INVALID_NFT_ERROR = 5;
 Response.S_STATUS_INFURA_ERROR = 6;
+Response.S_STATUS_WRONG_URL = 7;

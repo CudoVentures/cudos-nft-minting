@@ -12,6 +12,7 @@ import ProjectUtils from '../../../../common/js/ProjectUtils';
 import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 
+import SvgDownload from '../../../../common/svg/download.svg';
 import SvgTwitter from '../../../../common/svg/twitter.svg';
 import '../../../css/components-inc/NftView/nft-viewer.css'
 import Config from '../../../../../../../builds/dev-generated/Config';
@@ -41,10 +42,13 @@ class NftViewer extends React.Component<Props, State> {
         }
     }
 
-    componentDidMount(): void {
+    async componentDidMount(): Promise<void> {
         try {
-            this.getTxHash();
-        } catch (e) { }
+            this.setState({
+                nftTxHash: await this.props.myNftsStore.getNftTxHash(this.props.nftModel),
+            });
+        } catch (e) {
+        }
     }
 
     onClickSendAsGift = () => {
@@ -75,12 +79,6 @@ class NftViewer extends React.Component<Props, State> {
         return S.Strings.EMPTY;
     }
 
-    getTxHash(): void {
-        this.props.myNftsStore.getNftTxHash(this.props.nftModel).then((txHash: string) => {
-            this.setState({ nftTxHash: txHash });
-        });
-    }
-
     getId(): string {
         const { nftModel, nftCollectionModel } = this.props;
 
@@ -108,6 +106,12 @@ class NftViewer extends React.Component<Props, State> {
                             <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgTwitter }} />
                             Share on Twitter
                         </div> */}
+                        {nftModel !== null && (
+                            <a href={nftModel.url} className={'StartRight FlexRow Share'} target='_blank' rel='noreferrer' >
+                                <div className={'SVG IconTwitter'} dangerouslySetInnerHTML={{ __html: SvgDownload }} />
+                                Downlaod
+                            </a>
+                        )}
                     </div>
                     <div className={'NftName'} > {this.getName()} </div>
                     <div className={'TxInfo FlexColumn'} >

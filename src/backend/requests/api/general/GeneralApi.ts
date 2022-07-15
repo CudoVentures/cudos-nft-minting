@@ -13,8 +13,8 @@ export default class GeneralApi extends GeneralApiH {
 
     async processRequest(context: Context) {
         switch (context.payload.action) {
-            case GeneralApiH.Actions.LOGIN:
-                await this.generalController.login(context);
+            case GeneralApiH.Actions.DOWNLOAD:
+                await this.generalController.download(context);
                 break;
             default:
                 break;

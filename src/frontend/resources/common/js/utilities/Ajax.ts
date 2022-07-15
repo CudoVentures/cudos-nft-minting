@@ -19,7 +19,7 @@ export default class Ajax {
     responseText: string | null = null;
     wiped: boolean = false;
 
-    onResponse: null | ((responseText: string) => void) = null;
+    onResponse: null | ((responseText: string | ArrayBuffer) => void) = null;
     onResponseJson: null | ((json: any) => void) = null;
     onResponseData: null | ((data: any) => void) = null;
     onProgress: null | ((e: ProgressEvent) => void) = null;
