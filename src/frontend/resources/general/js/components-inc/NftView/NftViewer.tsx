@@ -144,12 +144,15 @@ class NftViewer extends React.Component<Props, State> {
                         )}
                         <Button
                             radius={Button.RADIUS_MAX}
-                            padding={Button.PADDING_48} >
+                            padding={Button.PADDING_48}
+                            href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.nftTxHash}`}
+                            target={'_blank'}
+                        >
                             View details in Explorer
                         </Button>
                     </Actions>
                 </div>
-            </div>
+            </div >
         )
     }
 
