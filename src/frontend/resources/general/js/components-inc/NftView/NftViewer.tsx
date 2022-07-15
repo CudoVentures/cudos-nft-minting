@@ -42,8 +42,13 @@ class NftViewer extends React.Component<Props, State> {
         }
     }
 
-    componentDidMount(): void {
-        this.getTxHash();
+    async componentDidMount(): Promise < void > {
+        try {
+            this.setState({
+                nftTxHash: await this.props.myNftsStore.getNftTxHash(this.props.nftModel),
+            });
+        } catch (e) {
+        }
     }
 
     onClickSendAsGift = () => {
@@ -74,13 +79,6 @@ class NftViewer extends React.Component<Props, State> {
         return S.Strings.EMPTY;
     }
 
-    getTxHash(): void {
-        this.props.myNftsStore.getNftTxHash(this.props.nftModel).then((txHash: string) => {
-            console.log(txHash);
-            this.setState({ nftTxHash: txHash });
-        });
-    }
-
     getId(): string {
         const { nftModel, nftCollectionModel } = this.props;
 
@@ -108,10 +106,12 @@ class NftViewer extends React.Component<Props, State> {
                             <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgTwitter }} />
                             Share on Twitter
                         </div> */}
-                        <a href = { nftModel.url } className = { 'StartRight FlexRow Share' } target = '_blank' rel = 'noreferrer' >
-                            <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgDownload }} />
-                            Downlaod
-                        </a>
+                        { nftModel !== null && (
+                            <a href = { nftModel.url } className = { 'StartRight FlexRow Share' } target = '_blank' rel = 'noreferrer' >
+                                <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgDownload }} />
+                                Downlaod
+                            </a>
+                        )}
                     </div>
                     <div className={'NftName'} > {this.getName()} </div>
                     <div className={'TxInfo FlexColumn'} >
