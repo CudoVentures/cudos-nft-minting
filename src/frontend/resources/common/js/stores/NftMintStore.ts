@@ -2,6 +2,7 @@ import { makeAutoObservable, makeObservable, observable } from 'mobx';
 import { SigningStargateClient, estimateFee, Coin } from 'cudosjs';
 import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
 import BigNumber from 'bignumber.js';
+import { Crypto } from '@peculiar/webcrypto';
 
 import S from '../utilities/Main';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -271,7 +272,7 @@ export default class NftMintStore {
         nft.sizeBytes = sizeBytes;
         nft.updatePreviewUrl();
 
-        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+        const hashBuffer = await new Crypto().subtle.digest('SHA-256', arrayBuffer);
         const hashArray = Array.from(new Uint8Array(hashBuffer))
         nft.data = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
 
