@@ -93,7 +93,7 @@ class NftDetails extends React.Component<Props, State> {
             <NftStepWrapper
                 className={'NftDetails'}
                 stepNumber={`Step ${navMintStore.getMintStepShowNumber()}`}
-                stepName={'NFT Details'} >
+                stepName={'Add Names to Uploaded Files'} >
                 {this.renderSingleNftDetails()}
                 {this.renderMultipleNftDetails()}
             </NftStepWrapper>
@@ -158,7 +158,8 @@ class NftDetails extends React.Component<Props, State> {
     renderMultipleNftDetails() {
         const { appStore, nftMintStore } = this.props;
         const navMintStore = nftMintStore.navMintStore;
-        if (navMintStore.isMintOptionMultiple() !== true) {
+        if (navMintStore.isMintOptionMultiple() !== true
+            && navMintStore.isMintOptionAddToExistingollection() !== true) {
             return null;
         }
 

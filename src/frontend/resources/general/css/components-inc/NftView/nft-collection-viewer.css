@@ -15,6 +15,26 @@
 }
 
 .NftCollectionViewer .NftModelsLabel {
-    font-size: 30px; font-weight: 700;
     margin-top: 72px;
+}
+
+.NftCollectionViewer .NftModelsLabel .NftModelsLabelHeading {
+    font-size: 30px; font-weight: 700;
+}
+
+.NftCollectionViewer .NftModelsLabel .NftModelsCount {
+    color: var(--color-secondary);
+    font-size: 14px;
+    margin-left: 13px;
+}
+
+.NftCollectionViewer .NftModelsLabel .AddMoreButton {
+    color: var(--color-primary);
+    fill: var(--color-primary);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.NftCollectionViewer .NftModelsLabel .AddMoreButton .AddMoreButtonText {
+    margin-left: 12px;
 }

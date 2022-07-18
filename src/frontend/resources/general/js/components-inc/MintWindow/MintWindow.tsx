@@ -18,6 +18,7 @@ import NftMintingFailed from './NftMintingFailed';
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
 import '../../../css/components-inc/NftMint/mint-window.css';
+import CollectionPremintPreview from './CollectionPremintPreview';
 
 interface Props {
     navStore: NavStore;
@@ -29,6 +30,11 @@ class MintWindow extends React.Component<Props> {
     isNextStepActive(): boolean {
         const { navStore, nftMintStore } = this.props;
         const navMintStore = nftMintStore.navMintStore;
+
+        // on step collection preview always active
+        if (navMintStore.isMintStepPremintPreview()) {
+            return true;
+        }
 
         // on first step a mint option should be selected to continue
         if (navMintStore.isMintStepChooseOption() && navMintStore.mintOption !== S.NOT_EXISTS) {
@@ -80,8 +86,11 @@ class MintWindow extends React.Component<Props> {
                 return navMintStore.selectNextStep;
             }
 
+            if (navMintStore.isMintStepPremintPreview()) {
+                return navMintStore.selectUploadFilesStep;
+            }
             // on single nft mint option, jump pass collection details directly to mint details
-            if (navMintStore.isMintStepUploadFile() && navMintStore.isMintOptionSingle()) {
+            if (navMintStore.isMintStepUploadFile()) {
                 return navMintStore.selectNftDetailsStep;
             }
 
@@ -108,6 +117,7 @@ class MintWindow extends React.Component<Props> {
             <div className={'MintWindow FlexColumn'}>
                 {this.renderMintStepNavMap()}
                 <div className={'MintStepPage'}>
+                    {this.renderStepCollectionPremintPreview()}
                     {this.renderStepChooseOption()}
                     {this.renderStepUploadFile()}
                     {this.renderStepCollectionDetails()}
@@ -128,7 +138,7 @@ class MintWindow extends React.Component<Props> {
                     )}
                     {navMintStore.shouldShowNextStep() === true && (
                         <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(this.isNextStepActive())}`}
-                            onClick = { this.getNextStepHandler() } >
+                            onClick={this.getNextStepHandler()} >
                             <span>{this.getNextStepText()}</span>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>
                         </div>
@@ -144,6 +154,15 @@ class MintWindow extends React.Component<Props> {
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true && <MintStepNav />}
+            </div>
+        )
+    }
+
+    renderStepCollectionPremintPreview() {
+        const display = this.props.nftMintStore.navMintStore.isMintStepPremintPreview();
+        return (
+            <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
+                {display === true && <CollectionPremintPreview />}
             </div>
         )
     }

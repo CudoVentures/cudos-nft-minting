@@ -70,6 +70,12 @@ export default class NftMintStore {
         }
     }
 
+    selectAddNftsOption(collection: NftCollectionModel) {
+        this.reset(false);
+        this.nftCollection = collection;
+        this.navMintStore.initAddNftsFlow();
+    }
+
     // mint option
     selectSingleMintOption() {
         this.reset(false);
@@ -165,8 +171,13 @@ export default class NftMintStore {
             this.appStore.disableActions();
             if (this.navMintStore.isMintOptionSingle() === true) {
                 await this.mintSingleNftInCudosCollection();
-            } else if (this.navMintStore.isMintOptionMultiple() === true) {
+            } else if (this.navMintStore.isMintOptionMultiple() === true
+                || this.navMintStore.isMintOptionAddToExistingollection() === true
+            ) {
                 await this.mintNftsInOwnCollection();
+            } else {
+                this.navMintStore.selectStepMintingFailed();
+                return;
             }
             this.navMintStore.selectStepMintingSucceeeded();
         } catch (e) {
@@ -220,6 +231,8 @@ export default class NftMintStore {
 
             nfts[i].tokenId = tokenIdAttr.value;
         }
+
+        this.transactionHash = mintRes.transactionHash;
     }
 
     isValidNftModels(): boolean {
@@ -334,17 +347,19 @@ export class NavMintStore {
 
     static MINT_OPTION_SINGLE: number = 1;
     static MINT_OPTION_MULTIPLE: number = 2;
+    static MINT_OPTION_ADD_TO_EXISTING_COLLECTION: number = 3;
 
     // order matters up to STEP_FINISH
-    static STEP_CHOOSE_OPTION: number = 1;
-    static STEP_UPLOAD_FILE: number = 2;
-    static STEP_COLLECTION_DETAILS: number = 3;
-    static STEP_NFT_DETAILS: number = 4;
-    static STEP_FINISH: number = 5;
+    static STEP_COLLECTION_PREMINT_PREVIEW: number = 1;
+    static STEP_CHOOSE_OPTION: number = 2;
+    static STEP_UPLOAD_FILE: number = 3;
+    static STEP_COLLECTION_DETAILS: number = 4;
+    static STEP_NFT_DETAILS: number = 5;
+    static STEP_FINISH: number = 6;
     // these numbers can change and new ones can be added
-    static STEP_MINTING_IN_PROGRESS: number = 6;
-    static STEP_MINTING_DONE: number = 7;
-    static STEP_MINTING_FAILED: number = 8;
+    static STEP_MINTING_IN_PROGRESS: number = 7;
+    static STEP_MINTING_DONE: number = 8;
+    static STEP_MINTING_FAILED: number = 9;
 
     static COLLECTION_MINT_NONE: number = 1;
     static COLLECTION_MINT_SUCCESS: number = 2;
@@ -368,6 +383,12 @@ export class NavMintStore {
         this.collectionMinted = NavMintStore.COLLECTION_MINT_NONE;
     }
 
+    initAddNftsFlow() {
+        this.mintOption = NavMintStore.MINT_OPTION_ADD_TO_EXISTING_COLLECTION;
+        this.mintStep = NavMintStore.STEP_COLLECTION_PREMINT_PREVIEW;
+        this.collectionMinted = NavMintStore.COLLECTION_MINT_NONE;
+    }
+
     // step
     selectPreviousStep = () => {
         --this.mintStep;
@@ -375,6 +396,10 @@ export class NavMintStore {
 
     selectNextStep = () => {
         ++this.mintStep;
+    }
+
+    selectUploadFilesStep = () => {
+        this.mintStep = NavMintStore.STEP_UPLOAD_FILE;
     }
 
     selectNftDetailsStep = () => {
@@ -395,6 +420,10 @@ export class NavMintStore {
 
     selectStepMintingFailed = () => {
         this.mintStep = NavMintStore.STEP_MINTING_FAILED;
+    }
+
+    isMintStepPremintPreview(): boolean {
+        return this.mintStep === NavMintStore.STEP_COLLECTION_PREMINT_PREVIEW;
     }
 
     isMintStepChooseOption(): boolean {
@@ -442,7 +471,7 @@ export class NavMintStore {
     }
 
     shouldShowBackStep(): boolean {
-        return !this.isFirstStep() && this.isInMintingStep();
+        return !this.isFirstStep() && !this.isMintStepPremintPreview() && this.isInMintingStep();
     }
 
     shouldShowNextStep(): boolean {
@@ -454,6 +483,10 @@ export class NavMintStore {
     }
 
     getPreviousStepFunction() {
+        if (this.isMintStepUploadFile() && this.isMintOptionAddToExistingollection()) {
+            return () => { this.mintStep = NavMintStore.STEP_COLLECTION_PREMINT_PREVIEW }
+        }
+
         if (this.isMintStepDetails() && this.isMintOptionSingle()) {
             return () => { this.mintStep = NavMintStore.STEP_UPLOAD_FILE };
         }
@@ -470,8 +503,16 @@ export class NavMintStore {
         return this.mintOption === NavMintStore.MINT_OPTION_MULTIPLE;
     }
 
+    isMintOptionAddToExistingollection(): boolean {
+        return this.mintOption === NavMintStore.MINT_OPTION_ADD_TO_EXISTING_COLLECTION;
+    }
+
     getMintStepShowNumber(): number {
-        let showNumber = this.mintStep;
+        if (this.mintStep === NavMintStore.STEP_COLLECTION_PREMINT_PREVIEW) {
+            return 1;
+        }
+
+        let showNumber = this.mintStep - 1;
 
         if (this.isMintOptionSingle() && this.mintStep > NavMintStore.STEP_UPLOAD_FILE) {
             showNumber--;
@@ -507,6 +548,8 @@ export class NavMintStore {
                 return 'Single Mint';
             case NavMintStore.MINT_OPTION_MULTIPLE:
                 return 'Collection';
+            case NavMintStore.MINT_OPTION_ADD_TO_EXISTING_COLLECTION:
+                return 'Add to collection';
             default:
                 return S.Strings.EMPTY;
         }

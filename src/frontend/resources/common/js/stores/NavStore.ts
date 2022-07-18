@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import NftCollectionModel from '../models/NftCollectionModel';
 
 import S from '../utilities/Main';
 import MyNftsStore from './MyNftsStore';
@@ -24,6 +25,11 @@ export default class NavStore {
     reset = () => {
         this.nftPage = NavStore.MY_NFTS_PAGE_KEY;
         this.nftMintStore.reset(true);
+    }
+
+    innitiateAddNftsToCollection = (collection: NftCollectionModel) => {
+        this.nftMintStore.selectAddNftsOption(collection);
+        this.nftPage = NavStore.MINT_PAGE_KEY;
     }
 
     selectNftPage(page: number): void {

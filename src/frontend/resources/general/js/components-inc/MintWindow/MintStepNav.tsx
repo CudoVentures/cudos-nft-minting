@@ -12,6 +12,7 @@ interface Props {
 }
 
 class MintStepNav extends React.Component<Props> {
+    static TEXT_COLLECTION_PREMINT_PREVIEW = 'Collection Details';
     static TEXT_CHOOSE_OPTION = 'Choose Option';
     static TEXT_UPLOAD_FILE = 'Upload File';
     static TEXT_COLLECTION_DETAILS = 'Collection Details';
@@ -21,39 +22,74 @@ class MintStepNav extends React.Component<Props> {
     getMenuItems(): any[] {
         const navMintStore = this.props.nftMintStore.navMintStore;
 
-        const menuItems = [
-            {
-                name: MintStepNav.TEXT_CHOOSE_OPTION,
-                showNumber: NavMintStore.STEP_CHOOSE_OPTION,
-                step: NavMintStore.STEP_CHOOSE_OPTION,
-            },
-            {
-                name: MintStepNav.TEXT_UPLOAD_FILE,
-                showNumber: NavMintStore.STEP_UPLOAD_FILE,
-                step: NavMintStore.STEP_UPLOAD_FILE,
-            }];
-
-        if (navMintStore.isMintOptionMultiple()) {
-            menuItems.push({
-                name: MintStepNav.TEXT_COLLECTION_DETAILS,
-                showNumber: NavMintStore.STEP_COLLECTION_DETAILS,
-                step: NavMintStore.STEP_COLLECTION_DETAILS,
-            });
+        if (navMintStore.isMintOptionAddToExistingollection()) {
+            return [
+                {
+                    name: MintStepNav.TEXT_COLLECTION_PREMINT_PREVIEW,
+                    step: NavMintStore.STEP_COLLECTION_PREMINT_PREVIEW,
+                },
+                {
+                    name: MintStepNav.TEXT_UPLOAD_FILE,
+                    step: NavMintStore.STEP_UPLOAD_FILE,
+                },
+                {
+                    name: MintStepNav.TEXT_NFT_DETAILS,
+                    step: NavMintStore.STEP_NFT_DETAILS,
+                },
+                {
+                    name: MintStepNav.TEXT_FINISH,
+                    step: NavMintStore.STEP_FINISH,
+                },
+            ]
         }
 
-        menuItems.push({
-            name: MintStepNav.TEXT_NFT_DETAILS,
-            showNumber: navMintStore.isMintOptionMultiple() ? NavMintStore.STEP_NFT_DETAILS : NavMintStore.STEP_NFT_DETAILS - 1,
-            step: NavMintStore.STEP_NFT_DETAILS,
-        })
+        if (navMintStore.isMintOptionSingle) {
+            return [
+                {
+                    name: MintStepNav.TEXT_CHOOSE_OPTION,
+                    step: NavMintStore.STEP_CHOOSE_OPTION,
+                },
+                {
+                    name: MintStepNav.TEXT_UPLOAD_FILE,
+                    step: NavMintStore.STEP_UPLOAD_FILE,
+                },
+                {
+                    name: MintStepNav.TEXT_NFT_DETAILS,
+                    step: NavMintStore.STEP_NFT_DETAILS,
+                },
+                {
+                    name: MintStepNav.TEXT_FINISH,
+                    step: NavMintStore.STEP_FINISH,
+                },
+            ];
+        }
 
-        menuItems.push({
-            name: MintStepNav.TEXT_FINISH,
-            showNumber: navMintStore.isMintOptionMultiple() ? NavMintStore.STEP_FINISH : NavMintStore.STEP_FINISH - 1,
-            step: NavMintStore.STEP_FINISH,
-        })
+        if (navMintStore.isMintOptionMultiple()) {
+            return [
+                {
+                    name: MintStepNav.TEXT_CHOOSE_OPTION,
+                    step: NavMintStore.STEP_CHOOSE_OPTION,
+                },
+                {
+                    name: MintStepNav.TEXT_UPLOAD_FILE,
+                    step: NavMintStore.STEP_UPLOAD_FILE,
+                },
+                {
+                    name: MintStepNav.TEXT_COLLECTION_DETAILS,
+                    step: NavMintStore.STEP_COLLECTION_DETAILS,
+                },
+                {
+                    name: MintStepNav.TEXT_NFT_DETAILS,
+                    step: NavMintStore.STEP_NFT_DETAILS,
+                },
+                {
+                    name: MintStepNav.TEXT_FINISH,
+                    step: NavMintStore.STEP_FINISH,
+                },
+            ];
+        }
 
-        return menuItems;
+        return [];
     }
 
     render() {
@@ -62,14 +98,14 @@ class MintStepNav extends React.Component<Props> {
         return (
             <div className={'MintStepNav FlexRow '}>
                 <div className={'HorizontalLine'} />
-                {this.getMenuItems().map((step: any) => (
+                {this.getMenuItems().map((step: any, index: number) => (
                     <div
-                        key={step.step}
-                        className={`MintStep FlexColumn ${S.CSS.getClassName(step.step <= navMintStore.mintStep, 'BlueStep')} ${S.CSS.getClassName(step.showNumber === navMintStore.mintStep, 'CurrentStep')}`}>
+                        key={index}
+                        className={`MintStep FlexColumn ${S.CSS.getClassName(step.step <= navMintStore.mintStep, 'BlueStep')} ${S.CSS.getClassName(step.step === navMintStore.mintStep, 'CurrentStep')}`}>
                         <div className={'NumberBox'} >
                             {step.step < navMintStore.mintStep
                                 ? <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgTick }}></div>
-                                : step.showNumber
+                                : index + 1
                             }
                         </div>
                         <div className={'StageName'}>{step.name}</div>

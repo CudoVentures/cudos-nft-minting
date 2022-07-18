@@ -8,11 +8,16 @@ import NftModelsViewer from './NftModelsViewer';
 import NftViewer from './NftViewer';
 
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
+import SvgPlus from '../../../../common/svg/plus.svg';
 import '../../../css/components-inc/NftView/nft-collection-viewer.css'
+import WalletStore from '../../../../common/js/stores/WalletStore';
+import NavStore from '../../../../common/js/stores/NavStore';
 
 interface Props {
     myNftsStore: MyNftsStore;
+    navStore: NavStore;
     nftCollectionModel: NftCollectionModel;
+    walletStore: WalletStore;
 }
 
 class NftCollectionViewer extends React.Component<Props> {
@@ -21,10 +26,13 @@ class NftCollectionViewer extends React.Component<Props> {
         this.props.myNftsStore.markNftCollection(null);
     }
 
+    onClickAddNfts = () => {
+        this.props.navStore.innitiateAddNftsToCollection(this.props.nftCollectionModel);
+    }
+
     render() {
         const nftCollectionModel = this.props.nftCollectionModel;
         const nftModels = this.props.myNftsStore.getNftsInCollection(nftCollectionModel.denomId);
-
         return (
             <div className={'NftCollectionViewer'} >
                 <div className={'NavigationBack FlexRow'} onClick={this.onClickBack} >
@@ -35,12 +43,20 @@ class NftCollectionViewer extends React.Component<Props> {
                     nftCollectionModel={nftCollectionModel}
                     onSendAsGiftSuccess={this.onClickBack}
                 />
-                <div className={'NftModelsLabel'} >NFTs in this collection</div>
+                <div className={'NftModelsLabel FlexRow FlexSplit'} >
+                    <div className={'NftModelsLabelHeading'}>NFTs in this collection</div>
+                    <div className={'NftModelsCount'}>Items {nftModels.length}</div>
+                    {this.props.nftCollectionModel.creator === this.props.walletStore.keplrWallet.accountAddress
+                        && <div className={'StartRight FlexRow AddMoreButton'} onClick={this.onClickAddNfts}>
+                            <div className={'SVG'} dangerouslySetInnerHTML={{ __html: SvgPlus }} />
+                            <div className={'AddMoreButtonText'}>Add more NFTs to Collection</div>
+                        </div>}
+                </div>
                 <NftModelsViewer nftModels={nftModels} />
-            </div>
+            </div >
         )
     }
 
 }
 
-export default inject('myNftsStore')(observer(NftCollectionViewer));
+export default inject('navStore', 'walletStore', 'myNftsStore')(observer(NftCollectionViewer));

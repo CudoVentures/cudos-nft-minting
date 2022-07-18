@@ -7,6 +7,7 @@ export default class NftCollectionModel implements Filterable {
 
     denomId: string;
     name: string;
+    creator: string;
     own: boolean;
 
     constructor() {
@@ -22,6 +23,7 @@ export default class NftCollectionModel implements Filterable {
 
         model.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
         model.name = 'Cudos one collection';
+        model.creator = S.Strings.EMPTY;
 
         return model;
     }
@@ -42,6 +44,7 @@ export default class NftCollectionModel implements Filterable {
         return {
             'denomId': this.denomId,
             'name': this.name,
+            'creator': this.creator,
             'own': this.own,
         }
     }
@@ -55,6 +58,7 @@ export default class NftCollectionModel implements Filterable {
 
         model.denomId = json.denomId ?? model.denomId;
         model.name = json.name ?? model.name;
+        model.creator = json.creator ?? model.creator;
         model.own = json.own ?? model.own;
 
         return model;
@@ -69,6 +73,7 @@ export default class NftCollectionModel implements Filterable {
 
         model.denomId = json.id ?? model.denomId;
         model.name = json.name ?? model.name;
+        model.creator = json.creator ?? model.creator;
 
         return model;
     }

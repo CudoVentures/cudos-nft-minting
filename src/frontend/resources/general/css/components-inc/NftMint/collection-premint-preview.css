@@ -1,0 +1,56 @@
+.CollectionPremintPreview .NftCollectionPreview {
+    align-items: flex-start;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .Img {
+    width: 300px; height: 0;
+    padding-bottom: 100%;
+    margin-right: 30px;
+    border-radius: 10px;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt {
+    flex: 1 1 auto;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionHeader {
+    margin-bottom: 4px;
+    color: var(--color-secondary);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionName {
+    display: flex;
+    font-size: 40px; font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionName span {
+    width: 0;
+    flex: 1 1 auto;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionInfo {
+    padding: 20px;
+    margin-bottom: 20px;
+    background: var(--color-gray-light);
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionInfo .InfoRow {
+    color: var(--color-secondary);
+    font-weight: 600;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionInfo .InfoRow:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionInfo .InfoRow div {
+    color: var(--color-dark);
+}
+
+.CollectionPremintPreview .NftCollectionPreview .CollectionDataCnt .CollectionInfo .InfoRow .TxInfoBlue {
+    color: var(--color-primary)
+}
