@@ -72,6 +72,28 @@ class PageHeader extends React.Component<Props, State> {
         this.props.popupConnectWalletsStore.showSignal();
     }
 
+    getChainName(): string {
+        const chainId = Config.CUDOS_NETWORK.CHAIN_ID;
+
+        if (chainId.startsWith('cudos-testnet-private')) {
+            return 'CUDOS Private Testnet'
+        }
+
+        if (chainId.startsWith('cudos-testnet-public')) {
+            return 'CUDOS Public Testnet'
+        }
+
+        if (chainId.includes('local') || chainId.includes('debug')) {
+            return 'CUDOS Local Testnet';
+        }
+
+        if (chainId.startsWith('cudos-')) {
+            return 'CUDOS Mainnet'
+        }
+
+        return '';
+    }
+
     render() {
         const keplrWallet = this.props.walletStore.keplrWallet;
 
@@ -86,7 +108,7 @@ class PageHeader extends React.Component<Props, State> {
                         ? <>
                             <div className={'InfoBlock FlexRow'}>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgPlanet }} />
-                                <div>CUDOS Mainnet</div>
+                                <div>{this.getChainName()}</div>
                             </div>
                             <div className={'InfoBlock FlexRow'}>
                                 <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgWallet }} />
