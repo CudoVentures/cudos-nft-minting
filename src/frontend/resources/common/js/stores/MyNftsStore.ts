@@ -9,6 +9,7 @@ import S from '../utilities/Main';
 import WalletStore from './WalletStore';
 import AppStore from './AppStore';
 import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
+import storageHelper from '../helpers/StorageHelper';
 
 export default class MyNftsStore {
 
@@ -32,6 +33,7 @@ export default class MyNftsStore {
 
     initialized: boolean;
     timeoutHelper: TimeoutHelper;
+    nftFetchTimeout: TimeoutHelper;
 
     constructor(appStore: AppStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
@@ -45,6 +47,7 @@ export default class MyNftsStore {
 
         this.initialized = false;
         this.timeoutHelper = new TimeoutHelper();
+        this.nftFetchTimeout = new TimeoutHelper();
 
         makeAutoObservable(this);
     }
@@ -134,20 +137,42 @@ export default class MyNftsStore {
     async fetchNfts() {
         let nftModels = [];
 
-        await new Promise<void>((resolve, reject) => {
-            this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_: NftCollectionModel[], nftModels_: NftModel[]) => {
-                this.nftCollectionModels = nftCollectionModels_.filter((nftCollectioModel) => {
-                    return nftCollectioModel.isCudosMainCollection() === false;
-                });
-                nftModels = nftModels_;
-                resolve();
-            });
-        });
+        // fetch what is in storage first
+        const storageCollections = storageHelper['nftCollections'] ?? [];
+        const storageNfts = storageHelper['nftModels'] ?? [];
+
+        this.nftCollectionModels = storageCollections.map((collection: NftCollectionModel) => NftCollectionModel.fromJson(collection));
+        nftModels = storageNfts.map((nft: NftModel) => NftModel.fromJSON(nft));
 
         this.initializeNftsInCollectionsMap(nftModels);
         this.filter();
 
         this.initialized = true;
+
+        // then fetch from chain
+        nftModels = [];
+        this.nftFetchTimeout.signal(async () => {
+            await new Promise<void>((resolve, reject) => {
+                this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_: NftCollectionModel[], nftModels_: NftModel[]) => {
+                    this.nftCollectionModels = nftCollectionModels_.filter((nftCollectionModel) => {
+                        return nftCollectionModel.isCudosMainCollection() === false;
+                    });
+                    nftModels = nftModels_;
+                    resolve();
+                });
+            });
+
+            // save newly fetched data to storage
+            storageHelper['nftCollections'] = this.nftCollectionModels.map((collection: NftCollectionModel) => collection.toJson());
+            storageHelper['nftModels'] = nftModels.map((nft: NftModel) => nft.toJSON());
+            storageHelper.save();
+
+            this.initializeNftsInCollectionsMap(nftModels);
+            this.filter();
+
+            this.initialized = true;
+        })
+
     }
 
     removeNftModel(nftModel: NftModel) {

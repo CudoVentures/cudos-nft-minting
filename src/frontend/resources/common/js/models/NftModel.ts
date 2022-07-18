@@ -3,6 +3,7 @@ import Config from '../../../../../../builds/dev-generated/Config';
 import WorkerQueueHelper, { Runnable } from '../helpers/WorkerQueueHelper';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
+import storageHelper from '../helpers/StorageHelper';
 
 export default class NftModel implements Filterable {
 
@@ -93,14 +94,37 @@ export default class NftModel implements Filterable {
     }
 
     getPreviewUrl(workerQueueHelper: WorkerQueueHelper): string {
+        storageHelper.images = storageHelper.images ?? {};
+
+        // if in local storage - get it from there
+        const images = storageHelper.images;
+        let image = images[this.url];
+
+        if (image !== undefined) {
+            this.type = image.type;
+            this.previewUrl = image.previewUrl;
+        }
+
         if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
             this.type = 'null';
             workerQueueHelper.pushAndExecute(new Runnable(async () => {
                 const res = await fetch(this.url);
                 return res.headers.get('content-type');
             }, (type: string | null) => {
+
                 this.type = type ?? 'null';
+
                 this.updatePreviewUrl();
+
+                // save to local storage
+                image = {
+                    type: this.type,
+                    previewUrl: this.previewUrl,
+                }
+
+                images[this.url] = image;
+
+                storageHelper.save();
             }));
         }
 
@@ -147,7 +171,7 @@ export default class NftModel implements Filterable {
         const model = new NftModel();
 
         model.denomId = json.denomId ?? model.denomId;
-        model.tokenId = json.id ?? model.tokenId;
+        model.tokenId = json.id ?? json.tokenId ?? model.tokenId;
         model.name = json.name ?? model.name;
         model.url = json.url ?? model.url;
         model.data = json.data ?? model.data;
