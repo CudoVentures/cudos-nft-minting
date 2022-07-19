@@ -152,6 +152,7 @@ class DevGeneratedModule {
         const config = {
             'URL': Config.URL,
             'CUDOS_NETWORK': Config.CUDOS_NETWORK,
+            'UTILS': Config.UTILS,
         };
 
         fs.writeFileSync(path.join(Config.Path.Builds.DEV_GENERATED, 'Config.ts'), `const Config = ${JSON.stringify(config)}; export default Config;`);

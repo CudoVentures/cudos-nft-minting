@@ -159,7 +159,7 @@ export default class NftMintStore {
         }
     }
 
-    mintNfts = async (): Promise<void> => {
+    mintNfts = async (recaptchaToken: string): Promise<void> => {
         if (!this.isValidNftModels()) {
             this.navMintStore.selectStepMintingFailed();
             return;
@@ -170,7 +170,7 @@ export default class NftMintStore {
         try {
             this.appStore.disableActions();
             if (this.navMintStore.isMintOptionSingle() === true) {
-                await this.mintSingleNftInCudosCollection();
+                await this.mintSingleNftInCudosCollection(recaptchaToken);
             } else if (this.navMintStore.isMintOptionMultiple() === true
                 || this.navMintStore.isMintOptionAddToExistingollection() === true
             ) {
@@ -187,8 +187,8 @@ export default class NftMintStore {
         }
     }
 
-    private async mintSingleNftInCudosCollection() {
-        this.transactionHash = await this.nftApi.mintNftsInCudosCollection(this.nfts);
+    private async mintSingleNftInCudosCollection(recaptchaToken: string) {
+        this.transactionHash = await this.nftApi.mintNftsInCudosCollection(this.nfts, recaptchaToken);
     }
 
     private async mintNftsInOwnCollection() {

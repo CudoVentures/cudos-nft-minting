@@ -12,9 +12,9 @@ import Button from '../../../../common/js/components-inc/Button';
 import Popover from '../../../../common/js/components-inc/Popover';
 import NftSidePreview from '../NftSidePreview';
 import NftStepWrapper from './NftStepWrapper';
-
 import SvgInfo from '../../../../common/svg/info.svg';
 import '../../../css/components-inc/NftMint/nft-finish.css';
+import ReCaptchaV2 from 'react-google-recaptcha'
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -25,19 +25,36 @@ interface Props {
 interface State {
     anchorEl: any;
     feeEstimate: number;
+    recaptchaToken: string;
     feeEstimateInDollars: number;
 }
 
 class NftFinish extends React.Component<Props, State> {
+    recaptchaToken: string;
 
     constructor(props) {
         super(props);
 
+        this.recaptchaToken = S.Strings.EMPTY;
+
         this.state = {
             anchorEl: null,
+            recaptchaToken: S.Strings.EMPTY,
             feeEstimate: 0,
             feeEstimateInDollars: 0,
         }
+    }
+
+    onShowGiftInfo = (e) => {
+        this.setState({
+            'anchorEl': e.target,
+        });
+    }
+
+    onHideGiftInfo = () => {
+        this.setState({
+            'anchorEl': null,
+        })
     }
 
     async componentDidMount(): Promise<void> {
@@ -73,6 +90,19 @@ class NftFinish extends React.Component<Props, State> {
         });
     }
 
+    handleRecaptchaToken = (token: string) => {
+        if (token === null) {
+            this.setState({
+                recaptchaToken: S.Strings.EMPTY,
+            })
+            return;
+        }
+
+        this.setState({
+            recaptchaToken: token,
+        })
+    }
+
     onShowFreeInfo = (e) => {
         this.setState({
             'anchorEl': e.target,
@@ -96,6 +126,10 @@ class NftFinish extends React.Component<Props, State> {
                 </div>
             </NftStepWrapper>
         )
+    }
+
+    onClickMintNft = () => {
+        this.props.nftMintStore.mintNfts(this.state.recaptchaToken);
     }
 
     renderSingleMintFinish(): any {
@@ -168,15 +202,22 @@ class NftFinish extends React.Component<Props, State> {
                         )}
                     </div>
                     <Actions className={'MintNftButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
+                        {this.props.nftMintStore.navMintStore.mintOption === NavMintStore.MINT_OPTION_SINGLE
+                            && <ReCaptchaV2
+                                sitekey={Config.UTILS.CAPTCHA_FRONTEND_KEY}
+                                onChange={this.handleRecaptchaToken}
+                            />}
                         <Button
                             type={Button.TYPE_ROUNDED}
                             radius={Button.RADIUS_MAX}
                             color={Button.COLOR_SCHEME_1}
                             padding={Button.PADDING_24}
-                            onClick={nftMintStore.mintNfts} >
+                            disabled={this.state.recaptchaToken === S.Strings.EMPTY && this.props.nftMintStore.navMintStore.mintOption === NavMintStore.MINT_OPTION_SINGLE}
+                            onClick={this.onClickMintNft} >
                             {navMintStore.isMintOptionSingle() === true ? 'Mint NFT' : 'Mint Collection NFTs'}
                         </Button>
                     </Actions>
+
                 </div>
             </>
         )

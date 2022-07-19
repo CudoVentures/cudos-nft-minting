@@ -120,9 +120,9 @@ export default class NftApi extends AbsApi {
         callback(resNftCollectionModels, resNftModels);
     }
 
-    mintNftsInCudosCollection(nftModels: NftModel[]): Promise<string> {
+    mintNftsInCudosCollection(nftModels: NftModel[], recaptchaToken: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            const req = new MintNftReq(nftModels);
+            const req = new MintNftReq(nftModels, recaptchaToken);
 
             this.api.req(Actions.NFT.MINT, req, (json: any) => {
                 if (json.status !== 0) {

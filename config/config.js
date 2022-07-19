@@ -34,6 +34,8 @@ const envVariables = [
     'INFURA_HOST',
     'INFURA_ID',
     'INFURA_SECRET',
+    'CAPTCHA_FRONTEND_KEY',
+    'CAPTCHA_SECRET_KEY',
 ];
 
 if (process.env.NODE_ENV === 'production') {
@@ -75,6 +77,7 @@ const Config = {
         SESSION_UNIQUE_KEY: process.env.SESSION_UNIQUE_KEY,
         SESSION_STORE_TCP_ADDR: process.env.SESSION_STORE_TCP_ADDR,
         SESSION_STORE_PORT: process.env.SESSION_STORE_PORT,
+        CAPTCHA_SECRET_KEY: process.env.CAPTCHA_SECRET_KEY,
     },
     Path: {
         ROOT: path.join(__dirname, '..'),
@@ -215,6 +218,9 @@ const Config = {
     },
     CUDOS_SIGNER: {
         MNEMONIC: process.env.SIGNER_MNEMONIC,
+    },
+    UTILS: {
+        CAPTCHA_FRONTEND_KEY: process.env.CAPTCHA_FRONTEND_KEY,
     },
     INFURA: {
         HOST: process.env.INFURA_HOST,
