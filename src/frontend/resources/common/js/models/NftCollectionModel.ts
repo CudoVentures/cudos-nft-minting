@@ -78,4 +78,7 @@ export default class NftCollectionModel implements Filterable {
         return model;
     }
 
+    validate(): boolean {
+        return this.denomId !== S.Strings.EMPTY && this.name !== S.Strings.EMPTY;
+    }
 }

@@ -37,6 +37,9 @@ export default class NftMintStore {
     nftsInputErrors: boolean[];
 
     transactionHash: string;
+    cudosUsdPrice: number;
+    denomIssueFeeEstimate: number;
+    nftMintFeeEstimate: number;
 
     constructor(appStore: AppStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
@@ -52,6 +55,22 @@ export default class NftMintStore {
     // utils
     getTxHashLink(): string {
         return `${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.transactionHash}`
+    }
+
+    async getUsdPrice() {
+        try {
+            const now = new Date();
+            now.setMinutes(0);
+            const coinId = 'cudos';
+            const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`;
+            const res = await (await fetch(url)).json();
+
+            this.cudosUsdPrice = Number(res.cudos.usd);
+        } catch (e) {
+            console.log(e);
+
+            this.cudosUsdPrice = 0;
+        }
     }
 
     reset(resetNavStore: boolean) {
@@ -88,30 +107,49 @@ export default class NftMintStore {
     }
 
     // estimate
-    async esimateMintFees(local: number, callback: (fee: BigNumber) => void) {
+    async esimateMintFees() {
+        this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
+            this.nftMintFeeEstimate = Number((new BigNumber(fee[0].amount)).div(Config.CUDOS_NETWORK.DECIMAL_DIVIDER).toFixed(2));
+        })
+    }
+
+    async esimateDenomIssueFees() {
         try {
-            if (local === NftMintStore.MINT_MODE_LOCAL) {
-                const { signer, sender, client } = await this.walletStore.getSignerData();
+            const { signer, sender, client } = await this.walletStore.getSignerData();
 
-                const nftInfos = this.nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url.substring(0, Math.min(nftModel.url.length, 256)), nftModel.data, sender));
-
-                const { msgs, fee } = await client.nftModule.msgMintMultipleNFT(
-                    nftInfos,
-                    sender,
-                    '',
-                    NftApi.getGasPrice(),
-                )
-
-                callback(new BigNumber(fee.amount[0].amount));
-            } if (local === NftMintStore.MINT_MODE_BACKEND) {
-                this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
-                    callback(new BigNumber(fee[0].amount));
-                })
-            }
+            const { msgs, fee } = await client.nftModule.msgIssueDenom(
+                this.nftCollection.denomId,
+                this.nftCollection.name,
+                this.nftCollection.denomId,
+                sender,
+                '',
+                this.nftCollection.denomId,
+                NftApi.getGasPrice(),
+            )
+            this.denomIssueFeeEstimate = Number((new BigNumber(fee.amount[0].amount)).div(Config.CUDOS_NETWORK.DECIMAL_DIVIDER).toFixed(2));
         } catch (e) {
-            console.log(e);
-            throw new Error('Failed to connect signing client');
+
         }
+    }
+
+    getDenomIssueFeeInUsd() {
+        let result = this.denomIssueFeeEstimate * this.cudosUsdPrice;
+
+        if (Number.isNaN(result)) {
+            result = 0;
+        }
+
+        return 0;
+    }
+
+    getNftMintFeeInUsd() {
+        let result = this.nftMintFeeEstimate * this.cudosUsdPrice;
+
+        if (Number.isNaN(result)) {
+            result = 0;
+        }
+
+        return 0;
     }
 
     // minting
@@ -572,12 +610,12 @@ export class NavMintStore {
     }
 
     collectionMintSuccess = () => {
-        this.mintStep = NavMintStore.STEP_COLLECTION_DETAILS;
+        this.mintStep = NavMintStore.STEP_FINISH;
         this.collectionMinted = NavMintStore.COLLECTION_MINT_SUCCESS;
     }
 
     collectionMintFail = () => {
-        this.mintStep = NavMintStore.STEP_COLLECTION_DETAILS;
+        this.mintStep = NavMintStore.STEP_FINISH;
         this.collectionMinted = NavMintStore.COLLECTION_MINT_FAIL;
     }
 

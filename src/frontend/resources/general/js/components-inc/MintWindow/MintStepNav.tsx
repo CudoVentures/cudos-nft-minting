@@ -43,27 +43,6 @@ class MintStepNav extends React.Component<Props> {
             ]
         }
 
-        if (navMintStore.isMintOptionSingle) {
-            return [
-                {
-                    name: MintStepNav.TEXT_CHOOSE_OPTION,
-                    step: NavMintStore.STEP_CHOOSE_OPTION,
-                },
-                {
-                    name: MintStepNav.TEXT_UPLOAD_FILE,
-                    step: NavMintStore.STEP_UPLOAD_FILE,
-                },
-                {
-                    name: MintStepNav.TEXT_NFT_DETAILS,
-                    step: NavMintStore.STEP_NFT_DETAILS,
-                },
-                {
-                    name: MintStepNav.TEXT_FINISH,
-                    step: NavMintStore.STEP_FINISH,
-                },
-            ];
-        }
-
         if (navMintStore.isMintOptionMultiple()) {
             return [
                 {
@@ -89,7 +68,24 @@ class MintStepNav extends React.Component<Props> {
             ];
         }
 
-        return [];
+        return [
+            {
+                name: MintStepNav.TEXT_CHOOSE_OPTION,
+                step: NavMintStore.STEP_CHOOSE_OPTION,
+            },
+            {
+                name: MintStepNav.TEXT_UPLOAD_FILE,
+                step: NavMintStore.STEP_UPLOAD_FILE,
+            },
+            {
+                name: MintStepNav.TEXT_NFT_DETAILS,
+                step: NavMintStore.STEP_NFT_DETAILS,
+            },
+            {
+                name: MintStepNav.TEXT_FINISH,
+                step: NavMintStore.STEP_FINISH,
+            },
+        ];
     }
 
     render() {

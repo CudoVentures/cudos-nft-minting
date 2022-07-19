@@ -47,7 +47,7 @@ class MintWindow extends React.Component<Props> {
         }
 
         // on collection details step a colletion should be minted
-        if (navMintStore.isMintStepCollectionDetails() && navMintStore.isCollectionMintedSuccess()) {
+        if (navMintStore.isMintStepCollectionDetails() && navMintStore.nftMintStore.nftCollection.validate()) {
             return true;
         }
 

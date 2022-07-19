@@ -116,8 +116,7 @@ export default class NftService {
             }
         }
 
-        // TODO: fix data
-        const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, 'wefwef', nftModel.recipient));
+        const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(Config.CUDOS_NETWORK.NFT_DENOM_ID, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
 
         try {
 

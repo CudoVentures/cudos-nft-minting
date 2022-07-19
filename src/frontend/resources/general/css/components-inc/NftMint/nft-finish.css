@@ -20,19 +20,35 @@
     margin-bottom: 20px;
 }
 
-.NftFinish .NftFinishHolder .SummaryDetails .DetailsRow {
-    margin-bottom: 10px;
-}
-
-.NftFinish .NftFinishHolder .SummaryDetails .DetailsRow .DetailColumn {
-    margin-right: 30px;
-}
-
-.NftFinish .NftFinishHolder .SummaryDetails .DetailColumn {
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder {
     align-items: flex-start;
 }
 
-.NftFinish .NftFinishHolder .SummaryDetails .DetailHeading {
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailsHolderColumn:first-child {
+    margin-right: 24px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailsHolderColumn>div:first-child {
+    margin-bottom: 19px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailsRow {
+    margin-bottom: 10px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailsRow .DetailColumn {
+    margin-right: 30px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailColumn {
+    align-items: flex-start;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailColumn.ItemsColumn {
+    margin-right: 48px;
+}
+
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailHeading {
     font-weight: 600;
     font-size: 14px;
     line-height: 21px;
@@ -40,27 +56,62 @@
     margin-bottom: 5px;
 }
 
-.NftFinish .NftFinishHolder .SummaryDetails .DetailData {
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailData {
     font-weight: 600;
     font-size: 14px;
     line-height: 21px;
     color: var(--color-dark);
 }
 
-.NftFinish .NftFinishHolder .SummaryDetails .DetailData .FeeEstimate.Crossed {
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailData .FeeEstimate.Crossed {
     text-decoration: line-through;
 }
 
-.NftFinish .NftFinishHolder .SummaryDetails .DetailData .RealPrice {
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailData .RealPrice {
     margin-left: 10px;
     color: var(--color-primary);
     fill: var(--color-primary);
 }
 
-.NftFinish .NftFinishHolder .SummaryDetails .DetailData .RealPrice .SVG {
+.NftFinish .NftFinishHolder .SummaryDetails .DetailsHolder .DetailData .RealPrice .SVG {
     margin-left: 7px;
 }
 
 .NftFinish .NftFinishHolder .MintNftButton {
     margin-top: 30px;
+}
+
+.NftFinish .NftFinishHolder .CollectionMintAdditionalInfoHolder {
+    padding: 20px;
+    background: rgba(82, 166, 248, 0.1);
+    border-radius: 5px;
+    margin-top: 30px;
+    align-items: flex-start;
+}
+
+.NftFinish .NftFinishHolder .CollectionMintAdditionalInfoHolder .SVG {
+    fill: var(--color-primary);
+    margin-right: 21px;
+}
+
+.NftFinish .NftFinishHolder .CollectionMintAdditionalInfoHolder .InfoText {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-dark);
+}
+
+.NftFinish .NftFinishHolder .CollectionMintAdditionalInfoHolder .StepExplanation {
+
+    margin-top: 7px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-dark);
+    margin-left: 36px;
+}
+
+
+.NftFinish .NftFinishHolder .CollectionMintAdditionalInfoHolder .StepExplanation .Numbering {
+    text-align: end;
+    width: 10px;
+    margin-right: 5px;
 }

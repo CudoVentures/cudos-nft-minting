@@ -46,10 +46,10 @@ class CollectionDetails extends React.Component<Props> {
         nftCollectionModel.name = value;
     }
 
-    isMintButtonActive(): boolean {
-        const nftCollectionModel = this.props.nftMintStore.nftCollection;
-        return nftCollectionModel.denomId !== S.Strings.EMPTY && nftCollectionModel.name !== S.Strings.EMPTY;
-    }
+    // isMintButtonActive(): boolean {
+    //     const nftCollectionModel = this.props.nftMintStore.nftCollection;
+    //     return nftCollectionModel.denomId !== S.Strings.EMPTY && nftCollectionModel.name !== S.Strings.EMPTY;
+    // }
 
     render() {
         const nftMintStore = this.props.nftMintStore;
@@ -84,7 +84,7 @@ class CollectionDetails extends React.Component<Props> {
                             <div className={'Text'}>The cover image of the collection will be randomly selected from the uploaded NFTs in it.</div>
                         </div>
 
-                        {navMintStore.isCollectionMintedNone() === false && (
+                        {/* {navMintStore.isCollectionMintedNone() === false && (
                             <>
                                 <div className={`ResultMessage FlexColumn ${navMintStore.isCollectionMintedFail() ? 'Fail' : ''}`}>
                                     <div className={'Heading FlexRow'}>
@@ -108,8 +108,8 @@ class CollectionDetails extends React.Component<Props> {
                                     )}
                                 </div>
                             </>
-                        )}
-                        {navMintStore.isCollectionMintedSuccess() === false && (
+                        )} */}
+                        {/* {navMintStore.isCollectionMintedSuccess() === false && (
                             <Actions className={'MintCollectionButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
                                 <Button
                                     type={Button.TYPE_ROUNDED}
@@ -121,7 +121,7 @@ class CollectionDetails extends React.Component<Props> {
                                     Mint Collection
                                 </Button>
                             </Actions>
-                        )}
+                        )} */}
                     </LayoutBlock>
                 </div>
             </NftStepWrapper >
