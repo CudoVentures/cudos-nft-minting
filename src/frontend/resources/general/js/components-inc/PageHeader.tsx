@@ -21,6 +21,7 @@ import './../../css/components-inc/page-header.css';
 import ProjectUtils from '../../../common/js/ProjectUtils';
 import S from '../../../common/js/utilities/Main';
 import Config from '../../../../../../builds/dev-generated/Config';
+import Tooltip from '../../../common/js/components-inc/Tooltip';
 
 interface Props {
     walletStore: WalletStore,
@@ -59,7 +60,7 @@ class PageHeader extends React.Component<Props, State> {
         })
     }
 
-    onClickCopeWalletAddress = () => {
+    onClickCopyWalletAddress = () => {
         ProjectUtils.copyText(this.props.walletStore.keplrWallet.accountAddress);
     }
 
@@ -134,12 +135,24 @@ class PageHeader extends React.Component<Props, State> {
                                     <div className={'SVG IconWallet'} dangerouslySetInnerHTML={{ __html: SvgWallet }} />
                                     <div className={'WalletAddress Dots'} > {keplrWallet.accountAddress} </div>
                                     <div className={'WalletActions'} >
-                                        <div className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgCopy }} onClick={this.onClickCopeWalletAddress} />
-                                        <a
-                                            href={`${Config.CUDOS_NETWORK.EXPLORER}/accounts/${keplrWallet.accountAddress}`}
-                                            target='_blank'
-                                            rel='noreferrer'
-                                            className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
+
+                                        <Tooltip
+                                            title={'Copy address to clipboard'}
+                                        >
+                                            <div
+                                                className={'SVG IconAction'}
+                                                dangerouslySetInnerHTML={{ __html: SvgCopy }}
+                                                onClick={this.onClickCopyWalletAddress} />
+                                        </Tooltip>
+                                        <Tooltip
+                                            title={'Open address in explorer.'}
+                                        >
+                                            <a
+                                                href={`${Config.CUDOS_NETWORK.EXPLORER}/accounts/${keplrWallet.accountAddress}`}
+                                                target='_blank'
+                                                rel='noreferrer'
+                                                className={'SVG IconAction'} dangerouslySetInnerHTML={{ __html: SvgOpenUrl }} />
+                                        </Tooltip>
                                     </div>
                                     <Actions height={Actions.HEIGHT_52} layout={Actions.LAYOUT_COLUMN_FULL} >
                                         <Button
@@ -172,7 +185,7 @@ class PageHeader extends React.Component<Props, State> {
                         </>
                     }
                 </div>
-            </header>
+            </header >
         )
     }
 }
