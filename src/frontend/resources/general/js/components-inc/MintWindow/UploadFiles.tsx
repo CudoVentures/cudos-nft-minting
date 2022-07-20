@@ -66,7 +66,7 @@ class UploadFiles extends React.Component<Props> {
     makeImageUploadParams() {
         return {
             'maxSize': 1 << 20, // 1MB
-            'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .webp, webm, mp3, wav, ogg, gltf, glb',
+            'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .audio/mpeg, .webp, .webm, .mp3, .wav, .ogg, .gltf, .glb',
             'controller': '#',
             'multi': this.props.nftMintStore.navMintStore.isMintOptionMultiple(),
             'progressWindow': false,
@@ -133,7 +133,7 @@ class UploadFiles extends React.Component<Props> {
                 stepName={'Upload File'} >
                 <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(!this.props.nftMintStore.isNftsEmpty() && navMintStore.isMintOptionSingle())}`}>
                     <FileUpload
-                        ref = { this.nodes.fileUpload }
+                        ref={this.nodes.fileUpload}
                         uploadId={'OptionChoosePage'}
                         uploadParams={this.makeImageUploadParams()}>
                         <div className={'UploadFileBox FlexRow'}>
