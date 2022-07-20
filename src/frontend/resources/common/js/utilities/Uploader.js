@@ -235,7 +235,10 @@ class UploaderImpl {
                 error = true;
             }
             if (this.exts.length > 0) {
-                const fileMimeTypeLowerCase = this.files[i].type.toLowerCase();
+                let fileMimeTypeLowerCase = this.files[i].type.toLowerCase();
+                if (fileMimeTypeLowerCase === '') {
+                    fileMimeTypeLowerCase = this.files[i].name.substring(this.files[i].name.indexOf('.'));
+                }
                 for (j = this.exts.length - 1; j >= 0; --j) {
                     const extWithoutDot = this.exts[j].replace('.', '').toLowerCase();
                     if (fileMimeTypeLowerCase.indexOf(extWithoutDot) !== -1) {
