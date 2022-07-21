@@ -22,8 +22,6 @@ export default class NftController {
 
         try {
             const res = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${Config.Server.CAPTCHA_SECRET_KEY}&response=${req.recaptchaToken}`);
-            console.log(res.data)
-            console.log(res.data.score);
             if (res.data.success === true) {
                 captchaPassed = true;
             }

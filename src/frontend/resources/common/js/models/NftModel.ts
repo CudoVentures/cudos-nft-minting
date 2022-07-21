@@ -134,11 +134,11 @@ export default class NftModel implements Filterable {
     updatePreviewUrl() {
         if (this.type.indexOf('svg') !== -1) {
             this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/svg.svg`
-        } else if (this.type.indexOf('mp3') !== -1 || this.type.indexOf('wav') !== -1 || this.type.indexOf('ogg') !== -1) {
+        } else if (this.type.indexOf('mpeg') !== -1 || this.type.indexOf('mp3') !== -1 || this.type.indexOf('wav') !== -1 || this.type.indexOf('ogg') !== -1) {
             this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/music.svg`
         } else if (this.type.indexOf('mp4') !== -1 || this.type.indexOf('webm') !== -1 || this.type.indexOf('webp') !== -1) {
             this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/video.svg`
-        } else if (this.type.indexOf('gltf') !== -1 || this.type.indexOf('glb') !== -1) {
+        } else if (this.type.indexOf('application') !== -1 || this.type.indexOf('gltf') !== -1 || this.type.indexOf('glb') !== -1) {
             this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/gl.svg`
         } else if (this.type.indexOf('jpeg') !== -1 || this.type.indexOf('jpg') !== -1 || this.type.indexOf('png') !== -1 || this.type.indexOf('gif') !== -1) {
             this.previewUrl = this.url
