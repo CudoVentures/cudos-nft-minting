@@ -9,10 +9,13 @@ import axios from 'axios';
 import Config from '../../../config/config';
 import StateException from '../utilities/network/StateException';
 import Response from '../utilities/network/Response';
+import Logger from '../utilities/Logger';
 
 export default class NftController {
 
     async mintNft(context: Context) {
+        Logger.request('Mint nft requested.');
+
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
 
@@ -26,10 +29,11 @@ export default class NftController {
                 captchaPassed = true;
             }
         } catch (e) {
-            console.log(e);
+            Logger.error(`Failed to verify captcha: ${e}`);
         }
 
         if (!captchaPassed) {
+            Logger.request('Invalid captcha');
             throw new StateException(Response.S_STATUS_RUNTIME_ERROR, 'Captcha failed.');
         }
 
@@ -40,6 +44,8 @@ export default class NftController {
     }
 
     async estimateFeeMintNft(context: Context) {
+        Logger.request('Estimate fee mint NFT requested.');
+
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
 
@@ -52,6 +58,8 @@ export default class NftController {
     }
 
     async imagesUpload(context: Context) {
+        Logger.request('Image upload requested.');
+
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
 

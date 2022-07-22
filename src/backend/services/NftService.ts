@@ -6,6 +6,7 @@ import { create, IPFSHTTPClient } from 'ipfs-http-client';
 import StateException from '../utilities/network/StateException';
 import Response from '../utilities/network/Response';
 import SV from '../utilities/SV';
+import Logger from '../utilities/Logger';
 
 const MEMO = 'Minted by Cudos NFT Minter';
 
@@ -27,12 +28,14 @@ export default class NftService {
             wallet = await DirectSecp256k1HdWallet.fromMnemonic(Config.CUDOS_SIGNER.MNEMONIC);
             sender = (await wallet.getAccounts())[0].address;
         } catch (e) {
+            Logger.error(`Failed to get wallet from signer mnemonic: ${e}`);
             throw new StateException(Response.S_STATUS_RUNTIME_ERROR, 'Failed to create wallet');
         }
 
         try {
             client = await SigningStargateClient.connectWithSigner(Config.CUDOS_NETWORK.RPC_BACKEND, wallet);
         } catch (e) {
+            Logger.error(`Failed to connect signing client with signer: ${e}`);
             throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, 'Failed to connect signing client');
         }
 
@@ -81,6 +84,7 @@ export default class NftService {
                 MEMO,
             )
         } catch (e) {
+            Logger.error(`Failed to mint NFTs: ${e}`);
             throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, `Failed to mint nfts: ${e}`);
         }
 
@@ -90,18 +94,21 @@ export default class NftService {
         for (let i = 0; i < log.length; i++) {
             // each message has a few events, the get the one with the correct type
             const attributeEvent = log[i].events.find((event: any) => event.type === 'mint_nft');
+            try {
+                if (attributeEvent === undefined) {
+                    throw Error('Failed to get event from tx response');
+                }
 
-            if (attributeEvent === undefined) {
-                throw Error('Failed to get event from tx response');
+                // get token id from the event attributes
+                const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'token_id');
+                if (tokenIdAttr === undefined) {
+                    throw Error('Failed to get token id attribute from attribute event.');
+                }
+                nftModels[i].tokenId = tokenIdAttr.value;
+            } catch (e) {
+                Logger.error(`Failed to get NFT tokenId from TX event: ${e}`);
+                throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, `Failed to get NFT tokenId from TX event: ${e}`);
             }
-
-            // get token id from the event attributes
-            const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'token_id');
-            if (tokenIdAttr === undefined) {
-                throw Error('Failed to get token id attribute from attribute event.');
-            }
-
-            nftModels[i].tokenId = tokenIdAttr.value;
         }
 
         return { nftModels, txHash: mintRes.transactionHash };
@@ -131,6 +138,7 @@ export default class NftService {
 
             return fee;
         } catch (e) {
+            Logger.error(`Failed to estimate fee mint NFTs: ${e}`);
             throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, `Failed to estimate fee nfts: ${e}`);
         }
     }
@@ -163,6 +171,7 @@ export default class NftService {
 
             return url;
         } catch (error) {
+            Logger.error(`Failed to upload image to infura: ${e}`);
             throw new StateException(Response.S_STATUS_INFURA_ERROR, 'Failed to upload image to infura');
         }
 
