@@ -5,6 +5,8 @@ footer.PageFooter {
 
 footer.PageFooter .IconLogoWithText {
     margin-right: 12px;
+    height: 28px;
+    width: 117px;
 }
 
 footer.PageFooter .FooterNav {

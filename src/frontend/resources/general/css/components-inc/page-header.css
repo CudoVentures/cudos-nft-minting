@@ -7,6 +7,10 @@ header.PageHeader {
 header.PageHeader .HeaderLogo {
     font-size: 20px;
 }
+header.PageHeader .HeaderLogo .SVG.Size{
+    height: 28px;
+    width: 117px;
+}
 
 header.PageHeader .HeaderLogo > *:not(:first-child) {
     margin-left: 8px;

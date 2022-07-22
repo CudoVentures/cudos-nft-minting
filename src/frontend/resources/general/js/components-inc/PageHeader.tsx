@@ -9,7 +9,7 @@ import Actions from '../../../common/js/components-inc/Actions';
 import Button from '../../../common/js/components-inc/Button';
 import Popover from '../../../common/js/components-inc/Popover';
 
-import SvgCudosLogoWithText from '../../../common/svg/cudos-logo-with-text.svg';
+import SvgCudosLogoWithText from '../../../common/svg/cudos-rectangle-drk-r.svg';
 import SvgLinkBox from '../../../common/svg/link-box.svg';
 import SvgPlanet from '../../../common/svg/planet.svg';
 import SvgWallet from '../../../common/svg/wallet.svg';
@@ -101,7 +101,7 @@ class PageHeader extends React.Component<Props, State> {
         return (
             <header className={'PageHeader FlexRow FlexSplit'}>
                 <a href={PagesGeneral.HOME} className={'HeaderLogo FlexRow'}>
-                    <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgCudosLogoWithText }} />
+                    <div className={'SVG Icon Size'} dangerouslySetInnerHTML={{ __html: SvgCudosLogoWithText }} />
                     <div className={'Slogan'}>NFT Mint</div>
                 </a>
                 <div className={'HeaderEnd FlexRow StartRight'}>
