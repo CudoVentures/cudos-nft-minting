@@ -247,30 +247,34 @@ export default class NftMintStore {
                 nfts[i].url = imageUrls[i];
             }
         }
-        const nftInfos = nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
-        const mintRes = await client.nftMintMultipleTokens(nftInfos, this.walletStore.keplrWallet.accountAddress, NftApi.getGasPrice());
+        try {
+            const nftInfos = nfts.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
+            const mintRes = await client.nftMintMultipleTokens(nftInfos, this.walletStore.keplrWallet.accountAddress, NftApi.getGasPrice());
 
-        // get the token ids from the mint transaction result
-        // each log represents one message in the transaction
-        const log = JSON.parse(mintRes.rawLog);
-        for (let i = 0; i < log.length; i++) {
-            // each message has a few events, the get the one with the correct type
-            const attributeEvent = log[i].events.find((event: any) => event.type === 'mint_nft');
+            // get the token ids from the mint transaction result
+            // each log represents one message in the transaction
+            const log = JSON.parse(mintRes.rawLog);
+            for (let i = 0; i < log.length; i++) {
+                // each message has a few events, the get the one with the correct type
+                const attributeEvent = log[i].events.find((event: any) => event.type === 'mint_nft');
 
-            if (attributeEvent === undefined) {
-                throw Error('Failed to get event from tx response');
+                if (attributeEvent === undefined) {
+                    throw Error('Failed to get event from tx response');
+                }
+
+                // get token id from the event attributes
+                const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'token_id');
+                if (tokenIdAttr === undefined) {
+                    throw Error('Failed to get token id attribute from attribute event.');
+                }
+
+                nfts[i].tokenId = tokenIdAttr.value;
             }
 
-            // get token id from the event attributes
-            const tokenIdAttr = attributeEvent.attributes.find((attr) => attr.key === 'token_id');
-            if (tokenIdAttr === undefined) {
-                throw Error('Failed to get token id attribute from attribute event.');
-            }
-
-            nfts[i].tokenId = tokenIdAttr.value;
+            this.transactionHash = mintRes.transactionHash;
+        } catch (e) {
+            throw new Error(`Failed to mint: ${e}`);
         }
-
-        this.transactionHash = mintRes.transactionHash;
     }
 
     isValidNftModels(): boolean {

@@ -21,16 +21,12 @@
 <link rel="icon" type="image/png" href=`${input.Config.URL.RESOURCES}/common/img/favicon/favicon-96x96.png` sizes="96x96">
 <link rel="icon" type="image/png" href=`${input.Config.URL.RESOURCES}/common/img/favicon/favicon-192x192.png` sizes="192x192">
 
-<link rel="preload" href=`${input.Config.URL.RESOURCES}/common/fonts/BasierCircle-Regular.woff2` as="font"  type="font/woff2" crossorigin />
-<link rel="preload" href=`${input.Config.URL.RESOURCES}/common/fonts/BasierCircle-SemiBold.woff2` as="font"  type="font/woff2" crossorigin />
-<link rel="preload" href=`${input.Config.URL.RESOURCES}/common/fonts/BasierCircle-Bold.woff2` as="font"  type="font/woff2" crossorigin />
-
 <script>
 (function() {
     var user_agent = navigator.userAgent;
     if (user_agent.indexOf('MSIE') === -1  &&  user_agent.indexOf('rv:11') === -1)
         return;
-    
+
     var func, name;
     if (window.attachEvent !== undefined) {
         func = window.attachEvent;

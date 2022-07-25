@@ -72,6 +72,7 @@ export default class NftService {
                 nft.url = await this.imageUpload(nft.url);
             }
         }
+
         const nftInfos = nftModels.map((nftModel: NftModel) => new NftInfo(nftModel.denomId, nftModel.name, nftModel.url, nftModel.data, nftModel.recipient));
 
         try {
@@ -104,6 +105,7 @@ export default class NftService {
                 if (tokenIdAttr === undefined) {
                     throw Error('Failed to get token id attribute from attribute event.');
                 }
+
                 nftModels[i].tokenId = tokenIdAttr.value;
             } catch (e) {
                 Logger.error(`Failed to get NFT tokenId from TX event: ${e}`);
@@ -170,9 +172,9 @@ export default class NftService {
             const url = `https://ipfs.io/ipfs/${added.path}`
 
             return url;
-        } catch (error) {
+        } catch (e) {
             Logger.error(`Failed to upload image to infura: ${e}`);
-            throw new StateException(Response.S_STATUS_INFURA_ERROR, 'Failed to upload image to infura');
+            throw new StateException(Response.S_STATUS_INFURA_ERROR, `Failed to upload image to infura: ${e}`);
         }
 
     }

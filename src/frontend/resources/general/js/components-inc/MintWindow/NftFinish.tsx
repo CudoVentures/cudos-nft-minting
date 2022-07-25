@@ -231,15 +231,25 @@ class NftFinish extends React.Component<Props, State> {
                             <div className={'DetailHeading'}>Collection Name</div>
                             <div className={'DetailData'}>{nftCollectionModel.name}</div>
                         </div>
-                        <div className={'FlexColumn DetailColumn'}>
-                            <div className={'DetailHeading'}>Estimated Gas Fee Collection</div>
-                            <div className={'DetailData FlexRow'}>
-                                <div className={'FeeEstimate '}>{nftMintStore.denomIssueFeeEstimate} CUDOS</div>
-                                <div className={'RealPrice FlexRow'}>
-                                    {`$ ${nftMintStore.getDenomIssueFeeInUsd().toFixed(2)}`}
+                        {navMintStore.isMintOptionMultiple()
+                            ? <div className={'FlexColumn DetailColumn'}>
+                                <div className={'DetailHeading'}>Estimated Gas Fee Collection</div>
+                                <div className={'DetailData FlexRow'}>
+                                    <div className={'FeeEstimate '}>{nftMintStore.denomIssueFeeEstimate} CUDOS</div>
+                                    <div className={'RealPrice FlexRow'}>
+                                        {`$ ${nftMintStore.getDenomIssueFeeInUsd().toFixed(2)}`}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            : <div className={'FlexColumn DetailColumn'}>
+                                <div className={'DetailHeading'}>Estimated Gas Fee NFTs</div>
+                                <div className={'DetailData FlexRow'}>
+                                    <div className={'FeeEstimate'}>{nftMintStore.nftMintFeeEstimate} CUDOS</div>
+                                    <div className={'RealPrice FlexRow'}>
+                                        {`$ ${nftMintStore.getNftMintFeeInUsd().toFixed(2)}`}
+                                    </div>
+                                </div>
+                            </div>}
                     </div>
                     <div className={'FlexColumn DetailsHolderColumn'}>
                         <div className={'FlexRow'}>
@@ -252,17 +262,18 @@ class NftFinish extends React.Component<Props, State> {
                                 <div className={'DetailData'}>{NavMintStore.getMintTypeText(navMintStore.mintOption)}</div>
                             </div>
                         </div>
-                        <div className={'FlexRow DetailsRow'}>
-                            <div className={'FlexColumn DetailColumn'}>
-                                <div className={'DetailHeading'}>Estimated Gas Fee NFTs</div>
-                                <div className={'DetailData FlexRow'}>
-                                    <div className={'FeeEstimate'}>{nftMintStore.nftMintFeeEstimate} CUDOS</div>
-                                    <div className={'RealPrice FlexRow'}>
-                                        {`$ ${nftMintStore.getNftMintFeeInUsd().toFixed(2)}`}
+                        {navMintStore.isMintOptionMultiple()
+                            && <div className={'FlexRow DetailsRow'}>
+                                <div className={'FlexColumn DetailColumn'}>
+                                    <div className={'DetailHeading'}>Estimated Gas Fee NFTs</div>
+                                    <div className={'DetailData FlexRow'}>
+                                        <div className={'FeeEstimate'}>{nftMintStore.nftMintFeeEstimate} CUDOS</div>
+                                        <div className={'RealPrice FlexRow'}>
+                                            {`$ ${nftMintStore.getNftMintFeeInUsd().toFixed(2)}`}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div>}
                     </div>
                 </div>
             </div>

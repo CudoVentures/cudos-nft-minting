@@ -129,6 +129,10 @@ export default class MyNftsStore {
         return this.nftApi.getTokenTx(nft);
     }
 
+    async getNftCollectionTxHash(collection: NftCollectionModel): Promise<string> {
+        return this.nftApi.getCollectionTxHash(collection.denomId);
+    }
+
     filter = () => {
         this.filterredNftModels = FilterHelper.filter(this.getNftsInCudosMainCollection(), this.filterString) as NftModel[];
         this.filteredNftCollectionModels = FilterHelper.filter(this.nftCollectionModels, this.filterString) as NftCollectionModel[];

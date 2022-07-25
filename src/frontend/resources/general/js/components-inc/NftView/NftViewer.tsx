@@ -43,9 +43,11 @@ class NftViewer extends React.Component<Props, State> {
     }
 
     async componentDidMount(): Promise<void> {
+        const { nftModel, nftCollectionModel } = this.props;
+
         try {
             this.setState({
-                nftTxHash: await this.props.myNftsStore.getNftTxHash(this.props.nftModel),
+                nftTxHash: nftModel !== null ? await this.props.myNftsStore.getNftTxHash(nftModel) : await this.props.myNftsStore.getNftCollectionTxHash(nftCollectionModel),
             });
         } catch (e) {
         }
@@ -114,7 +116,7 @@ class NftViewer extends React.Component<Props, State> {
                         )}
                     </div>
                     <div className={'NftName FlexRow'} >
-                        <span className = { 'Dots' } title = { this.getName() } > {this.getName()} </span>
+                        <span className={'Dots'} title={this.getName()} > {this.getName()} </span>
                     </div>
                     <div className={'TxInfo FlexColumn'} >
                         <div className={'TxInfoRow FlexSplit'} >
