@@ -84,6 +84,7 @@ export default class NftService {
                 this.gasPrice,
                 MEMO,
             )
+
         } catch (e) {
             Logger.error(`Failed to mint NFTs: ${e}`);
             throw new StateException(Response.S_STATUS_CUDOS_NETWORK_ERROR, `Failed to mint nfts: ${e}`);

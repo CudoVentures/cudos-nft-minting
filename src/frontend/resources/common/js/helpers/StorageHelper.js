@@ -40,7 +40,6 @@ class StorageHelper {
 
     getNfts() {
         const storageNfts = this['nftModels'] ?? [];
-
         return storageNfts.map((nftJson) => NftModel.fromJSON(nftJson));
     }
 

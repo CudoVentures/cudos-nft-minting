@@ -144,7 +144,7 @@ export default class MyNftsStore {
         const storageCollections = storageHelper.getCollections();
         const storageNfts = storageHelper.getNfts();
 
-        this.nftCollectionModels = storageCollections.filter((collection: NftCollectionModel) => collection.creator === address);
+        this.nftCollectionModels = storageCollections
         let nftModels = storageNfts.filter((nft: NftModel) => nft.recipient === address);
 
         this.initializeNftsInCollectionsMap(nftModels);
