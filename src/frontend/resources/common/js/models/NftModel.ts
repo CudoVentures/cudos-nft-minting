@@ -94,10 +94,8 @@ export default class NftModel implements Filterable {
     }
 
     getPreviewUrl(workerQueueHelper: WorkerQueueHelper): string {
-        storageHelper.images = storageHelper.images ?? {};
-
         // if in local storage - get it from there
-        const images = storageHelper.images;
+        const images = storageHelper.getImages();
         let image = images[this.url];
 
         if (image !== undefined) {
@@ -124,7 +122,7 @@ export default class NftModel implements Filterable {
 
                 images[this.url] = image;
 
-                storageHelper.save();
+                storageHelper.saveImages(images);
             }));
         }
 

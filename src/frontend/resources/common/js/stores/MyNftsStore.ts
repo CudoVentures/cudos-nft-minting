@@ -135,14 +135,13 @@ export default class MyNftsStore {
     }
 
     async fetchNfts() {
-        let nftModels = [];
         const address = this.walletStore.keplrWallet.accountAddress;
         // fetch what is in storage first
-        const storageCollections = storageHelper['nftCollections'] ?? [];
-        const storageNfts = storageHelper['nftModels'] ?? [];
+        const storageCollections = storageHelper.getCollections();
+        const storageNfts = storageHelper.getNfts();
 
-        this.nftCollectionModels = storageCollections.map((collection: NftCollectionModel) => NftCollectionModel.fromJson(collection)).filter((collection: NftCollectionModel) => collection.creator === address);
-        nftModels = storageNfts.map((nft: NftModel) => NftModel.fromJSON(nft)).filter((nft: NftModel) => nft.recipient === address);
+        this.nftCollectionModels = storageCollections.filter((collection: NftCollectionModel) => collection.creator === address);
+        let nftModels = storageNfts.filter((nft: NftModel) => nft.recipient === address);
 
         this.initializeNftsInCollectionsMap(nftModels);
         this.filter();
@@ -163,9 +162,8 @@ export default class MyNftsStore {
             });
 
             // save newly fetched data to storage
-            storageHelper['nftCollections'] = this.nftCollectionModels.map((collection: NftCollectionModel) => collection.toJson());
-            storageHelper['nftModels'] = nftModels.map((nft: NftModel) => nft.toJSON());
-            storageHelper.save();
+            storageHelper.saveCollections(this.nftCollectionModels);
+            storageHelper.saveNfts(nftModels);
 
             this.initializeNftsInCollectionsMap(nftModels);
             this.filter();
