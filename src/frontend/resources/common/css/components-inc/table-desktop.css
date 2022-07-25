@@ -64,16 +64,6 @@
     box-sizing: border-box;
 }
 
-.TableDesktop .TableCell .Image{
-    width: 40px;
-    margin-right: 13px;
-}
-
-.TableDesktop .TableCell .Remove{
-    fill: var(--color-red);
-    cursor: pointer;
-}
-
 .TableDesktop .TableCell.TableCellAlignLeft {
     justify-content: flex-start;
     padding-right: 4px;

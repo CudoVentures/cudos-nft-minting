@@ -126,6 +126,21 @@
     margin-bottom: 37px;
 }
 
+.UploadFiles .TableDesktop .ImagePreview {
+    width: 40px;
+    margin-right: 13px;
+    flex: 0 0 auto;
+}
+
+.UploadFiles .TableDesktop .IconRemove {
+    fill: var(--color-red);
+    cursor: pointer;
+}
+
+.UploadFiles .TableDesktop .FileNameColumn {
+    overflow: hidden;
+}
+
 .UploadFiles .DeleteFilesButton {
     position: absolute;
     background: #fff;

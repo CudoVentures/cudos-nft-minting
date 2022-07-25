@@ -107,7 +107,7 @@ export default class NftMintStore {
     }
 
     // estimate
-    async esimateMintFees() {
+    esimateMintFees() {
         this.nftApi.estimateFeeMintNft(this.nfts, (fee: Coin[]) => {
             this.nftMintFeeEstimate = Number((new BigNumber(fee[0].amount)).div(Config.CUDOS_NETWORK.DECIMAL_DIVIDER).toFixed(2));
         })

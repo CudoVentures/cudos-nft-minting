@@ -41,18 +41,6 @@ class NftFinish extends React.Component<Props, State> {
         }
     }
 
-    onShowGiftInfo = (e) => {
-        this.setState({
-            'anchorEl': e.target,
-        });
-    }
-
-    onHideGiftInfo = () => {
-        this.setState({
-            'anchorEl': null,
-        })
-    }
-
     async componentDidMount(): Promise<void> {
         const navMintStore = this.props.nftMintStore.navMintStore;
 
@@ -67,20 +55,13 @@ class NftFinish extends React.Component<Props, State> {
         }
 
         // set nft mint fee
-        await this.props.nftMintStore.esimateMintFees();
+        this.props.nftMintStore.esimateMintFees();
     }
 
     handleRecaptchaToken = (token: string) => {
-        if (token === null) {
-            this.setState({
-                recaptchaToken: S.Strings.EMPTY,
-            })
-            return;
-        }
-
         this.setState({
-            recaptchaToken: token,
-        })
+            recaptchaToken: token ?? S.Strings.EMPTY,
+        });
     }
 
     onShowFreeInfo = (e) => {

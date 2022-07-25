@@ -66,7 +66,7 @@ class UploadFiles extends React.Component<Props> {
     makeImageUploadParams() {
         return {
             'maxSize': 1 << 20, // 1MB
-            'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .audio/mpeg, .webp, .webm, .mp3, .wav, .ogg, .gltf, .glb',
+            'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .mpeg, .webp, .webm, .mp3, .wav, .ogg, .gltf, .glb',
             'controller': '#',
             'multi': this.props.nftMintStore.navMintStore.isMintOptionMultiple(),
             'progressWindow': false,
@@ -231,15 +231,15 @@ class UploadFiles extends React.Component<Props> {
 
             cells = cells.concat([
                 Table.cell(
-                    <div className={'FlexRow'}>
-                        <img className={'Image'} src={nft.getPreviewUrl(appStore.workerQueueHelper)} />
-                        {nft.fileName}
+                    <div className={'FlexRow FileNameColumn'}>
+                        <img className={'ImagePreview'} src={nft.getPreviewUrl(appStore.workerQueueHelper)} />
+                        <span className ={ 'Dots' }>{nft.fileName}</span>
                     </div>,
                 ),
                 Table.cellString(nft.type),
                 Table.cellString(NftModel.getImageSizeString(nft)),
                 Table.cell(
-                    <div className={'SVG Icon Remove'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNft(index)}></div>,
+                    <div className={'SVG IconRemove'} dangerouslySetInnerHTML={{ __html: SvgTrash }} onClick={() => this.props.nftMintStore.removeNft(index)}></div>,
                 ),
             ]);
 

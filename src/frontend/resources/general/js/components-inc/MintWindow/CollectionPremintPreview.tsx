@@ -45,19 +45,15 @@ class CollectionPremintPreview extends React.Component<Props, State> {
         const collection = this.props.nftMintStore.nftCollection;
         const nftApi = this.props.myNftsStore.nftApi;
         try {
-            nftApi.getCollectionTxHash(collection.denomId)
-                .then((txHash: string) => {
-                    this.setState({
-                        txHash,
-                    })
-                });
+            const txHash = await nftApi.getCollectionTxHash(collection.denomId)
+            this.setState({
+                txHash,
+            });
 
-            nftApi.getNumberOfNftsInCollection(collection.denomId)
-                .then((nftCount: number) => {
-                    this.setState({
-                        nftCount,
-                    })
-                });
+            const nftCount = await nftApi.getNumberOfNftsInCollection(collection.denomId)
+            this.setState({
+                nftCount,
+            });
         } catch (e) {
         }
     }
