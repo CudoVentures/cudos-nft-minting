@@ -51,7 +51,7 @@
 
 html {
 	color:var(--color-dark);
-    font-family:Poppins, sans-serif; font-weight:400; font-size:14px;
+    font-family:OpenSans, sans-serif; font-weight:400; font-size:14px;
     scroll-behavior: smooth;
     background:var(--color-body-background);
 }
