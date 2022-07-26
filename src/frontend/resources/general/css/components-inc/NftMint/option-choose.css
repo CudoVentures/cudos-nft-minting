@@ -24,8 +24,20 @@
     margin-bottom: 10px;
 }
 
-.OptionChoose .OptionHolder .OptionBox.Active .SVG {
+.OptionChoose .OptionHolder .OptionBox .SvgBox {
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.OptionChoose .OptionHolder .OptionBox.Active .SvgBox .SVG {
     background: #fff;
+}
+
+.OptionChoose .OptionHolder .OptionBox.Active .SvgBox .SVG.Tick {
+    background: none;
+    fill: var(--color-primary);
+    padding: 0;
 }
 
 .OptionChoose .OptionHolder .OptionBox .OptionInfo{

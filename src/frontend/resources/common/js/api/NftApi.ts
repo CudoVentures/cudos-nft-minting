@@ -1,4 +1,4 @@
-import { Coin, StargateClient, SigningStargateClient, GasPrice, StdFee } from 'cudosjs';
+import { Coin, StargateClient, SigningStargateClient, GasPrice, PageRequest } from 'cudosjs';
 import Apis from '../../../../../../builds/dev-generated/Apis';
 import Actions from '../../../../../../builds/dev-generated/Actions';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -45,7 +45,8 @@ export default class NftApi extends AbsApi {
                 await this.init();
             }
 
-            const resCollection = await this.queryClient.getNftCollection(denomId);
+            const resCollection = await this.queryClient.getNftCollection(denomId, PageRequest.fromJSON({ limit: '1000' }));
+
             if (resCollection.collection !== undefined) {
                 if (resCollection.collection.denom !== undefined) {
                     nftCollectionModel = NftCollectionModel.fromChain(resCollection.collection.denom);

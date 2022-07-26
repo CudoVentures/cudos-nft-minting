@@ -10,6 +10,11 @@
     margin-bottom: 40px;
 }
 
+.NftMintingDone  .SVG.Success {
+    fill: var(--color-green);
+    margin-right: 10px;
+}
+
 .NftMintingDone .Background.SVG {
     position: absolute;
     width: 100%;

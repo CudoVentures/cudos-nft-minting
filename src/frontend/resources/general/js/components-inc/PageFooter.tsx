@@ -1,11 +1,15 @@
 import React from 'react';
 
-import { TERMS_AND_CONDITIONS, PRIVACY_POLICY, WEBSITE, TELEGRAM, REDDIT, TWITTER, DISCORD } from '../../../common/js/utilities/Links';
+import { TERMS_AND_CONDITIONS, PRIVACY_POLICY, WEBSITE, TELEGRAM, LINKEDIN, TWITTER, DISCORD, FACEBOOK, MEDIUM, SPOTIFY, YOUTUBE } from '../../../common/js/utilities/Links';
 
-import SvgDiscord from '../../../common/svg/discord.svg';
+import SvgLinkedin from '../../../common/svg/linkedin.svg';
 import SvgTwitter from '../../../common/svg/twitter.svg';
+import SvgFacebook from '../../../common/svg/facebook.svg';
+import SvgMedium from '../../../common/svg/medium.svg';
 import SvgTelegram from '../../../common/svg/telegram.svg';
-import SvgReddit from '../../../common/svg/reddit.svg';
+import SvgDiscord from '../../../common/svg/discord.svg';
+import SvgSpotify from '../../../common/svg/spotify.svg';
+import SvgYoutube from '../../../common/svg/youtube.svg';
 import SvgCudosLogoWithText from '../../../common/svg/cudos-rectangle-drk-r.svg';
 import './../../css/components-inc/page-footer.css';
 
@@ -22,10 +26,14 @@ export default class PageFooter extends React.Component {
                     <a>License &copy; 2018 - {new Date().getFullYear()}</a>
                 </div>
                 <div className={'StartRightBlock'}>
-                    <a href={DISCORD} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgDiscord }} />
-                    <a href={TELEGRAM} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgTelegram }} />
+                    <a href={LINKEDIN} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgLinkedin }} />
                     <a href={TWITTER} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgTwitter }} />
-                    <a href={REDDIT} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgReddit }} />
+                    <a href={FACEBOOK} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgFacebook }} />
+                    <a href={MEDIUM} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgMedium }} />
+                    <a href={TELEGRAM} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgTelegram }} />
+                    <a href={DISCORD} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgDiscord }} />
+                    <a href={SPOTIFY} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgSpotify }} />
+                    <a href={YOUTUBE} className={'SVG IconSocial'} target={'_blank'} rel={'noreferrer'} dangerouslySetInnerHTML={{ __html: SvgYoutube }} />
                 </div>
             </footer>
         )

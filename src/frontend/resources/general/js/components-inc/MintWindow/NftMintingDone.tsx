@@ -9,7 +9,8 @@ import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 import SvgMintingWaves from '../../../../common/svg/finished-waves.svg';
 import SvgLinkBox from '../../../../common/svg/link-box.svg';
-import SvgTwitter from '../../../../common/svg/twitter.svg';
+import SvgTickCircle from '../../../../common/svg/tick-circle.svg';
+
 import '../../../css/components-inc/NftMint/nft-minting-done.css';
 
 interface Props {
@@ -36,9 +37,12 @@ class NftMintingDone extends React.Component<Props> {
                         <div className={'NftName Dots'}>{navMintStore.isMintOptionSingle() ? nftModel.name : nftCollectionModel.name}</div>
                     </div>
                 </div>
-                <div className={'Heading4'} >Minting is Done!</div>
+                <div className={'Heading4 FlexRow'} >
+                    <div className={'SVG Icon Success'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }}></div>
+                    Minting is Done!
+                </div>
                 <div className={'Description'}>Minting was successful! Check the details from the link below.</div>
-                <a href={this.props.nftMintStore.getTxHashLink()} className={'TransactionLink FlexRow'} target = '_blank' rel = 'noreferrer'>
+                <a href={this.props.nftMintStore.getTxHashLink()} className={'TransactionLink FlexRow'} target='_blank' rel='noreferrer'>
                     <div>Check transaction details in Explorer</div>
                     <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgLinkBox }}></div>
                 </a>

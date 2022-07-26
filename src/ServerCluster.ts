@@ -31,9 +31,8 @@ class ServerCluster {
             }
 
             cluster.on('exit', this.clusterOnWorkerExit);
-            process.on('SIGINT', () => process.exit(1)); // Just to wait for all works to finish;
+            process.on('SIGINT', () => { }); // Just to wait for all works to finish;
             process.on('SIGTERM', () => { }); // Just to wait for all works to finish;
-
             if (Config.Build.DEV === true) {
                 process.send('SERVER_MSG::STARTED');
             }
@@ -85,6 +84,7 @@ class ServerCluster {
     }
 
     initWorkerListeners() {
+
         cluster.worker.process.on('exit', this.workerExit);
         cluster.worker.on('exit', this.workerExit);
         cluster.worker.process.on('disconnect', this.workerExit);

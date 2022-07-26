@@ -25,10 +25,14 @@
     position: relative;
 }
 
-.MintWindow .StepNav .Active {
+.MintWindow .StepNav .Clickable{
     fill: var(--color-primary);
     color: var(--color-primary);
     cursor: pointer;
+}
+
+.MintWindow .StepNav .StartRight .Active .SVG{
+    fill: #fff;
 }
 
 .MintWindow .StepNav span {

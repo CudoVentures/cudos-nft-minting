@@ -19,6 +19,8 @@ import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgArrowRight from '../../../../common/svg/arrow-right.svg';
 import '../../../css/components-inc/NftMint/mint-window.css';
 import CollectionPremintPreview from './CollectionPremintPreview';
+import Button from '../../../../common/js/components-inc/Button';
+import Actions from '../../../../common/js/components-inc/Actions';
 
 interface Props {
     navStore: NavStore;
@@ -130,18 +132,28 @@ class MintWindow extends React.Component<Props> {
                 <div className={'FlexSplit StepNav'}>
                     {navMintStore.shouldShowBackStep() === true && (
                         <div
-                            className={'FlexRow Clickable Active'}
+                            className={'FlexRow Clickable'}
                             onClick={navMintStore.getPreviousStepFunction()} >
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowLeft }}></div>
                             <span>Back</span>
                         </div>
                     )}
                     {navMintStore.shouldShowNextStep() === true && (
-                        <div className={`FlexRow StartRight ${S.CSS.getActiveClassName(this.isNextStepActive())}`}
-                            onClick={this.getNextStepHandler()} >
-                            <span>{this.getNextStepText()}</span>
-                            <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>
-                        </div>
+                        <Actions
+                            className={'StartRight'}
+                            height={Actions.HEIGHT_48}
+                        >
+                            <Button
+                                className={`FlexRow  ${S.CSS.getActiveClassName(this.isNextStepActive())}`}
+                                type={Button.TYPE_ROUNDED}
+                                radius={Button.RADIUS_MAX}
+                                padding={Button.PADDING_24}
+                                disabled={!this.isNextStepActive()}
+                                onClick={this.getNextStepHandler()} >
+                                <span>{this.getNextStepText()}</span>
+                                <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgArrowRight }}></div>
+                            </Button>
+                        </Actions>
                     )}
                 </div>
             </div>

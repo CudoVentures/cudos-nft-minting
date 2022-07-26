@@ -7,6 +7,7 @@ import NftStepWrapper from './NftStepWrapper';
 
 import SvgUploadSingle from '../../../../common/svg/upload-single.svg';
 import SvgUploadMultiple from '../../../../common/svg/upload-multiple.svg';
+import SvgTickCircle from '../../../../common/svg/tick-circle.svg';
 import '../../../css/components-inc/NftMint/option-choose.css'
 
 interface Props {
@@ -35,20 +36,26 @@ class OptionChoose extends React.Component<Props> {
                     <div
                         className={`OptionBox FlexColumn Transition ${S.CSS.getActiveClassName(navMintStore.isMintOptionSingle())}`}
                         onClick={this.onSelectSingleMintOption} >
-                        <div className={'SvgBox'}>
+                        <div className={'FlexRow SvgBox'}>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadSingle }}></div>
-                            <div className={'Heading4'}>{NavMintStore.getMintOptionText(NavMintStore.MINT_OPTION_SINGLE)}</div>
-                            <div className={'OptionInfo'}>This option allows you to upload and mint only one file for NFT</div>
+                            {navMintStore.isMintOptionSingle()
+                                && <div className={'SVG Icon Tick'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }}></div>
+                            }
                         </div>
+                        <div className={'Heading4'}>{NavMintStore.getMintOptionText(NavMintStore.MINT_OPTION_SINGLE)}</div>
+                        <div className={'OptionInfo'}>This option allows you to upload and mint only one file for NFT</div>
                     </div>
                     <div
                         className={`OptionBox FlexColumn Transition ${S.CSS.getActiveClassName(navMintStore.isMintOptionMultiple())}`}
                         onClick={this.onSelectMultipleMintOption} >
-                        <div className={'SvgBox'}>
+                        <div className={'FlexRow SvgBox'}>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadMultiple }}></div>
-                            <div className={'Heading4'}>{NavMintStore.getMintOptionText(NavMintStore.MINT_OPTION_MULTIPLE)}</div>
-                            <div className={'OptionInfo'}>This option allows you to upload and mint multiple files in one mint</div>
+                            {navMintStore.isMintOptionMultiple()
+                                && <div className={'SVG Icon Tick'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }}></div>
+                            }
                         </div>
+                        <div className={'Heading4'}>{NavMintStore.getMintOptionText(NavMintStore.MINT_OPTION_MULTIPLE)}</div>
+                        <div className={'OptionInfo'}>This option allows you to upload and mint multiple files in one mint</div>
                     </div>
                 </div>
             </NftStepWrapper>
