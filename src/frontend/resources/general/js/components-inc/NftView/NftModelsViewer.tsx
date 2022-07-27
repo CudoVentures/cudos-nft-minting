@@ -1,6 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import S from '../../../../common/js/utilities/Main';
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 import AppStore from '../../../../common/js/stores/AppStore';
 
@@ -8,7 +9,6 @@ import NftModel from '../../../../common/js/models/NftModel';
 import ProjectUtils from '../../../../common/js/ProjectUtils';
 
 import '../../../css/components-inc/NftView/nft-models-viewer.css'
-import S from '../../../../common/js/utilities/Main';
 
 interface Props {
     appStore: AppStore;

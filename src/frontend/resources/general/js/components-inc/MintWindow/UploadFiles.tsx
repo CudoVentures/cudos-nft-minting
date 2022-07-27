@@ -9,6 +9,7 @@ import AppStore from '../../../../common/js/stores/AppStore';
 import NftModel from '../../../../common/js/models/NftModel';
 import TableHelper from '../../../../common/js/helpers/TableHelper';
 import InputStateHelper from '../../../../common/js/helpers/InputStateHelper';
+import GeneralApi from '../../../../common/js/api/GeneralApi';
 
 import Button from '../../../../common/js/components-inc/Button';
 import Input, { InputType, InputMargin } from '../../../../common/js/components-inc/Input';
@@ -23,8 +24,6 @@ import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import SvgTrash from '../../../../common/svg/trash.svg';
 import SvgUploadFile from '../../../../common/svg/upload-file.svg';
 import '../../../css/components-inc/NftMint/upload-files.css';
-import GeneralApi from '../../../../common/js/api/GeneralApi';
-import Response from '../../../../../../../builds/dev-generated/utilities/network/ResponseConsts';
 
 interface Props {
     appStore: AppStore;
