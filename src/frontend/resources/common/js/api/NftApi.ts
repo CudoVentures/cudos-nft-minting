@@ -50,7 +50,6 @@ export default class NftApi extends AbsApi {
             if (resCollection.collection !== undefined) {
                 if (resCollection.collection.denom !== undefined) {
                     nftCollectionModel = NftCollectionModel.fromChain(resCollection.collection.denom);
-                    nftCollectionModel.own = resCollection.collection.denom.creator === owner;
                     nftModels = resCollection.collection.nfts.map((nftJson) => {
                         const nftModel = NftModel.fromChain(nftJson);
                         nftModel.denomId = nftCollectionModel.denomId;

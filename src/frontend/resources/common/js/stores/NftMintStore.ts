@@ -325,7 +325,7 @@ export default class NftMintStore {
         nft.fileName = fileName;
         nft.type = type;
         nft.sizeBytes = sizeBytes;
-        nft.updatePreviewUrl();
+        nft.updatePreviewUrlByType();
 
         const hashBuffer = await new Crypto().subtle.digest('SHA-256', arrayBuffer);
         const hashArray = Array.from(new Uint8Array(hashBuffer))

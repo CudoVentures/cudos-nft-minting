@@ -1,9 +1,9 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import Config from '../../../../../../builds/dev-generated/Config';
 import WorkerQueueHelper, { Runnable } from '../helpers/WorkerQueueHelper';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
-import storageHelper from '../helpers/StorageHelper';
+import StorageHelper from '../helpers/StorageHelper';
 
 export default class NftModel implements Filterable {
 
@@ -34,9 +34,11 @@ export default class NftModel implements Filterable {
         this.fileName = S.Strings.EMPTY;
         this.type = S.Strings.EMPTY;
         this.sizeBytes = S.NOT_EXISTS;
-        this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL
+        this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL;
 
-        makeAutoObservable(this);
+        makeAutoObservable(this, {
+            'type': false,
+        });
     }
 
     static getImageSizeString(nftModel: NftModel): string {
@@ -95,41 +97,33 @@ export default class NftModel implements Filterable {
 
     getPreviewUrl(workerQueueHelper: WorkerQueueHelper): string {
         // if in local storage - get it from there
-        const images = storageHelper.getImages();
-        let image = images[this.url];
+        const storageHelper = StorageHelper.getSingletonInstance();
+        const nftImageCacheModel = storageHelper.getNftImageCache(this.url);
 
-        if (image !== undefined) {
-            this.type = image.type;
-            this.previewUrl = image.previewUrl;
-        }
-
-        if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
-            this.type = 'null';
+        if (nftImageCacheModel !== null) {
+            runInAction(() => {
+                this.type = nftImageCacheModel.mimeType;
+                this.previewUrl = nftImageCacheModel.previewUrl;
+            })
+        } else if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
             workerQueueHelper.pushAndExecute(new Runnable(async () => {
                 const res = await fetch(this.url);
                 return res.headers.get('content-type');
             }, (type: string | null) => {
-
-                this.type = type ?? 'null';
-
-                this.updatePreviewUrl();
-
                 // save to local storage
-                image = {
-                    type: this.type,
-                    previewUrl: this.previewUrl,
-                }
+                this.type = type ?? 'null';
+                this.updatePreviewUrlByType();
 
-                images[this.url] = image;
-
-                storageHelper.saveImages(images);
+                storageHelper.addNftImageCache(this.url, this.type, this.previewUrl);
             }));
         }
+
+        this.type = 'null';
 
         return this.previewUrl;
     }
 
-    updatePreviewUrl() {
+    updatePreviewUrlByType() {
         if (this.type.indexOf('svg') !== -1) {
             this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/svg.svg`
         } else if (this.type.indexOf('mpeg') !== -1 || this.type.indexOf('mp3') !== -1 || this.type.indexOf('wav') !== -1 || this.type.indexOf('ogg') !== -1) {

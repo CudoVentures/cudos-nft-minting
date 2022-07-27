@@ -8,12 +8,10 @@ export default class NftCollectionModel implements Filterable {
     denomId: string;
     name: string;
     creator: string;
-    own: boolean;
 
     constructor() {
         this.denomId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
-        this.own = false;
 
         makeAutoObservable(this);
     }
@@ -36,8 +34,8 @@ export default class NftCollectionModel implements Filterable {
         return this.denomId === Config.CUDOS_NETWORK.NFT_DENOM_ID;
     }
 
-    isOwn(): boolean {
-        return this.own;
+    isOwn(walletAddress: string): boolean {
+        return this.creator === walletAddress;
     }
 
     toJson(): any {
@@ -45,7 +43,6 @@ export default class NftCollectionModel implements Filterable {
             'denomId': this.denomId,
             'name': this.name,
             'creator': this.creator,
-            'own': this.own,
         }
     }
 
@@ -59,7 +56,6 @@ export default class NftCollectionModel implements Filterable {
         model.denomId = json.denomId ?? model.denomId;
         model.name = json.name ?? model.name;
         model.creator = json.creator ?? model.creator;
-        model.own = json.own ?? model.own;
 
         return model;
     }

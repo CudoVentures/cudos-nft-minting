@@ -9,7 +9,7 @@ import S from '../utilities/Main';
 import WalletStore from './WalletStore';
 import AppStore from './AppStore';
 import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
-import storageHelper from '../helpers/StorageHelper';
+import StorageHelper from '../helpers/StorageHelper';
 
 export default class MyNftsStore {
 
@@ -33,7 +33,6 @@ export default class MyNftsStore {
 
     initialized: boolean;
     timeoutHelper: TimeoutHelper;
-    nftFetchTimeout: TimeoutHelper;
 
     constructor(appStore: AppStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
@@ -47,7 +46,6 @@ export default class MyNftsStore {
 
         this.initialized = false;
         this.timeoutHelper = new TimeoutHelper();
-        this.nftFetchTimeout = new TimeoutHelper();
 
         makeAutoObservable(this);
     }
@@ -139,22 +137,23 @@ export default class MyNftsStore {
     }
 
     async fetchNfts() {
+        const storageHelper = StorageHelper.getSingletonInstance();
         const address = this.walletStore.keplrWallet.accountAddress;
         // fetch what is in storage first
-        const storageCollections = storageHelper.getCollections();
-        const storageNfts = storageHelper.getNfts();
+        this.nftCollectionModels = storageHelper.getCollections().filter((nftCollectionModel: NftCollectionModel) => {
+            return nftCollectionModel.isOwn(address);
+        });
+        let nftModels = storageHelper.getNfts().filter((nft: NftModel) => {
+            return nft.recipient === address
+        });
 
-        this.nftCollectionModels = storageCollections
-        let nftModels = storageNfts.filter((nft: NftModel) => nft.recipient === address);
-
-        this.initializeNftsInCollectionsMap(nftModels);
+        this.invalidateNftsInCollectionsMap(nftModels);
         this.filter();
 
         this.initialized = true;
 
         // then fetch from chain
-        nftModels = [];
-        this.nftFetchTimeout.signal(async () => {
+        setTimeout(async () => {
             await new Promise<void>((resolve, reject) => {
                 this.nftApi.fetchNftCollections(this.walletStore.keplrWallet.accountAddress, (nftCollectionModels_: NftCollectionModel[], nftModels_: NftModel[]) => {
                     this.nftCollectionModels = nftCollectionModels_.filter((nftCollectionModel) => {
@@ -169,12 +168,9 @@ export default class MyNftsStore {
             storageHelper.saveCollections(this.nftCollectionModels);
             storageHelper.saveNfts(nftModels);
 
-            this.initializeNftsInCollectionsMap(nftModels);
+            this.invalidateNftsInCollectionsMap(nftModels);
             this.filter();
-
-            this.initialized = true;
-        })
-
+        });
     }
 
     removeNftModel(nftModel: NftModel) {
@@ -193,7 +189,7 @@ export default class MyNftsStore {
         this.filter();
     }
 
-    initializeNftsInCollectionsMap(nftModels: NftModel[]) {
+    invalidateNftsInCollectionsMap(nftModels: NftModel[]) {
         this.nftsInCollectionsMap.clear();
         this.updateNftsInCollectionsMap(nftModels);
     }
