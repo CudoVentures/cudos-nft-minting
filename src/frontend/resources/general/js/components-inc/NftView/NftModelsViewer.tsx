@@ -25,7 +25,6 @@ class NftModelsViewer extends React.Component<Props> {
     render() {
         const nftModels = this.props.nftModels;
         const appStore = this.props.appStore;
-
         return (
             <div className={`NftModelsViewer ${S.CSS.getClassName(nftModels.length > 0, 'HasNfts')}`} >
                 {nftModels.length > 0 && nftModels.map((nftModel: NftModel) => {

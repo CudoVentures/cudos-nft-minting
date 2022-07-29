@@ -16,6 +16,7 @@ export default class NftModel implements Filterable {
     data: string;
     recipient: string;
     approvedAddresses: string[];
+    txHash: string;
 
     fileName: string;
     type: string;
@@ -30,6 +31,7 @@ export default class NftModel implements Filterable {
         this.data = S.Strings.EMPTY;
         this.recipient = S.Strings.EMPTY;
         this.approvedAddresses = [];
+        this.txHash = S.Strings.EMPTY;
 
         this.fileName = S.Strings.EMPTY;
         this.type = S.Strings.EMPTY;
@@ -186,6 +188,24 @@ export default class NftModel implements Filterable {
         model.data = json.data ?? model.data;
         model.recipient = json.owner ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
+
+        return model;
+    }
+
+    static fromHasura(json): NftModel {
+        if (json === null) {
+            return null;
+        }
+
+        const model = new NftModel();
+
+        model.tokenId = json.id ?? model.tokenId;
+        model.name = json.name ?? model.name;
+        model.url = json.uri ?? model.url;
+        model.data = json.data_text ?? model.data;
+        model.recipient = json.owner ?? model.recipient;
+        model.approvedAddresses = model.approvedAddresses ?? [];
+        model.txHash = json.transaction_hash ?? model.txHash;
 
         return model;
     }

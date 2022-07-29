@@ -15,23 +15,20 @@ interface Props {
 
 class MyNftsWindow extends React.Component < Props > {
 
-    async componentDidMount(): Promise < void > {
-        await this.props.myNftsStore.fetchNfts();
-    }
-
     render() {
         const myNftsStore = this.props.myNftsStore;
         return (
             <div className = { 'MyNftsWindow FlexGrow FlexColumn' } >
-                { myNftsStore.isInitialized() === false && (
+                {/* { myNftsStore.isInitialized() === false && (
                     <LoadingIndicator margin = { 'auto' } />
                 )}
-                { myNftsStore.isInitialized() === true && (
-                    <>
-                        { myNftsStore.hasNfts() === false && <NoNfts /> }
-                        { myNftsStore.hasNfts() === true && <ListNfts /> }
-                    </>
-                )}
+                { myNftsStore.isInitialized() === true && ( */}
+                <>
+                    {/* { myNftsStore.hasNfts() === false && <NoNfts /> }
+                    { myNftsStore.hasNfts() === true && <ListNfts /> } */}
+                </>
+                {/* )} */}
+                <ListNfts />
             </div>
         )
     }

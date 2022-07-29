@@ -177,41 +177,6 @@ export default class NftApi extends AbsApi {
         });
     }
 
-    async getTokenTx(nftModel: NftModel): Promise<string> {
-        const data = {
-            operationName: 'GetTokenTxHashQuery',
-            query: `query GetTokenTxHashQuery {\n  nft_mint(where: {denom_id: {_eq: "${nftModel.denomId}"}, token_id: {_eq: "${nftModel.tokenId}"}}) {\n    transaction_hash\n    transaction {\n      height\n    }\n  }\n}`,
-            variables: null,
-        };
-
-        const request = {
-            method: 'POST',
-            body: JSON.stringify(data),
-        }
-
-        const res = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, request)).json();
-        const txHash = res.data.nft_mint[0].transaction_hash;
-        return txHash;
-    }
-
-    async getCollectionTxHash(denomId: string): Promise<string> {
-        const data = {
-            operationName: 'GetDenomTxHashQuery',
-            query: `query GetDenomTxHashQuery {\n  nft_issue_denom(where: {denom_id: {_eq: "${denomId}"}}) {\n    transaction_hash\n    transaction {\n      height\n    }\n  }\n}`,
-            variables: null,
-        };
-
-        const request = {
-            method: 'POST',
-            body: JSON.stringify(data),
-        }
-
-        const res = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, request)).json();
-
-        const txHash = res.data.nft_issue_denom[0].transaction_hash;
-        return txHash;
-    }
-
     async getNumberOfNftsInCollection(denomId: string): Promise<number> {
         const res = await this.queryClient.getNftCollection(denomId);
         return res.collection.nfts.length;

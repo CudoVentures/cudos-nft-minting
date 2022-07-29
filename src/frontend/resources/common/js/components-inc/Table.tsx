@@ -13,12 +13,6 @@ interface Props extends TableDesktopProps, TableMobileProps {
 
 export default class Table extends React.Component<Props> {
 
-    static ROW_CLASS_NEW = 1;
-    static ROW_CLASS_PROCESSING = 2;
-    static ROW_CLASS_OVERDUE = 3;
-    static ROW_CLASS_ERROR = 4;
-    static ROW_CLASS_FINISHED = 5;
-
     static row(cells: TableCell[], rowClassNameName: string = S.Strings.EMPTY) {
         return new TableRow(cells, rowClassNameName);
     }
