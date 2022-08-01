@@ -26,7 +26,6 @@ class NftModelViewer extends React.Component<Props> {
 
     render() {
         const nftModel = this.props.nftModel;
-
         return (
             <div className={'NftModelViewer'} >
                 <div className={'NavigationBack FlexRow'} onClick={this.onClickBack} >

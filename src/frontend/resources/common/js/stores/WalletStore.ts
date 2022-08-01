@@ -56,7 +56,6 @@ export default class WalletStore {
     }
 
     onChangeAccount = () => {
-        console.log(this.keplrWallet.accountAddress);
         window.location.reload();
     }
 

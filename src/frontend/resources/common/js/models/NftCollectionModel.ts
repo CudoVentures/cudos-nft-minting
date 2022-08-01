@@ -8,10 +8,12 @@ export default class NftCollectionModel implements Filterable {
     denomId: string;
     name: string;
     creator: string;
+    txHash: string;
 
     constructor() {
         this.denomId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
+        this.txHash = S.Strings.EMPTY;
 
         makeAutoObservable(this);
     }
@@ -70,6 +72,21 @@ export default class NftCollectionModel implements Filterable {
         model.denomId = json.id ?? model.denomId;
         model.name = json.name ?? model.name;
         model.creator = json.creator ?? model.creator;
+
+        return model;
+    }
+
+    static fromHasura(json: any): NftCollectionModel {
+        if (json === null) {
+            return null;
+        }
+
+        const model = new NftCollectionModel();
+
+        model.denomId = json.id ?? model.denomId;
+        model.name = json.name ?? model.name;
+        model.creator = json.owner ?? model.creator;
+        model.txHash = json.transaction_hash ?? model.txHash;
 
         return model;
     }

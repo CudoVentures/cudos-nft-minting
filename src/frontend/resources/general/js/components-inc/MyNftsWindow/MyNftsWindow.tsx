@@ -1,33 +1,18 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
-import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
-
-import NoNfts from './NoNfts';
 import ListNfts from './ListNfts';
-import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
 import '../../../css/components-inc/MyNftsWindow/my-nfts-window.css';
 
 interface Props {
-    myNftsStore: MyNftsStore;
 }
 
 class MyNftsWindow extends React.Component < Props > {
 
     render() {
-        const myNftsStore = this.props.myNftsStore;
         return (
             <div className = { 'MyNftsWindow FlexGrow FlexColumn' } >
-                {/* { myNftsStore.isInitialized() === false && (
-                    <LoadingIndicator margin = { 'auto' } />
-                )}
-                { myNftsStore.isInitialized() === true && ( */}
-                <>
-                    {/* { myNftsStore.hasNfts() === false && <NoNfts /> }
-                    { myNftsStore.hasNfts() === true && <ListNfts /> } */}
-                </>
-                {/* )} */}
                 <ListNfts />
             </div>
         )

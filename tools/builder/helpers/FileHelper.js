@@ -100,9 +100,7 @@ class FileHelper {
         } else {
             includeList = exception.include;
             excludeList = exception.exclude;
-            // console.log(includeList[0], targetPath);
         }
-
 
         for (let i = includeList.length; i-- > 0;) {
             if (targetPath.indexOf(includeList[i]) === 0 || includeList[i].indexOf(targetPath) === 0) {

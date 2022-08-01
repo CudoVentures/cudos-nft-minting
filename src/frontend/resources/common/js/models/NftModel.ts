@@ -199,6 +199,7 @@ export default class NftModel implements Filterable {
 
         const model = new NftModel();
 
+        model.denomId = json.denom_id ?? model.denomId;
         model.tokenId = json.id ?? model.tokenId;
         model.name = json.name ?? model.name;
         model.url = json.uri ?? model.url;

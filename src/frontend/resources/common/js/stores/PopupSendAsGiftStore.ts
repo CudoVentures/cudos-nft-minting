@@ -132,7 +132,7 @@ export default class PopupSendAsGiftStore extends PopupStore {
             client,
         );
 
-        this.myNftsStore.removeNftModel(this.nftModel);
+        this.myNftsStore.fetchViewingModels();
         this.onSendAsGiftSuccess();
     }
 

@@ -12,6 +12,8 @@ import NftViewer from './NftViewer';
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgPlus from '../../../../common/svg/plus.svg';
 import '../../../css/components-inc/NftView/nft-collection-viewer.css'
+import Table from '../../../../common/js/components-inc/Table';
+import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
 
 interface Props {
     myNftsStore: MyNftsStore;
@@ -22,6 +24,10 @@ interface Props {
 
 class NftCollectionViewer extends React.Component<Props> {
 
+    componentDidMount(): void {
+        this.props.myNftsStore.fetchViewingModels();
+    }
+
     onClickBack = () => {
         this.props.myNftsStore.markNftCollection(null);
     }
@@ -31,8 +37,10 @@ class NftCollectionViewer extends React.Component<Props> {
     }
 
     render() {
+        const myNftsStore = this.props.myNftsStore;
         const nftCollectionModel = this.props.nftCollectionModel;
-        const nftModels = this.props.myNftsStore.getNftsInCollection(nftCollectionModel.denomId);
+        const nftModels = myNftsStore.filterredNftModels;
+
         return (
             <div className={'NftCollectionViewer'} >
                 <div className={'NavigationBack FlexRow'} onClick={this.onClickBack} >
@@ -51,7 +59,15 @@ class NftCollectionViewer extends React.Component<Props> {
                             <div className={'AddMoreButtonText'}>Add more NFTs to Collection</div>
                         </div>}
                 </div>
-                <NftModelsViewer nftModels={nftModels} />
+                <Table
+                    className={'NftModelsViewerTable'}
+                    legend={['']}
+                    widths={['100%']}
+                    aligns={[TableDesktop.ALIGN_CENTER]}
+                    helper={myNftsStore.tableHelper}
+                    rows={[Table.row([Table.cell(<NftModelsViewer nftModels={nftModels} />)])]}
+                    noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
+                />
             </div >
         )
     }

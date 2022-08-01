@@ -17,24 +17,29 @@ export default class NftsByDenomAndOwnerReq {
         const data = {
             operationName: 'GetNftsByDenomAndOwnerAndFilterPaginated',
             query: `query GetNftsByDenomAndOwnerAndFilterPaginated {
-                nft_nft(
+                nft_nft_aggregate(
                     where: {
                         denom_id: {_eq: "${this.denomId}"}, 
                         owner: {_eq: "${this.owner}"}, 
-                        name: {_iregex: "${this.filter}"}
+                        name: {_iregex: "${this.filter}"},
                         burned: {_eq: false}, 
                     },
                     offset: ${this.from}, 
                     limit: ${this.to - this.from}, 
                     order_by: {name: asc}
                 ) {
-                    id
-                    name
-                    owner
-                    uri
-                    transaction_hash
-                    data_text
-                    denom_id
+                    nodes {
+                        uri
+                        transaction_hash
+                        owner
+                        name
+                        id
+                        data_text
+                        denom_id
+                    }
+                    aggregate {
+                        count
+                    }
                 }
               }`,
             variables: null,
