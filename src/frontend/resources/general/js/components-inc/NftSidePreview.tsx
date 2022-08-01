@@ -1,7 +1,5 @@
 import React from 'react';
 import '../../css/components-inc/nft-side-preview.css';
-import SvgEmptyPicture from '../../../common/svg/empty-picture.svg';
-import S from '../../../common/js/utilities/Main';
 import ProjectUtils from '../../../common/js/ProjectUtils';
 import NftModel from '../../../common/js/models/NftModel';
 

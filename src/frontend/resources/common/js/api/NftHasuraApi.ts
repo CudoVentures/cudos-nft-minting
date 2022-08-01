@@ -7,6 +7,7 @@ import DenomTransactionHashReq from '../network-requests/NftHasura/DenomTransact
 import NftCollectionIdsByNftOwnerReq from '../network-requests/NftHasura/NftCollectionIdsByNftOwnerReq';
 import NftCollectionModelsPaginatedReq from '../network-requests/NftHasura/NftCollectionModelsPaginatedReq';
 import NftCountByDenomAndOwnerReq from '../network-requests/NftHasura/NftCountByDenomAndOwnerReq';
+import NftModelsForUrlsReq from '../network-requests/NftHasura/NftModelsForUrlsReq';
 import NftModelsPaginatedReq from '../network-requests/NftHasura/NftModelsPaginatedReq';
 import NftTransactionHashReq from '../network-requests/NftHasura/NftTransactionHashReq';
 import DenomCountByOwnerRes from '../network-responses/NftHasura/DenomCountByOwnerRes';
@@ -14,6 +15,7 @@ import DenomTransactionHashRes from '../network-responses/NftHasura/DenomTransac
 import NftCollectionIdsByNftOwnerRes from '../network-responses/NftHasura/NftCollectionIdsByNftOwnerRes';
 import NftCollectionModelsPaginatedRes from '../network-responses/NftHasura/NftCollectionModelsPaginatedRes';
 import NftCountByDenomAndOwnerRes from '../network-responses/NftHasura/NftCountByDenomAndOwnerRes';
+import NftModelsForUrlsRes from '../network-responses/NftHasura/NftModelsForUrlsRes';
 import NftModelsPaginatedRes from '../network-responses/NftHasura/NftModelsPaginatedRes';
 import NftTransactionHashRes from '../network-responses/NftHasura/NftTransactionHashRes';
 import Api from '../utilities/Api';
@@ -89,6 +91,17 @@ export default class NftApi extends AbsApi {
         const res = new NftModelsPaginatedRes(resJson);
 
         return { nftModels: res.nftModels, totalCount: res.totalCount };
+    }
+
+    async getNftModelsForUrls(denomIds: string[]): Promise<NftModel[]> {
+
+        const req = new NftModelsForUrlsReq(denomIds);
+
+        const resJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, req.buildRequest())).json();
+
+        const res = new NftModelsForUrlsRes(resJson);
+
+        return res.nftModels;
     }
 
     async getCollections(owner: string, from: number, to: number, filter: string): Promise<{nftCollectionModels: NftCollectionModel[], totalCount: number}> {

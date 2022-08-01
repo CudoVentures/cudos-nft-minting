@@ -20,23 +20,48 @@ import SvgSearch from '../../../../common/svg/search.svg';
 import '../../../css/components-inc/MyNftsWindow/list-nfts.css'
 import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 import TimeoutHelper from '../../../../common/js/helpers/TimeoutHelper';
+import SingleRowTable from '../../../../common/js/components-inc/SingleRowTable';
 
 interface Props {
     myNftsStore: MyNftsStore;
 }
 
-class ListNfts extends React.Component<Props> {
+interface State {
+    loadingModels: boolean;
+}
+
+class ListNfts extends React.Component<Props, State> {
     timeoutHelper: TimeoutHelper;
 
     constructor(props: Props) {
         super(props);
         this.timeoutHelper = new TimeoutHelper();
+
+        this.state = {
+            loadingModels: true,
+        }
     }
 
-    async componentDidMount(): Promise<void> {
+    componentDidMount(): void {
         this.props.myNftsStore.fetchNftCounts();
+        this.fetchModels();
+    }
 
-        this.props.myNftsStore.fetchViewingModels();
+    onClickViewSingleNfts = () => {
+        this.props.myNftsStore.markViewSingleNfts();
+        this.fetchModels();
+    }
+
+    onClickViewCollections = () => {
+        this.props.myNftsStore.markViewNftCollections();
+        this.fetchModels();
+    }
+
+    fetchModels() {
+        this.setState({ loadingModels: true });
+        this.timeoutHelper.signal(() => {
+            this.props.myNftsStore.fetchViewingModels(() => this.setState({ loadingModels: false }))
+        });
     }
 
     render() {
@@ -52,7 +77,7 @@ class ListNfts extends React.Component<Props> {
                             <Button
                                 type={myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE}
                                 color={myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2}
-                                onClick={myNftsStore.markViewSingleNfts} >
+                                onClick={this.onClickViewSingleNfts} >
                                 Single NFTs
                                 {myNftsStore.nftsCount === S.NOT_EXISTS
                                     ? <LoadingIndicator margin={'auto'} size={'20px'}/>
@@ -63,7 +88,7 @@ class ListNfts extends React.Component<Props> {
                             <Button
                                 type={myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE}
                                 color={myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2}
-                                onClick={myNftsStore.markViewNftCollections} >
+                                onClick={this.onClickViewCollections} >
                                 Collections
                                 {myNftsStore.collectionsCount === S.NOT_EXISTS
                                     ? <LoadingIndicator margin={'auto'} size={'20px'}/>
@@ -122,15 +147,17 @@ class ListNfts extends React.Component<Props> {
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true
-                && <Table
-                    className={'NftModelsViewerTable'}
-                    legend={['']}
-                    widths={['100%']}
-                    aligns={[TableDesktop.ALIGN_CENTER]}
-                    helper={myNftsStore.tableHelper}
-                    rows={[Table.row([Table.cell(<NftModelsViewer nftModels={myNftsStore.filterredNftModels} />)])]}
-                    noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
-                />
+                && (this.state.loadingModels
+                    ? <LoadingIndicator margin={'200px'}/>
+                    : <SingleRowTable
+                        className={'NftModelsViewerTable'}
+                        legend={['']}
+                        widths={['100%']}
+                        aligns={[TableDesktop.ALIGN_CENTER]}
+                        helper={myNftsStore.tableHelper}
+                        rows={[Table.row([Table.cell(<NftModelsViewer nftModels={myNftsStore.filterredNftModels} />)])]}
+                        noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
+                    />)
                 }
             </div>
         )
@@ -143,15 +170,17 @@ class ListNfts extends React.Component<Props> {
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true
-                && <Table
-                    className={'NftModelsViewerTable'}
-                    legend={['']}
-                    widths={['100%']}
-                    aligns={[TableDesktop.ALIGN_CENTER]}
-                    helper={myNftsStore.tableHelper}
-                    rows={[Table.row([Table.cell(<NftCollectionsViewer nftCollectionModels={myNftsStore.filteredNftCollectionModels} />)])]}
-                    noRowsContent={<div className={'NoNfts'}>There are no collections for this address</div>}
-                />
+                && (this.state.loadingModels
+                    ? <LoadingIndicator margin={'200px'}/>
+                    : <SingleRowTable
+                        className={'NftModelsViewerTable'}
+                        legend={['']}
+                        widths={['100%']}
+                        aligns={[TableDesktop.ALIGN_CENTER]}
+                        helper={myNftsStore.tableHelper}
+                        rows={[Table.row([Table.cell(<NftCollectionsViewer nftCollectionModels={myNftsStore.filteredNftCollectionModels} />)])]}
+                        noRowsContent={<div className={'NoNfts'}>There are no collections for this address</div>}
+                    />)
                 }
             </div>
         )

@@ -14,6 +14,8 @@ import SvgPlus from '../../../../common/svg/plus.svg';
 import '../../../css/components-inc/NftView/nft-collection-viewer.css'
 import Table from '../../../../common/js/components-inc/Table';
 import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
+import SingleRowTable from '../../../../common/js/components-inc/SingleRowTable';
+import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
 interface Props {
     myNftsStore: MyNftsStore;
@@ -22,10 +24,22 @@ interface Props {
     walletStore: WalletStore;
 }
 
-class NftCollectionViewer extends React.Component<Props> {
+interface State {
+    loadingModels: boolean;
+}
+
+class NftCollectionViewer extends React.Component<Props, State> {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loadingModels: true,
+        }
+    }
 
     componentDidMount(): void {
-        this.props.myNftsStore.fetchViewingModels();
+        this.props.myNftsStore.fetchViewingModels(() => this.setState({ loadingModels: false }));
     }
 
     onClickBack = () => {
@@ -59,15 +73,18 @@ class NftCollectionViewer extends React.Component<Props> {
                             <div className={'AddMoreButtonText'}>Add more NFTs to Collection</div>
                         </div>}
                 </div>
-                <Table
-                    className={'NftModelsViewerTable'}
-                    legend={['']}
-                    widths={['100%']}
-                    aligns={[TableDesktop.ALIGN_CENTER]}
-                    helper={myNftsStore.tableHelper}
-                    rows={[Table.row([Table.cell(<NftModelsViewer nftModels={nftModels} />)])]}
-                    noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
-                />
+
+                { this.state.loadingModels
+                    ? <LoadingIndicator margin={'50px'}/>
+                    : <SingleRowTable
+                        className={'NftModelsViewerTable'}
+                        legend={['']}
+                        widths={['100%']}
+                        aligns={[TableDesktop.ALIGN_CENTER]}
+                        helper={myNftsStore.tableHelper}
+                        rows={[Table.row([Table.cell(<NftModelsViewer nftModels={nftModels} />)])]}
+                        noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
+                    />}
             </div >
         )
     }

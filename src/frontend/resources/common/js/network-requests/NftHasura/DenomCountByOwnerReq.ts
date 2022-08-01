@@ -16,7 +16,7 @@ export default class NftsByDenomAndOwnerReq {
                 nft_denom_aggregate(where: {
                     _or: [
                       {owner: {_eq: "${this.owner}"}},
-                      {id: {_in: ${this.nftCollectionModelIds}}}
+                      {id: {_in: [${this.nftCollectionModelIds.map((denom) => `"${denom}"`).join(',')}]}}
                     ]
                     id: {_neq: "${Config.CUDOS_NETWORK.NFT_DENOM_ID}"}
                   }) {

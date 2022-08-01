@@ -22,7 +22,7 @@ export default class NftCollectionModelsPaginatedReq {
               nft_denom_aggregate(where: {
                 _or: [
                   {owner: {_eq: "${this.owner}"}},
-                  {id: {_in: ${this.denomsByNftOwnerIds}}}
+                  {id: {_in: [${this.denomsByNftOwnerIds.map((denom) => `"${denom}"`).join(',')}]}}
                 ],
                 id: {_neq: "${Config.CUDOS_NETWORK.NFT_DENOM_ID}"}
                 name: {_iregex: "${this.filter}"},

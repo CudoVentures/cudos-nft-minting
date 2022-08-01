@@ -28,96 +28,9 @@ export default class NftApi extends AbsApi {
         this.queryClient = null;
         this.denomId = Config.CUDOS_NETWORK.NFT_DENOM_ID;
     }
+
     static getGasPrice() {
         return GasPrice.fromString(Config.CUDOS_NETWORK.GAS_PRICE + Config.CUDOS_NETWORK.DENOM);
-    }
-
-    private async init() {
-        this.queryClient = await StargateClient.connect(Config.CUDOS_NETWORK.RPC);
-    }
-
-    async fetchNftCollection(owner: string, denomId: string, callback: (a_: NftCollectionModel | null, b_: NftModel[] | null) => void): Promise<void> {
-        let nftCollectionModel = null;
-        let nftModels = null;
-
-        try {
-            if (this.queryClient === null) {
-                await this.init();
-            }
-
-            const resCollection = await this.queryClient.getNftCollection(denomId, PageRequest.fromJSON({ limit: '1000' }));
-
-            if (resCollection.collection !== undefined) {
-                if (resCollection.collection.denom !== undefined) {
-                    nftCollectionModel = NftCollectionModel.fromChain(resCollection.collection.denom);
-                    nftModels = resCollection.collection.nfts.map((nftJson) => {
-                        const nftModel = NftModel.fromChain(nftJson);
-                        nftModel.denomId = nftCollectionModel.denomId;
-                        return nftModel;
-                    }).filter((nft: NftModel) => {
-                        return nft.recipient === owner
-                    });
-                }
-            }
-        } catch (e) {
-            console.error(e);
-        }
-
-        callback(nftCollectionModel, nftModels);
-    }
-
-    async fetchNftCollections(walletAddress: string, callback: (a_: NftCollectionModel[] | null, b_: NftModel[] | null) => void): Promise<void> {
-        const resNftCollectionModels = [];
-        let resNftModels = [];
-
-        try {
-            if (this.queryClient === null) {
-                await this.init();
-            }
-
-            const denomIdsSet = new Set<string>();
-
-            const resOwner = await this.queryClient.getNftOwner(walletAddress);
-            if (resOwner.owner !== undefined) {
-                if (resOwner.owner.idCollections !== undefined) {
-                    resOwner.owner.idCollections.forEach((idCollection: IDCollection) => {
-                        denomIdsSet.add(idCollection.denomId);
-                    });
-                }
-            }
-
-            const resDenoms = await this.queryClient.getNftDenoms();
-            resDenoms.denoms.filter((denom: Denom) => {
-                return denom.creator === walletAddress
-            }).map((denom) => {
-                return NftCollectionModel.fromChain(denom).denomId
-            }).forEach((denomId) => {
-                denomIdsSet.add(denomId);
-            });
-
-            const denomIds = Array.from(denomIdsSet);
-            for (let i = 0; i < denomIds.length; ++i) {
-                // eslint-disable-next-line no-loop-func
-                await new Promise<void>((resolve, reject) => {
-                    const run = async () => {
-                        this.fetchNftCollection(walletAddress, denomIds[i], (nftCollectionModel, nftModels) => {
-                            if (nftCollectionModel !== null) {
-                                resNftCollectionModels.push(nftCollectionModel);
-                                resNftModels = resNftModels.concat(nftModels);
-                            }
-
-                            resolve();
-                        });
-                    }
-
-                    run();
-                })
-            }
-        } catch (e) {
-            console.error(e);
-        }
-
-        callback(resNftCollectionModels, resNftModels);
     }
 
     mintNftsInCudosCollection(nftModels: NftModel[], recaptchaToken: string): Promise<string> {
