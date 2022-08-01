@@ -5,9 +5,8 @@ export default class NftModelsPaginatedRes {
     totalCount: number;
 
     constructor(json) {
-
-        const data = json.data.nft_nft_aggregate;
-        const nftCollectionJsons = data.nodes.map((node) => node.nft_denom);
+        const data = json.data.nft_denom_aggregate;
+        const nftCollectionJsons = data.nodes;
 
         this.totalCount = data.aggregate.count;
         this.nftCollectionModels = nftCollectionJsons.map((nftJson) => NftCollectionModel.fromHasura(nftJson));

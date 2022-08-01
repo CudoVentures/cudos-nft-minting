@@ -4,12 +4,14 @@ import NftCollectionModel from '../models/NftCollectionModel';
 import NftModel from '../models/NftModel';
 import DenomCountByOwnerReq from '../network-requests/NftHasura/DenomCountByOwnerReq';
 import DenomTransactionHashReq from '../network-requests/NftHasura/DenomTransactionHashReq';
+import NftCollectionIdsByNftOwnerReq from '../network-requests/NftHasura/NftCollectionIdsByNftOwnerReq';
 import NftCollectionModelsPaginatedReq from '../network-requests/NftHasura/NftCollectionModelsPaginatedReq';
 import NftCountByDenomAndOwnerReq from '../network-requests/NftHasura/NftCountByDenomAndOwnerReq';
 import NftModelsPaginatedReq from '../network-requests/NftHasura/NftModelsPaginatedReq';
 import NftTransactionHashReq from '../network-requests/NftHasura/NftTransactionHashReq';
 import DenomCountByOwnerRes from '../network-responses/NftHasura/DenomCountByOwnerRes';
 import DenomTransactionHashRes from '../network-responses/NftHasura/DenomTransactionHashRes';
+import NftCollectionIdsByNftOwnerRes from '../network-responses/NftHasura/NftCollectionIdsByNftOwnerRes';
 import NftCollectionModelsPaginatedRes from '../network-responses/NftHasura/NftCollectionModelsPaginatedRes';
 import NftCountByDenomAndOwnerRes from '../network-responses/NftHasura/NftCountByDenomAndOwnerRes';
 import NftModelsPaginatedRes from '../network-responses/NftHasura/NftModelsPaginatedRes';
@@ -61,7 +63,15 @@ export default class NftApi extends AbsApi {
     }
 
     async getColelctionsTotalCountByOwner(owner: string) {
-        const req = new DenomCountByOwnerReq(owner);
+        // first get denom ids where a user is owner of at least one nft
+        const reqDenomsByNftOwner = new NftCollectionIdsByNftOwnerReq(owner);
+
+        const rresDenomsByNftOwnerJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, reqDenomsByNftOwner.buildRequest())).json();
+
+        const resDenomsByNftOwner = new NftCollectionIdsByNftOwnerRes(rresDenomsByNftOwnerJson);
+
+        // get denoms by owner or if the id is in the above
+        const req = new DenomCountByOwnerReq(owner, resDenomsByNftOwner.nftCollectionModelIds);
 
         const resJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, req.buildRequest())).json();
 
@@ -82,7 +92,15 @@ export default class NftApi extends AbsApi {
     }
 
     async getCollections(owner: string, from: number, to: number, filter: string): Promise<{nftCollectionModels: NftCollectionModel[], totalCount: number}> {
-        const req = new NftCollectionModelsPaginatedReq(owner, from, to, filter);
+        // first get denom ids where a user is owner of at least one nft
+        const reqDenomsByNftOwner = new NftCollectionIdsByNftOwnerReq(owner);
+
+        const rresDenomsByNftOwnerJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, reqDenomsByNftOwner.buildRequest())).json();
+
+        const resDenomsByNftOwner = new NftCollectionIdsByNftOwnerRes(rresDenomsByNftOwnerJson);
+
+        // get denoms by owner or if the id is in the above
+        const req = new NftCollectionModelsPaginatedReq(owner, resDenomsByNftOwner.nftCollectionModelIds, from, to, filter);
         const resJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, req.buildRequest())).json();
 
         const res = new NftCollectionModelsPaginatedRes(resJson);
