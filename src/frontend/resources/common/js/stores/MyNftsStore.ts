@@ -91,7 +91,7 @@ export default class MyNftsStore {
     }
 
     hasNfts(): boolean {
-        return this.filteredNftCollectionModels.length !== 0;
+        return this.nftsCount > 0 || this.collectionsCount > 0;
     }
 
     shouldRenderCollection(): boolean {
@@ -137,9 +137,10 @@ export default class MyNftsStore {
         return NftModel.UNKNOWN_PREVIEW_URL;
     }
 
-    async fetchNftCounts() {
+    async fetchNftCounts(callback: () => void) {
         this.nftsCount = await this.nftHasuraApi.getNftsTotalCountByDenomAndOwner(Config.CUDOS_NETWORK.NFT_DENOM_ID, this.walletStore.keplrWallet.accountAddress);
         this.collectionsCount = await this.nftHasuraApi.getColelctionsTotalCountByOwner(this.walletStore.keplrWallet.accountAddress);
+        callback();
     }
 
     async fetchViewingModels(callback: () => void) {

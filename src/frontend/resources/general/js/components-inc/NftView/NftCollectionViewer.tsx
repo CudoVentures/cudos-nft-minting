@@ -74,17 +74,19 @@ class NftCollectionViewer extends React.Component<Props, State> {
                         </div>}
                 </div>
 
-                { this.state.loadingModels
-                    ? <LoadingIndicator margin={'50px'}/>
-                    : <SingleRowTable
-                        className={'NftModelsViewerTable'}
-                        legend={['']}
-                        widths={['100%']}
-                        aligns={[TableDesktop.ALIGN_CENTER]}
-                        helper={myNftsStore.tableHelper}
-                        rows={[Table.row([Table.cell(<NftModelsViewer nftModels={nftModels} />)])]}
-                        noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
-                    />}
+                <SingleRowTable
+                    className={'NftModelsViewerTable'}
+                    legend={['']}
+                    widths={['100%']}
+                    aligns={[TableDesktop.ALIGN_CENTER]}
+                    helper={myNftsStore.tableHelper}
+                    rows={[Table.row([Table.cell(
+                        this.state.loadingModels
+                            ? <LoadingIndicator margin={'auto'}/>
+                            : <NftModelsViewer nftModels={nftModels} />,
+                    )])]}
+                    noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
+                />
             </div >
         )
     }

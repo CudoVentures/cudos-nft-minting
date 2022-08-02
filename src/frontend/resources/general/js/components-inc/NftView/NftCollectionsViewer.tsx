@@ -8,6 +8,7 @@ import NftCollectionModel from '../../../../common/js/models/NftCollectionModel'
 import ProjectUtils from '../../../../common/js/ProjectUtils';
 
 import '../../../css/components-inc/NftView/nft-collections-viewer.css'
+import S from '../../../../common/js/utilities/Main';
 
 interface Props {
     appStore: AppStore;
@@ -24,10 +25,11 @@ class NftCollectionsViewer extends React.Component<Props> {
     render() {
         const appStore = this.props.appStore;
         const myNftsStore = this.props.myNftsStore;
+        const nftCollectionModels = this.props.nftCollectionModels;
 
         return (
-            <div className={'NftCollectionsViewer'} >
-                {this.props.nftCollectionModels.map((nftCollectionModel: NftCollectionModel) => {
+            <div className={`NftCollectionsViewer ${S.CSS.getClassName(nftCollectionModels.length > 0, 'HasCollections')}`} >
+                {nftCollectionModels.map((nftCollectionModel: NftCollectionModel) => {
                     return (
                         <div
                             key={nftCollectionModel.denomId}
@@ -38,6 +40,9 @@ class NftCollectionsViewer extends React.Component<Props> {
                         </div>
                     )
                 })}
+                {nftCollectionModels.length === 0 && (
+                    <div className={'NoNfts'}>There are no collections for this address.</div>
+                )}
             </div>
         )
     }

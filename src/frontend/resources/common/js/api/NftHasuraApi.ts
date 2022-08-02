@@ -10,6 +10,7 @@ import NftCountByDenomAndOwnerReq from '../network-requests/NftHasura/NftCountBy
 import NftModelsForUrlsReq from '../network-requests/NftHasura/NftModelsForUrlsReq';
 import NftModelsPaginatedReq from '../network-requests/NftHasura/NftModelsPaginatedReq';
 import NftTransactionHashReq from '../network-requests/NftHasura/NftTransactionHashReq';
+import TotalNumberOfNftsInColletionReq from '../network-requests/NftHasura/TotalNumberOfNftsInColletionReq';
 import DenomCountByOwnerRes from '../network-responses/NftHasura/DenomCountByOwnerRes';
 import DenomTransactionHashRes from '../network-responses/NftHasura/DenomTransactionHashRes';
 import NftCollectionIdsByNftOwnerRes from '../network-responses/NftHasura/NftCollectionIdsByNftOwnerRes';
@@ -18,6 +19,7 @@ import NftCountByDenomAndOwnerRes from '../network-responses/NftHasura/NftCountB
 import NftModelsForUrlsRes from '../network-responses/NftHasura/NftModelsForUrlsRes';
 import NftModelsPaginatedRes from '../network-responses/NftHasura/NftModelsPaginatedRes';
 import NftTransactionHashRes from '../network-responses/NftHasura/NftTransactionHashRes';
+import TotalNumberOfNftsInColletionRes from '../network-responses/NftHasura/TotalNumberOfNftsInColletionRes';
 import Api from '../utilities/Api';
 import AbsApi from './AbsApi';
 
@@ -119,5 +121,16 @@ export default class NftApi extends AbsApi {
         const res = new NftCollectionModelsPaginatedRes(resJson);
 
         return { nftCollectionModels: res.nftCollectionModels, totalCount: res.totalCount };
+    }
+
+    async getTotalNumberOfNftsInCollection(denomId: string): Promise<number> {
+        // first get denom ids where a user is owner of at least one nft
+        const req = new TotalNumberOfNftsInColletionReq(denomId);
+
+        const resJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, req.buildRequest())).json();
+
+        const res = new TotalNumberOfNftsInColletionRes(resJson);
+
+        return res.nftCount;
     }
 }

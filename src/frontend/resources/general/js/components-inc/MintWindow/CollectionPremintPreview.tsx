@@ -39,7 +39,7 @@ class CollectionPremintPreview extends React.Component<Props, State> {
         }
     }
 
-    async componentDidMount(): Promise<void> {
+    componentDidMount(): void {
         const collection = this.props.nftMintStore.nftCollection;
         const nftApi = this.nftApi;
         const nftHasuraApi = this.nftHasuraApi;
@@ -51,18 +51,19 @@ class CollectionPremintPreview extends React.Component<Props, State> {
                 });
             }).catch((e) => { });
 
-        nftApi.getNumberOfNftsInCollection(collection.denomId)
+        nftHasuraApi.getTotalNumberOfNftsInCollection(collection.denomId)
             .then((nftCount: number) => {
                 this.setState({
                     nftCount,
                 });
             }).catch((e) => { });
-
     }
 
     render() {
         const nftMintStore = this.props.nftMintStore;
         const navMintStore = nftMintStore.navMintStore;
+        const myNftsStore = this.props.myNftsStore;
+
         const appStore = this.props.appStore;
         const nftCollectionModel = nftMintStore.nftCollection;
         return (
@@ -72,7 +73,7 @@ class CollectionPremintPreview extends React.Component<Props, State> {
                 stepName={'Check Collection Details'} >
                 <div className={'NftCollectionPreview FlexRow'} >
                     <div>
-                        <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(this.props.myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper))} />
+                        <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper))} />
                     </div>
                     <div className={'CollectionDataCnt FlexColumn'} >
                         <div className={'CollectionHeader'} >COLLECTION</div>
@@ -82,7 +83,7 @@ class CollectionPremintPreview extends React.Component<Props, State> {
                         <div className={'CollectionInfo FlexColumn'} >
                             <div className={'InfoRow FlexSplit'} >
                                 <label>Transation Hash</label>
-                                <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.txHash}`} className={'TxInfoBlue StartRight'} target='_blank' rel='noreferrer' > {this.state.txHash} </a>
+                                <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${nftCollectionModel.txHash}`} className={'TxInfoBlue StartRight'} target='_blank' rel='noreferrer' > {nftCollectionModel.txHash} </a>
                             </div>
                             <div className={'InfoRow FlexSplit'} >
                                 <label>Token Standart</label>

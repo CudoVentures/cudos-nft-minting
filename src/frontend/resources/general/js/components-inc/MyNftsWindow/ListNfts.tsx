@@ -43,7 +43,6 @@ class ListNfts extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        this.props.myNftsStore.fetchNftCounts();
         this.fetchModels();
     }
 
@@ -143,7 +142,6 @@ class ListNfts extends React.Component<Props, State> {
     renderSingleNfts() {
         const myNftsStore = this.props.myNftsStore;
         const display = myNftsStore.shouldRenderSingleNfts();
-
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true

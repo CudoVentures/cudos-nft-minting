@@ -71,12 +71,12 @@ export default class NftApi extends AbsApi {
     }
 
     async sendNft(nft: NftModel, recipientAddress: string, senderAddress: string, client: SigningStargateClient): Promise<string> {
-        const txRes = await client.nftTransfer(senderAddress, nft.denomId, nft.tokenId, senderAddress, recipientAddress, NftApi.getGasPrice());
+        const txRes = await client.nftTransfer(senderAddress, nft.denomId, `${nft.tokenId}`, senderAddress, recipientAddress, NftApi.getGasPrice());
         return txRes.transactionHash;
     }
 
     async estimateFeeSendNft(nft: NftModel, recipientAddress: string, senderAddress: string, client: SigningStargateClient): Promise<Coin> {
-        const { msg, fee } = await client.nftModule.msgTransferNft(nft.denomId, nft.tokenId, senderAddress, recipientAddress, senderAddress, '', NftApi.getGasPrice());
+        const { msg, fee } = await client.nftModule.msgTransferNft(nft.denomId, `${nft.tokenId}`, senderAddress, recipientAddress, senderAddress, '', NftApi.getGasPrice());
         return fee.amount[0];
     }
 
@@ -88,11 +88,6 @@ export default class NftApi extends AbsApi {
 
             callback(res.fee);
         });
-    }
-
-    async getNumberOfNftsInCollection(denomId: string): Promise<number> {
-        const res = await this.queryClient.getNftCollection(denomId);
-        return res.collection.nfts.length;
     }
 
     async getCudosPriceInUsd(): Promise<number> {

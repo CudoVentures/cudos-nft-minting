@@ -132,8 +132,7 @@ export default class PopupSendAsGiftStore extends PopupStore {
             client,
         );
 
-        this.myNftsStore.fetchViewingModels();
-        this.onSendAsGiftSuccess();
+        this.myNftsStore.fetchViewingModels(() => { this.onSendAsGiftSuccess() });
     }
 
     async estimateFee() {
@@ -151,6 +150,7 @@ export default class PopupSendAsGiftStore extends PopupStore {
         } catch (e) {
             this.gasFee = S.NOT_EXISTS;
         }
+
         try {
             const cudosPrice = await this.nftApi.getCudosPriceInUsd();
             this.feeInUsd = this.gasFee * cudosPrice;

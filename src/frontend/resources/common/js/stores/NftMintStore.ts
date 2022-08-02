@@ -190,7 +190,6 @@ export default class NftMintStore {
 
             this.navMintStore.collectionMintSuccess();
         } catch (e) {
-            console.log(e);
             this.navMintStore.collectionMintFail();
         } finally {
             this.appStore.enableActions();
@@ -619,7 +618,7 @@ export class NavMintStore {
     }
 
     collectionMintFail = () => {
-        this.mintStep = NavMintStore.STEP_FINISH;
+        this.mintStep = NavMintStore.STEP_MINTING_FAILED;
         this.collectionMinted = NavMintStore.COLLECTION_MINT_FAIL;
     }
 

@@ -124,7 +124,7 @@ class NftFinish extends React.Component<Props, State> {
                                 padding={Button.PADDING_24}
                                 disabled={navMintStore.isCollectionMintedSuccess()}
                                 onClick={this.onClickIssueCollection} >
-                                {navMintStore.isCollectionMintedNone() === true ? 'Create Collection' : 'Collection Created'}
+                                {navMintStore.isCollectionMintedSuccess() !== true ? 'Create Collection' : 'Collection Created'}
                             </Button>
                         }
                         <Button
