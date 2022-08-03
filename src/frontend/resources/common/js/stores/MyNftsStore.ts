@@ -49,7 +49,7 @@ export default class MyNftsStore {
         this.denomIdToUrlMap = new Map();
 
         this.timeoutHelper = new TimeoutHelper();
-        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], () => { this.fetchViewingModels() }, 2);
+        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
 
         makeAutoObservable(this);
     }
