@@ -17,6 +17,7 @@ export default class NftCollectionModel implements Filterable {
     constructor() {
         this.denomId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
+        this.creator = S.Strings.EMPTY;
         this.txHash = S.Strings.EMPTY;
 
         this.previewUrl = S.Strings.EMPTY;
@@ -63,11 +64,16 @@ export default class NftCollectionModel implements Filterable {
         return ImagePreviewHelper.UNKNOWN_PREVIEW_URL;
     }
 
+    validate(): boolean {
+        return this.denomId !== S.Strings.EMPTY && this.name !== S.Strings.EMPTY;
+    }
+
     toJson(): any {
         return {
             'denomId': this.denomId,
             'name': this.name,
             'creator': this.creator,
+            'txHash': this.txHash,
         }
     }
 
@@ -81,20 +87,7 @@ export default class NftCollectionModel implements Filterable {
         model.denomId = json.denomId ?? model.denomId;
         model.name = json.name ?? model.name;
         model.creator = json.creator ?? model.creator;
-
-        return model;
-    }
-
-    static fromChain(json: any): NftCollectionModel {
-        if (json === null) {
-            return null;
-        }
-
-        const model = new NftCollectionModel();
-
-        model.denomId = json.id ?? model.denomId;
-        model.name = json.name ?? model.name;
-        model.creator = json.creator ?? model.creator;
+        model.txHash = json.txHash ?? model.txHash;
 
         return model;
     }
@@ -112,9 +105,5 @@ export default class NftCollectionModel implements Filterable {
         model.txHash = json.transaction_hash ?? model.txHash;
 
         return model;
-    }
-
-    validate(): boolean {
-        return this.denomId !== S.Strings.EMPTY && this.name !== S.Strings.EMPTY;
     }
 }

@@ -126,6 +126,7 @@ export default class NftModel implements Filterable {
             'data': this.data,
             'recipient': this.recipient,
             'approvedAddresses': this.approvedAddresses,
+            'txHash': this.txHash,
         }
     }
 
@@ -143,23 +144,7 @@ export default class NftModel implements Filterable {
         model.data = json.data ?? model.data;
         model.recipient = json.recipient ?? model.recipient;
         model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
-
-        return model;
-    }
-
-    static fromChain(json): NftModel {
-        if (json === null) {
-            return null;
-        }
-
-        const model = new NftModel();
-
-        model.tokenId = json.id ?? model.tokenId;
-        model.name = json.name ?? model.name;
-        model.url = json.uri ?? model.url;
-        model.data = json.data ?? model.data;
-        model.recipient = json.owner ?? model.recipient;
-        model.approvedAddresses = json.approvedAddresses ?? model.approvedAddresses;
+        model.txHash = json.txHash ?? model.txHash;
 
         return model;
     }
