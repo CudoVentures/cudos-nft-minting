@@ -85,7 +85,7 @@ export default class MyNftsStore {
 
         this.tableHelperSingleNfts.tableState.pageZero();
         this.tableHelperNftCollection.tableState.pageZero();
-        this.tableHelperNftCollection.tableState.pageZero();
+        this.tableHelperNftCollections.tableState.pageZero();
     }
 
     areCountsFetched(): boolean {

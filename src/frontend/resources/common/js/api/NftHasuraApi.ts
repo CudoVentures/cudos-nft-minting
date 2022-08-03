@@ -75,7 +75,7 @@ export default class NftApi extends AbsApi {
         const resDenomsByNftOwner = new NftCollectionIdsByNftOwnerRes(rresDenomsByNftOwnerJson);
 
         // get denoms by owner or if the id is in the above
-        const req = new DenomCountByOwnerReq(owner, resDenomsByNftOwner.nftCollectionModelIds);
+        const req = new DenomCountByOwnerReq(owner, filterString, resDenomsByNftOwner.nftCollectionModelIds);
 
         const resJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, req.buildRequest())).json();
 
