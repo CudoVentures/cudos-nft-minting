@@ -49,7 +49,7 @@ export default class MyNftsStore {
         this.denomIdToUrlMap = new Map();
 
         this.timeoutHelper = new TimeoutHelper();
-        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
+        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], () => { this.fetchViewingModels() }, 2);
 
         makeAutoObservable(this);
     }
@@ -182,25 +182,22 @@ export default class MyNftsStore {
 
     async fetchCollections() {
         const tableState = this.tableHelper.tableState;
-        const { nftCollectionModels, totalCount } = await this.nftHasuraApi.getCollections(this.walletStore.keplrWallet.accountAddress, tableState.from, tableState.to(), this.filterString);
+        const { nftCollectionModels } = await this.nftHasuraApi.getCollections(this.walletStore.keplrWallet.accountAddress, tableState.from, tableState.to(), this.filterString);
         const denomIds = nftCollectionModels.map((collectionModel: NftCollectionModel) => collectionModel.denomId);
         const denomIdToUrlMap = await this.nftHasuraApi.getNftModelsForUrls(denomIds);
 
         runInAction(() => {
             this.filteredNftCollectionModels = nftCollectionModels;
             this.denomIdToUrlMap = denomIdToUrlMap;
-            tableState.total = totalCount;
         });
     }
 
     async fetchNfts() {
         const tableState = this.tableHelper.tableState;
         const denomId = this.viewNftCollectionModel !== null ? this.viewNftCollectionModel.denomId : Config.CUDOS_NETWORK.NFT_DENOM_ID;
-        const { nftModels, totalCount } = await this.nftHasuraApi.getNftModels(denomId, this.walletStore.keplrWallet.accountAddress, tableState.from, tableState.to(), this.filterString);
-
+        const { nftModels } = await this.nftHasuraApi.getNftModels(denomId, this.walletStore.keplrWallet.accountAddress, tableState.from, tableState.to(), this.filterString);
         runInAction(() => {
             this.filterredNftModels = nftModels;
-            tableState.total = totalCount;
         });
     }
 
