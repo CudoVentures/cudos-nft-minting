@@ -35,11 +35,19 @@ class ListNfts extends React.Component<Props> {
     }
 
     componentDidMount(): void {
+        const myNftsStore = this.props.myNftsStore;
+        const tableHelper = myNftsStore.tableHelper;
+
+        if (myNftsStore.isViewSingleNfts() === true) {
+            tableHelper.tableState.total = myNftsStore.nftsCount;
+        } else if (myNftsStore.isViewNftCollections() === true) {
+            tableHelper.tableState.total = myNftsStore.collectionsCount;
+        }
+
         this.fetchModels();
     }
 
     onClickViewSingleNfts = () => {
-        this.props.myNftsStore.markViewSingleNfts();
         this.fetchModels();
     }
 
