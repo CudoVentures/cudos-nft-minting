@@ -112,6 +112,14 @@ export default class MyNftsStore {
         return this.viewNftCollectionModel !== null;
     }
 
+    shouldDisplayNoNftsAtAll() {
+        return this.hasFilter() === false && this.hasNfts() === false;
+    }
+
+    hasFilter(): boolean {
+        return this.filterString !== S.Strings.EMPTY;
+    }
+
     hasNfts(): boolean {
         return this.nftsCount > 0 || this.collectionsCount > 0;
     }

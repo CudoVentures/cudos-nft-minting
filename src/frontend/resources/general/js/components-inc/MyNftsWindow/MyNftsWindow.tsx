@@ -24,8 +24,8 @@ class MyNftsWindow extends React.Component < Props > {
         return (
             <div className = { 'MyNftsWindow FlexGrow FlexColumn' } >
                 { myNftsStore.areCountsFetched() === false && <LoadingIndicator margin={'auto'}/>}
-                { myNftsStore.areCountsFetched() === true && myNftsStore.hasNfts() === false && <NoNfts /> }
-                { myNftsStore.areCountsFetched() === true && myNftsStore.hasNfts() === true && <ListNfts /> }
+                { myNftsStore.areCountsFetched() === true && myNftsStore.shouldDisplayNoNftsAtAll() === true && <NoNfts /> }
+                { myNftsStore.areCountsFetched() === true && myNftsStore.shouldDisplayNoNftsAtAll() === false && <ListNfts /> }
             </div>
         )
     }
