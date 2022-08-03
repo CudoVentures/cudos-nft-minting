@@ -40,7 +40,7 @@ class NftCollectionViewer extends React.Component<Props> {
     render() {
         const myNftsStore = this.props.myNftsStore;
         const nftCollectionModel = this.props.nftCollectionModel;
-        const nftModels = myNftsStore.filterredNftModels;
+        const nftModels = myNftsStore.getNftModelsViewingCollection();
 
         return (
             <div className={'NftCollectionViewer'} >
@@ -62,14 +62,14 @@ class NftCollectionViewer extends React.Component<Props> {
                     )}
                 </div>
 
-                { myNftsStore.isDataFetched() === false && <LoadingIndicator margin={'auto'}/> }
-                { myNftsStore.isDataFetched() === true && (
+                { nftModels.length === 0 && myNftsStore.isFetchingNftModels() === true && <LoadingIndicator margin={'auto'}/> }
+                { (nftModels.length !== 0 || myNftsStore.isFetchingNftModels() === false) && (
                     <SingleRowTable
                         className={'NftModelsViewerTable'}
                         legend={['']}
                         widths={['100%']}
                         aligns={[TableDesktop.ALIGN_CENTER]}
-                        helper={myNftsStore.tableHelper}
+                        helper={myNftsStore.tableHelperNftCollection}
                         rows={SingleRowTable.singleCell(<NftModelsViewer nftModels={nftModels} />)}
                         noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>} />
                 ) }

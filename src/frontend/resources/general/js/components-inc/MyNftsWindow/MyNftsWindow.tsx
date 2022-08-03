@@ -16,7 +16,7 @@ interface Props {
 class MyNftsWindow extends React.Component < Props > {
 
     async componentDidMount() {
-        await this.props.myNftsStore.fetchNftCounts();
+        await this.props.myNftsStore.fetchDataCounts();
     }
 
     render() {

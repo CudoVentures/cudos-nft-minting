@@ -66,7 +66,7 @@ export default class NftApi extends AbsApi {
         return res.nftCount;
     }
 
-    async getColelctionsTotalCountByOwner(owner: string) {
+    async getCollectionsTotalCountByOwner(owner: string) {
         // first get denom ids where a user is owner of at least one nft
         const reqDenomsByNftOwner = new NftCollectionIdsByNftOwnerReq(owner);
 

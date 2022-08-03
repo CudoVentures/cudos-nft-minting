@@ -9,7 +9,7 @@ import WalletStore from './WalletStore';
 import AppStore from './AppStore';
 import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
 import NftHasuraApi from '../api/NftHasuraApi';
-import TableHelper from '../helpers/TableHelper';
+import TableHelper, { TableState } from '../helpers/TableHelper';
 import ImagePreviewHelper from '../helpers/ImagePreviewHelper';
 
 export default class MyNftsStore {
@@ -22,21 +22,27 @@ export default class MyNftsStore {
     appStore: AppStore;
     walletStore: WalletStore;
 
+    fetchingNftModels: number;
+    fetchingNftCollectionModels: number;
+
     viewPage: number;
     viewNftModel: NftModel;
     viewNftCollectionModel: NftCollectionModel;
 
     filterString: string;
-    filterredNftModels: NftModel[];
-    filteredNftCollectionModels: NftCollectionModel[];
-
     nftsCount: number;
     collectionsCount: number;
 
     denomIdToUrlMap: Map < string, string >;
+    nftCollectionModels: NftCollectionModel[]
+    denomIdToNftModelsMap: Map < string, NftModel[] >;
+    denomIdToNftModelsCount: Map < string, number >;
+
+    tableHelperSingleNfts: TableHelper;
+    tableHelperNftCollections: TableHelper;
+    tableHelperNftCollection: TableHelper;
 
     timeoutHelper: TimeoutHelper;
-    tableHelper: TableHelper;
 
     constructor(appStore: AppStore, walletStore: WalletStore) {
         this.nftApi = new NftApi();
@@ -44,12 +50,18 @@ export default class MyNftsStore {
         this.appStore = appStore;
         this.walletStore = walletStore;
 
+        this.fetchingNftModels = 0;
+        this.fetchingNftCollectionModels = 0;
+
         this.reset();
 
         this.denomIdToUrlMap = new Map();
 
+        this.tableHelperSingleNfts = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
+        this.tableHelperNftCollections = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
+        this.tableHelperNftCollection = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
+
         this.timeoutHelper = new TimeoutHelper();
-        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
 
         makeAutoObservable(this);
     }
@@ -60,31 +72,28 @@ export default class MyNftsStore {
         this.viewNftCollectionModel = null;
 
         this.filterString = S.Strings.EMPTY;
-        this.filterredNftModels = null;
-        this.filteredNftCollectionModels = null;
+        this.resetData();
+    }
 
+    resetData() {
         this.nftsCount = S.NOT_EXISTS;
         this.collectionsCount = S.NOT_EXISTS;
+
+        this.nftCollectionModels = [];
+        this.denomIdToNftModelsMap = new Map();
+        this.denomIdToNftModelsCount = new Map();
     }
 
     areCountsFetched(): boolean {
         return this.nftsCount !== S.NOT_EXISTS && this.collectionsCount !== S.NOT_EXISTS;
     }
 
-    isDataFetched(): boolean {
-        if (this.shouldRenderSingleNfts()) {
-            return this.filterredNftModels !== null;
-        }
+    isFetchingNftModels(): boolean {
+        return this.fetchingNftModels !== 0;
+    }
 
-        if (this.shouldRenderNftCollections()) {
-            return this.filteredNftCollectionModels !== null;
-        }
-
-        if (this.shouldRenderCollection()) {
-            return this.filterredNftModels !== null;
-        }
-
-        return false;
+    isFetchingNftCollectionModels(): boolean {
+        return this.fetchingNftCollectionModels !== 0;
     }
 
     isViewSingleNfts(): boolean {
@@ -124,8 +133,7 @@ export default class MyNftsStore {
         this.viewNftModel = null;
         this.viewNftCollectionModel = null;
 
-        this.filterredNftModels = null;
-        this.filteredNftCollectionModels = null;
+        this.tableHelperSingleNfts.tableState.pageZero();
 
         this.fetchViewingModels();
     }
@@ -135,8 +143,7 @@ export default class MyNftsStore {
         this.viewNftModel = null;
         this.viewNftCollectionModel = null;
 
-        this.filterredNftModels = null;
-        this.filteredNftCollectionModels = null;
+        this.tableHelperNftCollections.tableState.pageZero();
 
         this.fetchViewingModels();
     }
@@ -148,17 +155,17 @@ export default class MyNftsStore {
     markNftCollection(nftCollectionModel: NftCollectionModel) {
         this.viewNftCollectionModel = nftCollectionModel;
 
-        if (nftCollectionModel !== null) {
-            this.filteredNftCollectionModels = null;
-            this.filterredNftModels = null;
-        } else {
-            this.fetchViewingModels();
-        }
+        this.tableHelperNftCollection.tableState.pageZero();
+
+        this.fetchViewingModels();
     }
 
     onChangeFilterString = (value) => {
         this.filterString = value;
-        this.timeoutHelper.signal(this.fetchViewingModels);
+        this.timeoutHelper.signal(() => {
+            this.resetData();
+            this.fetchViewingModels();
+        });
     }
 
     getCollectionPreviewUrl(nftCollectionModel: NftCollectionModel, workerQueueHelper: WorkerQueueHelper) {
@@ -170,9 +177,54 @@ export default class MyNftsStore {
         return nftCollectionModel.getPreviewUrl(url, workerQueueHelper);
     }
 
-    async fetchNftCounts() {
-        const nftsCount = await this.nftHasuraApi.getNftsTotalCountByDenomAndOwner(Config.CUDOS_NETWORK.NFT_DENOM_ID, this.walletStore.keplrWallet.accountAddress);
-        const collectionsCount = await this.nftHasuraApi.getColelctionsTotalCountByOwner(this.walletStore.keplrWallet.accountAddress);
+    getNftModelsInDefaultCollection(): NftModel[] {
+        return this.getNftModels(Config.CUDOS_NETWORK.NFT_DENOM_ID, this.tableHelperSingleNfts.tableState);
+    }
+
+    getNftModelsViewingCollection(): NftModel[] {
+        return this.getNftModels(this.viewNftCollectionModel.denomId, this.tableHelperNftCollection.tableState);
+    }
+
+    private getNftModels(denomId: string, tableState: TableState): NftModel[] {
+        const nftModels = this.denomIdToNftModelsMap.get(denomId) ?? [];
+        const from = tableState.from;
+        const to = tableState.to();
+
+        return nftModels.slice(Math.min(nftModels.length, from), Math.min(nftModels.length, to)).filter((m) => m !== null);
+    }
+
+    getNftCollectionModels(): NftCollectionModel[] {
+        const nftCollectionModels = this.nftCollectionModels ?? [];
+        const tableState = this.tableHelperNftCollections.tableState;
+        const from = tableState.from;
+        const to = tableState.to();
+
+        return nftCollectionModels.slice(Math.min(nftCollectionModels.length, from), Math.min(nftCollectionModels.length, to)).filter((m) => m !== null);
+    }
+
+    fetchViewingModels = async () => {
+        if (this.shouldRenderSingleNfts() === true) {
+            await this.fetchDataCounts();
+            await this.fetchNftModels(Config.CUDOS_NETWORK.NFT_DENOM_ID, this.tableHelperSingleNfts.tableState, this.filterString);
+        }
+
+        if (this.shouldRenderNftCollections() === true) {
+            await this.fetchDataCounts();
+            await this.fetchNftCollectionModels(this.tableHelperNftCollections.tableState);
+        }
+
+        if (this.shouldRenderCollection() === true) {
+            const denomId = this.viewNftCollectionModel.denomId
+
+            await this.fetchDataCounts();
+            await this.fetchNftModelsCount(denomId);
+            await this.fetchNftModels(denomId, this.tableHelperNftCollection.tableState, S.Strings.EMPTY);
+        }
+    }
+
+    async fetchDataCounts(): Promise < void > {
+        const nftsCount = await this.fetchNftModelsCount(Config.CUDOS_NETWORK.NFT_DENOM_ID);
+        const collectionsCount = await this.fetchNftCollectionModelsCount(this.walletStore.keplrWallet.accountAddress);
 
         runInAction(() => {
             this.nftsCount = nftsCount;
@@ -180,38 +232,97 @@ export default class MyNftsStore {
         });
     }
 
-    async fetchCollections() {
-        const tableState = this.tableHelper.tableState;
-        const { nftCollectionModels } = await this.nftHasuraApi.getCollections(this.walletStore.keplrWallet.accountAddress, tableState.from, tableState.to(), this.filterString);
+    private async fetchNftModelsCount(denomId: string): Promise < number > {
+        const count = await this.nftHasuraApi.getNftsTotalCountByDenomAndOwner(denomId, this.walletStore.keplrWallet.accountAddress);
+
+        const cacheMap = this.denomIdToNftModelsCount;
+        this.denomIdToNftModelsCount = null;
+
+        cacheMap.set(denomId, count);
+
+        this.denomIdToNftModelsCount = cacheMap;
+
+        return count;
+    }
+
+    private async fetchNftCollectionModelsCount(walletAddress: string): Promise < number > {
+        return this.nftHasuraApi.getCollectionsTotalCountByOwner(walletAddress);
+    }
+
+    private async fetchNftCollectionModels(tableState: TableState): Promise < void > {
+        const from = tableState.from;
+        const to = tableState.to();
+
+        let fetch = true;
+        if (to < this.nftCollectionModels.length) {
+            for (let i = from; i < to; ++i) {
+                fetch = fetch && this.nftCollectionModels[i] !== null;
+            }
+        }
+
+        if (fetch === false) {
+            return;
+        }
+
+        ++this.fetchingNftCollectionModels;
+        const { nftCollectionModels } = await this.nftHasuraApi.getCollections(this.walletStore.keplrWallet.accountAddress, from, to, this.filterString);
         const denomIds = nftCollectionModels.map((collectionModel: NftCollectionModel) => collectionModel.denomId);
         const denomIdToUrlMap = await this.nftHasuraApi.getNftModelsForUrls(denomIds);
 
         runInAction(() => {
-            this.filteredNftCollectionModels = nftCollectionModels;
-            this.denomIdToUrlMap = denomIdToUrlMap;
+            while (this.nftCollectionModels.length < to) {
+                this.nftCollectionModels.push(null);
+            }
+
+            for (let i = nftCollectionModels.length; i-- > 0;) {
+                this.nftCollectionModels[from + i] = nftCollectionModels[i];
+            }
+
+            const cacheMap = this.denomIdToUrlMap;
+            this.denomIdToUrlMap = null;
+            denomIdToUrlMap.forEach((url, denomId) => {
+                cacheMap.set(denomId, url);
+            })
+            this.denomIdToUrlMap = cacheMap;
+            --this.fetchingNftCollectionModels;
         });
     }
 
-    async fetchNfts() {
-        const tableState = this.tableHelper.tableState;
-        const denomId = this.viewNftCollectionModel !== null ? this.viewNftCollectionModel.denomId : Config.CUDOS_NETWORK.NFT_DENOM_ID;
-        const { nftModels } = await this.nftHasuraApi.getNftModels(denomId, this.walletStore.keplrWallet.accountAddress, tableState.from, tableState.to(), this.filterString);
+    private async fetchNftModels(denomId: string, tableState: TableState, filterString: string) : Promise < void > {
+        const from = tableState.from;
+        const to = tableState.to();
+
+        let fetch = true;
+        let cacheNftModels = this.denomIdToNftModelsMap.get(denomId);
+        if (to < (cacheNftModels ?? []).length) {
+            for (let i = from; i < to; ++i) {
+                fetch = fetch && cacheNftModels[i] !== null;
+            }
+        }
+
+        if (fetch === false) {
+            return;
+        }
+
+        ++this.fetchingNftModels;
+        const { nftModels } = await this.nftHasuraApi.getNftModels(denomId, this.walletStore.keplrWallet.accountAddress, from, to, filterString);
         runInAction(() => {
-            this.filterredNftModels = nftModels;
+            const cacheMap = this.denomIdToNftModelsMap;
+            this.denomIdToNftModelsMap = null;
+
+            cacheNftModels = cacheMap.get(denomId) ?? [];
+            while (cacheNftModels.length < to) {
+                cacheNftModels.push(null);
+            }
+
+            for (let i = nftModels.length; i-- > 0;) {
+                cacheNftModels[from + i] = nftModels[i];
+            }
+
+            cacheMap.set(denomId, cacheNftModels);
+
+            this.denomIdToNftModelsMap = cacheMap;
+            --this.fetchingNftModels;
         });
-    }
-
-    fetchViewingModels = async () => {
-        if (this.shouldRenderSingleNfts()) {
-            await this.fetchNfts();
-        }
-
-        if (this.shouldRenderNftCollections()) {
-            await this.fetchCollections();
-        }
-
-        if (this.shouldRenderCollection()) {
-            await this.fetchNfts();
-        }
     }
 }
