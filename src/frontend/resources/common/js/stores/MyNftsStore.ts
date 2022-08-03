@@ -206,6 +206,26 @@ export default class MyNftsStore {
         return nftCollectionModels.slice(Math.min(nftCollectionModels.length, from), Math.min(nftCollectionModels.length, to)).filter((m) => m !== null);
     }
 
+    removeNftModel(nftModel: NftModel) {
+        const nftModels = this.denomIdToNftModelsMap.get(nftModel.denomId);
+        nftModels.removeElement(nftModel, (t1, t2) => {
+            return t1.tokenId === t2.tokenId;
+        });
+
+        const cacheDataMap = this.denomIdToNftModelsMap;
+        this.denomIdToNftModelsMap = null;
+        cacheDataMap.set(nftModel.denomId, nftModels);
+        this.denomIdToNftModelsMap = cacheDataMap;
+
+        const count = this.denomIdToNftModelsCount.get(nftModel.denomId);
+        if (count !== undefined) {
+            const cacheCountsMap = this.denomIdToNftModelsCount;
+            this.denomIdToNftModelsCount = null;
+            cacheCountsMap.set(nftModel.denomId, count - 1);
+            this.denomIdToNftModelsCount = cacheCountsMap;
+        }
+    }
+
     fetchViewingModels = async () => {
         if (this.shouldRenderSingleNfts() === true) {
             await this.fetchDataCounts();
