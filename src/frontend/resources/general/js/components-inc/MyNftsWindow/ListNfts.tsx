@@ -35,21 +35,15 @@ class ListNfts extends React.Component<Props> {
     }
 
     componentDidMount(): void {
-        this.fetchModels();
+        this.props.myNftsStore.fetchViewingModels();
     }
 
     onClickViewSingleNfts = () => {
         this.props.myNftsStore.markViewSingleNfts();
-        this.fetchModels();
     }
 
     onClickViewCollections = () => {
         this.props.myNftsStore.markViewNftCollections();
-        this.fetchModels();
-    }
-
-    fetchModels() {
-        this.props.myNftsStore.fetchViewingModels();
     }
 
     render() {
@@ -125,18 +119,19 @@ class ListNfts extends React.Component<Props> {
         const display = myNftsStore.shouldRenderSingleNfts();
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
-                {display === true
-                && (myNftsStore.isDataFetched() === false
-                    ? <LoadingIndicator margin={'200px'}/>
-                    : <SingleRowTable
-                        className={'NftModelsViewerTable'}
-                        legend={['']}
-                        widths={['100%']}
-                        aligns={[TableDesktop.ALIGN_CENTER]}
-                        helper={myNftsStore.tableHelper}
-                        rows={[Table.row([Table.cell(<NftModelsViewer nftModels={myNftsStore.filterredNftModels} />)])]}
-                        noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>}
-                    />)
+                { display === true && myNftsStore.isDataFetched() === false
+                    ? (
+                        <LoadingIndicator margin={'200px'}/>
+                    ) : (
+                        <SingleRowTable
+                            className={'NftModelsViewerTable'}
+                            legend={['']}
+                            widths={['100%']}
+                            aligns={[TableDesktop.ALIGN_CENTER]}
+                            helper={myNftsStore.tableHelper}
+                            rows={SingleRowTable.singleCell(<NftModelsViewer nftModels={myNftsStore.filterredNftModels} />)}
+                            noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>} />
+                    )
                 }
             </div>
         )
@@ -148,18 +143,19 @@ class ListNfts extends React.Component<Props> {
 
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
-                {display === true
-                && (myNftsStore.isDataFetched() === false
-                    ? <LoadingIndicator margin={'200px'}/>
-                    : <SingleRowTable
-                        className={'NftModelsViewerTable'}
-                        legend={['']}
-                        widths={['100%']}
-                        aligns={[TableDesktop.ALIGN_CENTER]}
-                        helper={myNftsStore.tableHelper}
-                        rows={[Table.row([Table.cell(<NftCollectionsViewer nftCollectionModels={myNftsStore.filteredNftCollectionModels} />)])]}
-                        noRowsContent={<div className={'NoNfts'}>There are no collections for this address</div>}
-                    />)
+                {display === true && myNftsStore.isDataFetched() === false
+                    ? (
+                        <LoadingIndicator margin={'200px'}/>
+                    ) : (
+                        <SingleRowTable
+                            className={'NftModelsViewerTable'}
+                            legend={['']}
+                            widths={['100%']}
+                            aligns={[TableDesktop.ALIGN_CENTER]}
+                            helper={myNftsStore.tableHelper}
+                            rows={SingleRowTable.singleCell(<NftCollectionsViewer nftCollectionModels={myNftsStore.filteredNftCollectionModels} />)}
+                            noRowsContent={<div className={'NoNfts'}>There are no collections for this address</div>} />
+                    )
                 }
             </div>
         )

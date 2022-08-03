@@ -27,11 +27,11 @@ export default class MyNftsStore {
     viewNftCollectionModel: NftCollectionModel;
 
     filterString: string;
-    nftsCount: number;
-    collectionsCount: number;
-
     filterredNftModels: NftModel[];
     filteredNftCollectionModels: NftCollectionModel[];
+
+    nftsCount: number;
+    collectionsCount: number;
 
     denomIdToUrlMap: Map < string, string >;
 
@@ -46,15 +46,10 @@ export default class MyNftsStore {
 
         this.reset();
 
-        this.nftsCount = S.NOT_EXISTS;
-        this.collectionsCount = S.NOT_EXISTS;
-
         this.denomIdToUrlMap = new Map();
-        this.filterredNftModels = null;
-        this.filteredNftCollectionModels = null;
 
         this.timeoutHelper = new TimeoutHelper();
-        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], () => { }, 5);
+        this.tableHelper = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
 
         makeAutoObservable(this);
     }
@@ -65,6 +60,11 @@ export default class MyNftsStore {
         this.viewNftCollectionModel = null;
 
         this.filterString = S.Strings.EMPTY;
+        this.filterredNftModels = null;
+        this.filteredNftCollectionModels = null;
+
+        this.nftsCount = S.NOT_EXISTS;
+        this.collectionsCount = S.NOT_EXISTS;
     }
 
     areCountsFetched(): boolean {
@@ -76,15 +76,15 @@ export default class MyNftsStore {
             return this.filterredNftModels !== null;
         }
 
-        if (this.shouldRenderCollection()) {
-            return this.filterredNftModels !== null;
-        }
-
         if (this.shouldRenderNftCollections()) {
             return this.filteredNftCollectionModels !== null;
         }
 
-        return false;
+        if (this.shouldRenderCollection()) {
+            return this.filterredNftModels !== null;
+        }
+
+        return true;
     }
 
     isViewSingleNfts(): boolean {
@@ -123,20 +123,41 @@ export default class MyNftsStore {
         this.viewPage = MyNftsStore.PAGE_SINGLE_NFTS;
         this.viewNftModel = null;
         this.viewNftCollectionModel = null;
+
+        this.filterredNftModels = null;
+        this.filteredNftCollectionModels = null;
+
+        this.fetchViewingModels();
     }
 
     markViewNftCollections = () => {
         this.viewPage = MyNftsStore.PAGE_NFT_COLLECTIONS;
         this.viewNftModel = null;
         this.viewNftCollectionModel = null;
+
+        this.filterredNftModels = null;
+        this.filteredNftCollectionModels = null;
+
+        this.fetchViewingModels();
     }
 
     markNft(nftModel: NftModel) {
         this.viewNftModel = nftModel;
+
+        this.filteredNftCollectionModels = null;
+        this.filterredNftModels = null;
     }
 
     markNftCollection(nftCollectionModel: NftCollectionModel) {
         this.viewNftCollectionModel = nftCollectionModel;
+
+        this.filteredNftCollectionModels = null;
+        this.filterredNftModels = null;
+    }
+
+    onChangeFilterString = (value) => {
+        this.filterString = value;
+        this.timeoutHelper.signal(this.fetchViewingModels);
     }
 
     getCollectionPreviewUrl(nftCollectionModel: NftCollectionModel, workerQueueHelper: WorkerQueueHelper) {
@@ -156,20 +177,6 @@ export default class MyNftsStore {
             this.nftsCount = nftsCount;
             this.collectionsCount = collectionsCount;
         });
-    }
-
-    fetchViewingModels = async () => {
-        if (this.shouldRenderSingleNfts()) {
-            await this.fetchNfts();
-        }
-
-        if (this.shouldRenderCollection()) {
-            await this.fetchNfts();
-        }
-
-        if (this.shouldRenderNftCollections()) {
-            await this.fetchCollections();
-        }
     }
 
     async fetchCollections() {
@@ -196,9 +203,17 @@ export default class MyNftsStore {
         });
     }
 
-    onChangeFilterString = (value) => {
-        this.filterString = value;
+    fetchViewingModels = async () => {
+        if (this.shouldRenderSingleNfts()) {
+            await this.fetchNfts();
+        }
 
-        this.timeoutHelper.signal(this.fetchViewingModels);
+        if (this.shouldRenderNftCollections()) {
+            await this.fetchCollections();
+        }
+
+        if (this.shouldRenderCollection()) {
+            await this.fetchNfts();
+        }
     }
 }

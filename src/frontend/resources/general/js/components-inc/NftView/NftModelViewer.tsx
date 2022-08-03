@@ -11,8 +11,8 @@ import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import '../../../css/components-inc/NftView/nft-model-viewer.css'
 
 interface Props {
-    myNftsStore: MyNftsStore;
-    nftModel: NftModel;
+    myNftsStore?: MyNftsStore;
+    nftModel?: NftModel;
     nftCollectionModel: NftCollectionModel | null;
 }
 

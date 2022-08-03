@@ -1,6 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import Config from '../../../../../../../builds/dev-generated/Config';
+
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 import PopupSendAsGiftStore from '../../../../common/js/stores/PopupSendAsGiftStore';
 import AppStore from '../../../../common/js/stores/AppStore';
@@ -14,12 +16,11 @@ import Button from '../../../../common/js/components-inc/Button';
 
 import SvgDownload from '../../../../common/svg/download.svg';
 import '../../../css/components-inc/NftView/nft-viewer.css'
-import Config from '../../../../../../../builds/dev-generated/Config';
 
 interface Props {
-    appStore: AppStore;
-    popupSendAsGiftStore: PopupSendAsGiftStore;
-    myNftsStore: MyNftsStore;
+    appStore?: AppStore;
+    popupSendAsGiftStore?: PopupSendAsGiftStore;
+    myNftsStore?: MyNftsStore;
     nftModel?: NftModel;
     nftCollectionModel?: NftCollectionModel;
     onSendAsGiftSuccess: () => void;
@@ -37,7 +38,7 @@ class NftViewer extends React.Component<Props> {
         const { nftModel, nftCollectionModel } = this.props;
 
         if (nftModel !== null) {
-            return nftCollectionModel !== null ? nftCollectionModel.name : 'CUDOS ONE COLLECTION';
+            return nftCollectionModel !== null ? nftCollectionModel.name : NftCollectionModel.instanceCudosMainCollection().name.toUpperCase();
         }
 
         return 'collection';
