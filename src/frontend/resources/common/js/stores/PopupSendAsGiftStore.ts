@@ -132,7 +132,8 @@ export default class PopupSendAsGiftStore extends PopupStore {
             client,
         );
 
-        this.myNftsStore.fetchViewingModels(() => { this.onSendAsGiftSuccess() });
+        this.myNftsStore.removeNftModel(this.nftModel);
+        this.onSendAsGiftSuccess();
     }
 
     async estimateFee() {
