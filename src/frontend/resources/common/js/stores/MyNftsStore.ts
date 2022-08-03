@@ -154,6 +154,10 @@ export default class MyNftsStore {
 
     markNft(nftModel: NftModel) {
         this.viewNftModel = nftModel;
+
+        this.tableHelperNftCollection.tableState.pageZero();
+
+        this.fetchViewingModels();
     }
 
     markNftCollection(nftCollectionModel: NftCollectionModel) {
@@ -342,7 +346,6 @@ export default class MyNftsStore {
             fetch = true;
         }
 
-        console.log(fetch);
         if (fetch === false) {
             return;
         }
