@@ -36,6 +36,7 @@ export default class NavStore {
         switch (page) {
             case NavStore.MY_NFTS_PAGE_KEY:
                 this.myNftsStore.reset();
+                this.myNftsStore.fetchViewingModels();
                 break;
             case NavStore.MINT_PAGE_KEY:
                 this.nftMintStore.reset(true);

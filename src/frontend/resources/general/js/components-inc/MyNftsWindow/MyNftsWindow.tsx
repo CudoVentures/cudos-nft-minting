@@ -13,10 +13,26 @@ interface Props {
     myNftsStore?: MyNftsStore;
 }
 
-class MyNftsWindow extends React.Component < Props > {
+interface State {
+    hasNfts: boolean;
+}
+
+class MyNftsWindow extends React.Component < Props, State > {
+
+    constructor(props: Props) {
+        super(props);
+
+        this.state = {
+            hasNfts: true,
+        }
+    }
 
     async componentDidMount() {
-        await this.props.myNftsStore.fetchNftCounts();
+        const myNftsStore = this.props.myNftsStore;
+        await myNftsStore.fetchDataCounts();
+        this.setState({
+            hasNfts: myNftsStore.hasNfts(),
+        })
     }
 
     render() {
@@ -24,8 +40,8 @@ class MyNftsWindow extends React.Component < Props > {
         return (
             <div className = { 'MyNftsWindow FlexGrow FlexColumn' } >
                 { myNftsStore.areCountsFetched() === false && <LoadingIndicator margin={'auto'}/>}
-                { myNftsStore.areCountsFetched() === true && myNftsStore.hasNfts() === false && <NoNfts /> }
-                { myNftsStore.areCountsFetched() === true && myNftsStore.hasNfts() === true && <ListNfts /> }
+                { myNftsStore.areCountsFetched() === true && this.state.hasNfts === false && <NoNfts /> }
+                { myNftsStore.areCountsFetched() === true && this.state.hasNfts === true && <ListNfts /> }
             </div>
         )
     }

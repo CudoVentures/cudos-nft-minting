@@ -35,16 +35,7 @@ class ListNfts extends React.Component<Props> {
     }
 
     componentDidMount(): void {
-        const myNftsStore = this.props.myNftsStore;
-        const tableHelper = myNftsStore.tableHelper;
-
-        if (myNftsStore.isViewSingleNfts() === true) {
-            tableHelper.tableState.total = myNftsStore.nftsCount;
-        } else if (myNftsStore.isViewNftCollections() === true) {
-            tableHelper.tableState.total = myNftsStore.collectionsCount;
-        }
-
-        myNftsStore.fetchViewingModels();
+        this.props.myNftsStore.fetchViewingModels();
     }
 
     onClickViewSingleNfts = () => {
@@ -126,25 +117,29 @@ class ListNfts extends React.Component<Props> {
     renderSingleNfts() {
         const myNftsStore = this.props.myNftsStore;
         const display = myNftsStore.shouldRenderSingleNfts();
+        const nftModels = myNftsStore.getNftModelsInDefaultCollection();
+
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 { display === true && (
-                    <>
-                        { myNftsStore.isDataFetched() === false
-                            ? (
-                                <LoadingIndicator margin={'200px'}/>
-                            ) : (
-                                <SingleRowTable
-                                    className={'NftModelsViewerTable'}
-                                    legend={['']}
-                                    widths={['100%']}
-                                    aligns={[TableDesktop.ALIGN_CENTER]}
-                                    helper={myNftsStore.tableHelper}
-                                    rows={SingleRowTable.singleCell(<NftModelsViewer nftModels={myNftsStore.filterredNftModels} />)}
-                                    noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>} />
-                            )
-                        }
-                    </>
+                    <SingleRowTable
+                        className={'NftModelsViewerTable'}
+                        legend={['']}
+                        widths={['100%']}
+                        aligns={[TableDesktop.ALIGN_CENTER]}
+                        helper={myNftsStore.tableHelperSingleNfts}
+                        rows={SingleRowTable.singleCell((
+                            <>
+                                { nftModels.length === 0 && myNftsStore.isFetchingNftModels() === true
+                                    ? (
+                                        <LoadingIndicator margin={'16px'}/>
+                                    ) : (
+                                        <NftModelsViewer nftModels={nftModels} />
+                                    )
+                                }
+                            </>
+                        ))}
+                        noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>} />
                 ) }
             </div>
         )
@@ -153,12 +148,13 @@ class ListNfts extends React.Component<Props> {
     renderNftCollecions() {
         const myNftsStore = this.props.myNftsStore;
         const display = myNftsStore.shouldRenderNftCollections();
+        const nftCollectionModels = myNftsStore.getNftCollectionModels();
 
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 { display === true && (
                     <>
-                        { myNftsStore.isDataFetched() === false
+                        { nftCollectionModels.length === 0 && myNftsStore.isFetchingNftCollectionModels() === true
                             ? (
                                 <LoadingIndicator margin={'200px'}/>
                             ) : (
@@ -167,8 +163,18 @@ class ListNfts extends React.Component<Props> {
                                     legend={['']}
                                     widths={['100%']}
                                     aligns={[TableDesktop.ALIGN_CENTER]}
-                                    helper={myNftsStore.tableHelper}
-                                    rows={SingleRowTable.singleCell(<NftCollectionsViewer nftCollectionModels={myNftsStore.filteredNftCollectionModels} />)}
+                                    helper={myNftsStore.tableHelperNftCollections}
+                                    rows={SingleRowTable.singleCell((
+                                        <>
+                                            { nftCollectionModels.length === 0 && myNftsStore.isFetchingNftCollectionModels() === true
+                                                ? (
+                                                    <LoadingIndicator margin={'16px'}/>
+                                                ) : (
+                                                    <NftCollectionsViewer nftCollectionModels={nftCollectionModels} />
+                                                )
+                                            }
+                                        </>
+                                    ))}
                                     noRowsContent={<div className={'NoNfts'}>There are no collections for this address</div>} />
                             )
                         }

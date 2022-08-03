@@ -56,8 +56,8 @@ export default class NftApi extends AbsApi {
         return res.txHash;
     }
 
-    async getNftsTotalCountByDenomAndOwner(denomId: string, owner: string) {
-        const req = new NftCountByDenomAndOwnerReq(denomId, owner);
+    async getNftsTotalCountByDenomAndOwner(denomId: string, owner: string, filterString: string) {
+        const req = new NftCountByDenomAndOwnerReq(denomId, owner, filterString);
 
         const resJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, req.buildRequest())).json();
 
@@ -66,16 +66,16 @@ export default class NftApi extends AbsApi {
         return res.nftCount;
     }
 
-    async getColelctionsTotalCountByOwner(owner: string) {
+    async getCollectionsTotalCountByOwner(owner: string, filterString: string) {
         // first get denom ids where a user is owner of at least one nft
-        const reqDenomsByNftOwner = new NftCollectionIdsByNftOwnerReq(owner);
+        const reqDenomsByNftOwner = new NftCollectionIdsByNftOwnerReq(owner, filterString);
 
         const rresDenomsByNftOwnerJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, reqDenomsByNftOwner.buildRequest())).json();
 
         const resDenomsByNftOwner = new NftCollectionIdsByNftOwnerRes(rresDenomsByNftOwnerJson);
 
         // get denoms by owner or if the id is in the above
-        const req = new DenomCountByOwnerReq(owner, resDenomsByNftOwner.nftCollectionModelIds);
+        const req = new DenomCountByOwnerReq(owner, filterString, resDenomsByNftOwner.nftCollectionModelIds);
 
         const resJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, req.buildRequest())).json();
 
@@ -108,7 +108,7 @@ export default class NftApi extends AbsApi {
 
     async getCollections(owner: string, from: number, to: number, filter: string): Promise<{nftCollectionModels: NftCollectionModel[], totalCount: number}> {
         // first get denom ids where a user is owner of at least one nft
-        const reqDenomsByNftOwner = new NftCollectionIdsByNftOwnerReq(owner);
+        const reqDenomsByNftOwner = new NftCollectionIdsByNftOwnerReq(owner, filter);
 
         const rresDenomsByNftOwnerJson = await (await fetch(Config.CUDOS_NETWORK.GRAPHQL, reqDenomsByNftOwner.buildRequest())).json();
 

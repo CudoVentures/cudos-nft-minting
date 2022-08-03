@@ -30,7 +30,7 @@ export default class WorkerQueueHelper {
                 const result = await runnable.run();
                 await runnable.onFinish(result);
             } catch (e) {
-                await runnable.onFinish('null');
+                await runnable.onFinish(null);
             }
         }
 

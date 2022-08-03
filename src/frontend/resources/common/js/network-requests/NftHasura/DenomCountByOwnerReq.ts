@@ -3,9 +3,11 @@ import Config from '../../../../../../../builds/dev-generated/Config';
 export default class NftsByDenomAndOwnerReq {
     owner: string;
     nftCollectionModelIds: string[];
+    filterString: string;
 
-    constructor(owner: string, nftCollectionModelIds: string[]) {
+    constructor(owner: string, filterString: string, nftCollectionModelIds: string[]) {
         this.owner = owner;
+        this.filterString = filterString;
         this.nftCollectionModelIds = nftCollectionModelIds;
     }
 
@@ -18,6 +20,8 @@ export default class NftsByDenomAndOwnerReq {
                       {owner: {_eq: "${this.owner}"}},
                       {id: {_in: [${this.nftCollectionModelIds.map((denom) => `"${denom}"`).join(',')}]}}
                     ]
+
+                    name: {_iregex: "${this.filterString}"},
                     id: {_neq: "${Config.CUDOS_NETWORK.NFT_DENOM_ID}"}
                   }) {
                     aggregate {
