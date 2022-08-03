@@ -57,9 +57,9 @@ export default class MyNftsStore {
 
         this.denomIdToUrlMap = new Map();
 
-        this.tableHelperSingleNfts = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
-        this.tableHelperNftCollections = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
-        this.tableHelperNftCollection = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 2);
+        this.tableHelperSingleNfts = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
+        this.tableHelperNftCollections = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
+        this.tableHelperNftCollection = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
 
         this.timeoutHelper = new TimeoutHelper();
 
@@ -206,11 +206,15 @@ export default class MyNftsStore {
         if (this.shouldRenderSingleNfts() === true) {
             await this.fetchDataCounts();
             await this.fetchNftModels(Config.CUDOS_NETWORK.NFT_DENOM_ID, this.tableHelperSingleNfts.tableState, this.filterString);
+
+            this.tableHelperSingleNfts.tableState.total = this.nftsCount;
         }
 
         if (this.shouldRenderNftCollections() === true) {
             await this.fetchDataCounts();
             await this.fetchNftCollectionModels(this.tableHelperNftCollections.tableState);
+
+            this.tableHelperNftCollections.tableState.total = this.collectionsCount;
         }
 
         if (this.shouldRenderCollection() === true) {
@@ -219,6 +223,8 @@ export default class MyNftsStore {
             await this.fetchDataCounts();
             await this.fetchNftModelsCount(denomId);
             await this.fetchNftModels(denomId, this.tableHelperNftCollection.tableState, S.Strings.EMPTY);
+
+            this.tableHelperNftCollection.tableState.total = this.denomIdToNftModelsCount.get(denomId);
         }
     }
 

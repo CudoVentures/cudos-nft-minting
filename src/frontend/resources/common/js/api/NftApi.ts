@@ -1,4 +1,4 @@
-import { Coin, StargateClient, SigningStargateClient, GasPrice, PageRequest } from 'cudosjs';
+import { Coin, StargateClient, SigningStargateClient, GasPrice, PageRequest, coin } from 'cudosjs';
 import Apis from '../../../../../../builds/dev-generated/Apis';
 import Actions from '../../../../../../builds/dev-generated/Actions';
 import Config from '../../../../../../builds/dev-generated/Config';
@@ -84,8 +84,15 @@ export default class NftApi extends AbsApi {
         const req = new EstimateFeeMintNftReq(nftModels);
 
         this.api.req(Actions.NFT.ESTIMATE_FEE_MINT_NFT, req, (json: any) => {
-            const res = new EstimateFeeMintNftRes(json.obj);
+            if (json.status !== 0) {
+                callback([{
+                    'denom': 'acudos',
+                    'amount': '0',
+                }]);
+                return;
+            }
 
+            const res = new EstimateFeeMintNftRes(json.obj);
             callback(res.fee);
         });
     }
