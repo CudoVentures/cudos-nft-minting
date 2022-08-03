@@ -84,7 +84,7 @@ export default class MyNftsStore {
             return this.filterredNftModels !== null;
         }
 
-        return true;
+        return false;
     }
 
     isViewSingleNfts(): boolean {
@@ -143,16 +143,17 @@ export default class MyNftsStore {
 
     markNft(nftModel: NftModel) {
         this.viewNftModel = nftModel;
-
-        this.filteredNftCollectionModels = null;
-        this.filterredNftModels = null;
     }
 
     markNftCollection(nftCollectionModel: NftCollectionModel) {
         this.viewNftCollectionModel = nftCollectionModel;
 
-        this.filteredNftCollectionModels = null;
-        this.filterredNftModels = null;
+        if (nftCollectionModel !== null) {
+            this.filteredNftCollectionModels = null;
+            this.filterredNftModels = null;
+        } else {
+            this.fetchViewingModels();
+        }
     }
 
     onChangeFilterString = (value) => {
