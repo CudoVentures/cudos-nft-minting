@@ -264,11 +264,16 @@ export default class MyNftsStore {
         const from = tableState.from;
         const to = tableState.to();
 
-        let fetch = true;
+        let fetch = false;
         if (to < this.nftCollectionModels.length) {
             for (let i = from; i < to; ++i) {
-                fetch = fetch && this.nftCollectionModels[i] !== null;
+                if (this.nftCollectionModels[i] === null) {
+                    fetch = true;
+                    break;
+                }
             }
+        } else {
+            fetch = true;
         }
 
         if (fetch === false) {
@@ -304,14 +309,20 @@ export default class MyNftsStore {
         const from = tableState.from;
         const to = tableState.to();
 
-        let fetch = true;
-        let cacheNftModels = this.denomIdToNftModelsMap.get(denomId);
-        if (to < (cacheNftModels ?? []).length) {
+        let fetch = false;
+        let cacheNftModels = this.denomIdToNftModelsMap.get(denomId) ?? [];
+        if (to < cacheNftModels.length) {
             for (let i = from; i < to; ++i) {
-                fetch = fetch && cacheNftModels[i] !== null;
+                if (cacheNftModels[i] === null) {
+                    fetch = true;
+                    break;
+                }
             }
+        } else {
+            fetch = true;
         }
 
+        console.log(fetch);
         if (fetch === false) {
             return;
         }
