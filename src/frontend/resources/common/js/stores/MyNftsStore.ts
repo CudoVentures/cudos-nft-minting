@@ -72,13 +72,13 @@ export default class MyNftsStore {
         this.viewNftCollectionModel = null;
 
         this.filterString = S.Strings.EMPTY;
+        this.nftsCount = S.NOT_EXISTS;
+        this.collectionsCount = S.NOT_EXISTS;
+
         this.resetData();
     }
 
     resetData() {
-        this.nftsCount = S.NOT_EXISTS;
-        this.collectionsCount = S.NOT_EXISTS;
-
         this.nftCollectionModels = [];
         this.denomIdToNftModelsMap = new Map();
         this.denomIdToNftModelsCount = new Map();
@@ -212,7 +212,7 @@ export default class MyNftsStore {
 
         if (this.shouldRenderNftCollections() === true) {
             await this.fetchDataCounts();
-            await this.fetchNftCollectionModels(this.tableHelperNftCollections.tableState);
+            await this.fetchNftCollectionModels(this.tableHelperNftCollections.tableState, this.filterString);
 
             this.tableHelperNftCollections.tableState.total = this.collectionsCount;
         }
@@ -221,7 +221,7 @@ export default class MyNftsStore {
             const denomId = this.viewNftCollectionModel.denomId
 
             await this.fetchDataCounts();
-            await this.fetchNftModelsCount(denomId);
+            await this.fetchNftModelsCount(denomId, S.Strings.EMPTY);
             await this.fetchNftModels(denomId, this.tableHelperNftCollection.tableState, S.Strings.EMPTY);
 
             this.tableHelperNftCollection.tableState.total = this.denomIdToNftModelsCount.get(denomId);
@@ -229,8 +229,8 @@ export default class MyNftsStore {
     }
 
     async fetchDataCounts(): Promise < void > {
-        const nftsCount = await this.fetchNftModelsCount(Config.CUDOS_NETWORK.NFT_DENOM_ID);
-        const collectionsCount = await this.fetchNftCollectionModelsCount(this.walletStore.keplrWallet.accountAddress);
+        const nftsCount = await this.fetchNftModelsCount(Config.CUDOS_NETWORK.NFT_DENOM_ID, this.filterString);
+        const collectionsCount = await this.fetchNftCollectionModelsCount(this.walletStore.keplrWallet.accountAddress, this.filterString);
 
         runInAction(() => {
             this.nftsCount = nftsCount;
@@ -238,8 +238,8 @@ export default class MyNftsStore {
         });
     }
 
-    private async fetchNftModelsCount(denomId: string): Promise < number > {
-        const count = await this.nftHasuraApi.getNftsTotalCountByDenomAndOwner(denomId, this.walletStore.keplrWallet.accountAddress);
+    private async fetchNftModelsCount(denomId: string, filterString: string): Promise < number > {
+        const count = await this.nftHasuraApi.getNftsTotalCountByDenomAndOwner(denomId, this.walletStore.keplrWallet.accountAddress, filterString);
 
         const cacheMap = this.denomIdToNftModelsCount;
         this.denomIdToNftModelsCount = null;
@@ -251,11 +251,11 @@ export default class MyNftsStore {
         return count;
     }
 
-    private async fetchNftCollectionModelsCount(walletAddress: string): Promise < number > {
-        return this.nftHasuraApi.getCollectionsTotalCountByOwner(walletAddress);
+    private async fetchNftCollectionModelsCount(walletAddress: string, filterString: string): Promise < number > {
+        return this.nftHasuraApi.getCollectionsTotalCountByOwner(walletAddress, filterString);
     }
 
-    private async fetchNftCollectionModels(tableState: TableState): Promise < void > {
+    private async fetchNftCollectionModels(tableState: TableState, filterString: string): Promise < void > {
         const from = tableState.from;
         const to = tableState.to();
 
@@ -271,7 +271,7 @@ export default class MyNftsStore {
         }
 
         ++this.fetchingNftCollectionModels;
-        const { nftCollectionModels } = await this.nftHasuraApi.getCollections(this.walletStore.keplrWallet.accountAddress, from, to, this.filterString);
+        const { nftCollectionModels } = await this.nftHasuraApi.getCollections(this.walletStore.keplrWallet.accountAddress, from, to, filterString);
         const denomIds = nftCollectionModels.map((collectionModel: NftCollectionModel) => collectionModel.denomId);
         const denomIdToUrlMap = await this.nftHasuraApi.getNftModelsForUrls(denomIds);
 
@@ -290,6 +290,7 @@ export default class MyNftsStore {
                 cacheMap.set(denomId, url);
             })
             this.denomIdToUrlMap = cacheMap;
+
             --this.fetchingNftCollectionModels;
         });
     }
@@ -313,10 +314,10 @@ export default class MyNftsStore {
         ++this.fetchingNftModels;
         const { nftModels } = await this.nftHasuraApi.getNftModels(denomId, this.walletStore.keplrWallet.accountAddress, from, to, filterString);
         runInAction(() => {
-            const cacheMap = this.denomIdToNftModelsMap;
+            const cacheDataMap = this.denomIdToNftModelsMap;
             this.denomIdToNftModelsMap = null;
 
-            cacheNftModels = cacheMap.get(denomId) ?? [];
+            cacheNftModels = cacheDataMap.get(denomId) ?? [];
             while (cacheNftModels.length < to) {
                 cacheNftModels.push(null);
             }
@@ -325,9 +326,9 @@ export default class MyNftsStore {
                 cacheNftModels[from + i] = nftModels[i];
             }
 
-            cacheMap.set(denomId, cacheNftModels);
+            cacheDataMap.set(denomId, cacheNftModels);
+            this.denomIdToNftModelsMap = cacheDataMap;
 
-            this.denomIdToNftModelsMap = cacheMap;
             --this.fetchingNftModels;
         });
     }

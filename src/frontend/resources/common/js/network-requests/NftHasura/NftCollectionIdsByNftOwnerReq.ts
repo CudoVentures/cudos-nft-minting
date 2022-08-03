@@ -2,9 +2,11 @@ import Config from '../../../../../../../builds/dev-generated/Config';
 
 export default class NftCollectionIdsByNftOwnerReq {
     owner: string;
+    filterString: string;
 
-    constructor(owner: string) {
+    constructor(owner: string, filterString: string) {
         this.owner = owner;
+        this.filterString = filterString;
     }
 
     buildRequest() {
@@ -13,7 +15,8 @@ export default class NftCollectionIdsByNftOwnerReq {
             query: `query GetNftCollectionIdsByNftOwner {
               nft_nft(where: {
                 owner: {_eq: "${this.owner}"}, 
-                burned: {_eq: false}, 
+                burned: {_eq: false},
+                name: {_iregex: "${this.filterString}"},
                 denom_id: {_neq: "${Config.CUDOS_NETWORK.NFT_DENOM_ID}"}
               }, 
                 distinct_on: denom_id) {
