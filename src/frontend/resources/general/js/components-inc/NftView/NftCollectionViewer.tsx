@@ -53,7 +53,7 @@ class NftCollectionViewer extends React.Component<Props> {
                     onSendAsGiftSuccess={this.onClickBack} />
                 <div className={'NftModelsLabel FlexRow FlexSplit'} >
                     <div className={'NftModelsLabelHeading'}>NFTs in this collection</div>
-                    <div className={'NftModelsCount'}>Items {nftModels?.length}</div>
+                    <div className={'NftModelsCount'}>Items {myNftsStore.tableHelperNftCollection.tableState.total}</div>
                     { this.props.nftCollectionModel.isOwn(this.props.walletStore.keplrWallet.accountAddress) === true && (
                         <div className={'StartRight FlexRow AddMoreButton'} onClick={this.onClickAddNfts}>
                             <div className={'SVG'} dangerouslySetInnerHTML={{ __html: SvgPlus }} />
