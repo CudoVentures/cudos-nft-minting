@@ -53,9 +53,9 @@ export default class MyNftsStore {
         this.fetchingNftModels = 0;
         this.fetchingNftCollectionModels = 0;
 
-        this.tableHelperSingleNfts = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
-        this.tableHelperNftCollections = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
-        this.tableHelperNftCollection = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
+        this.tableHelperSingleNfts = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 40);
+        this.tableHelperNftCollections = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 40);
+        this.tableHelperNftCollection = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 40);
 
         this.reset();
 
