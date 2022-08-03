@@ -7,12 +7,13 @@ import SvgArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import SvgArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import '../../css/components-inc/paging.css';
+import { observer } from 'mobx-react';
 
 interface Props {
     helper: TableHelper;
 }
 
-export default class Paging extends React.Component < Props > {
+export class Paging extends React.Component < Props > {
 
     render() {
         const helper = this.props.helper;
@@ -103,3 +104,5 @@ export default class Paging extends React.Component < Props > {
     }
 
 }
+
+export default observer(Paging);

@@ -10,7 +10,7 @@ import Button from '../../../../common/js/components-inc/Button';
 import '../../../css/components-inc/MyNftsWindow/no-nfts.css'
 
 interface Props {
-    navStore: NavStore
+    navStore?: NavStore
 }
 
 class NoNfts extends React.Component < Props > {

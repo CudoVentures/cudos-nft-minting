@@ -11,8 +11,8 @@ import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import '../../../css/components-inc/NftView/nft-model-viewer.css'
 
 interface Props {
-    myNftsStore: MyNftsStore;
-    nftModel: NftModel;
+    myNftsStore?: MyNftsStore;
+    nftModel?: NftModel;
     nftCollectionModel: NftCollectionModel | null;
 }
 
@@ -26,7 +26,6 @@ class NftModelViewer extends React.Component<Props> {
 
     render() {
         const nftModel = this.props.nftModel;
-
         return (
             <div className={'NftModelViewer'} >
                 <div className={'NavigationBack FlexRow'} onClick={this.onClickBack} >

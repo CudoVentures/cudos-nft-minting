@@ -1,0 +1,8 @@
+.SingleRowTable .TableRow.Legend {
+    display: none;
+}
+
+.SingleRowTable .TableRow {
+    padding: 0;
+    background: none !important;
+}

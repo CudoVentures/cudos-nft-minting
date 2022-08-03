@@ -61,9 +61,6 @@
     margin-bottom: 10px;
 }
 
-.NftViewer .NftDataCnt .TxInfo .TxInfoRow label {
-}
-
 .NftViewer .NftDataCnt .TxInfo .TxInfoRow div {
     color: var(--color-dark);
 }

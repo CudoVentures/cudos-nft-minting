@@ -11,8 +11,8 @@ import ProjectUtils from '../../../../common/js/ProjectUtils';
 import '../../../css/components-inc/NftView/nft-models-viewer.css'
 
 interface Props {
-    appStore: AppStore;
-    myNftsStore: MyNftsStore;
+    appStore?: AppStore;
+    myNftsStore?: MyNftsStore;
     nftModels: NftModel[];
 }
 
@@ -25,7 +25,6 @@ class NftModelsViewer extends React.Component<Props> {
     render() {
         const nftModels = this.props.nftModels;
         const appStore = this.props.appStore;
-
         return (
             <div className={`NftModelsViewer ${S.CSS.getClassName(nftModels.length > 0, 'HasNfts')}`} >
                 {nftModels.length > 0 && nftModels.map((nftModel: NftModel) => {

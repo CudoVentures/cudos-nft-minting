@@ -1,6 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import Config from '../../../../../../../builds/dev-generated/Config';
+
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 import PopupSendAsGiftStore from '../../../../common/js/stores/PopupSendAsGiftStore';
 import AppStore from '../../../../common/js/stores/AppStore';
@@ -13,45 +15,20 @@ import Actions from '../../../../common/js/components-inc/Actions';
 import Button from '../../../../common/js/components-inc/Button';
 
 import SvgDownload from '../../../../common/svg/download.svg';
-import SvgTwitter from '../../../../common/svg/twitter.svg';
 import '../../../css/components-inc/NftView/nft-viewer.css'
-import Config from '../../../../../../../builds/dev-generated/Config';
 
 interface Props {
-    appStore: AppStore;
-    popupSendAsGiftStore: PopupSendAsGiftStore;
-    myNftsStore: MyNftsStore;
+    appStore?: AppStore;
+    popupSendAsGiftStore?: PopupSendAsGiftStore;
+    myNftsStore?: MyNftsStore;
     nftModel?: NftModel;
     nftCollectionModel?: NftCollectionModel;
     onSendAsGiftSuccess: () => void;
 }
 
-interface State {
-    nftTxHash: string;
-}
-
-class NftViewer extends React.Component<Props, State> {
+class NftViewer extends React.Component<Props> {
 
     static defaultProps: any;
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            nftTxHash: S.Strings.EMPTY,
-        }
-    }
-
-    async componentDidMount(): Promise<void> {
-        const { nftModel, nftCollectionModel } = this.props;
-
-        try {
-            this.setState({
-                nftTxHash: nftModel !== null ? await this.props.myNftsStore.getNftTxHash(nftModel) : await this.props.myNftsStore.getNftCollectionTxHash(nftCollectionModel),
-            });
-        } catch (e) {
-        }
-    }
 
     onClickSendAsGift = () => {
         this.props.popupSendAsGiftStore.showSignal(this.props.nftModel, this.props.onSendAsGiftSuccess);
@@ -61,7 +38,7 @@ class NftViewer extends React.Component<Props, State> {
         const { nftModel, nftCollectionModel } = this.props;
 
         if (nftModel !== null) {
-            return nftCollectionModel !== null ? nftCollectionModel.name : 'CUDOS ONE COLLECTION';
+            return nftCollectionModel !== null ? nftCollectionModel.name : NftCollectionModel.instanceCudosMainCollection().name.toUpperCase();
         }
 
         return 'collection';
@@ -85,11 +62,25 @@ class NftViewer extends React.Component<Props, State> {
         const { nftModel, nftCollectionModel } = this.props;
 
         if (nftModel !== null) {
-            return nftModel.tokenId;
+            return nftModel.denomId;
         }
 
         if (nftCollectionModel.name !== null) {
             return nftCollectionModel.denomId;
+        }
+
+        return S.Strings.EMPTY;
+    }
+
+    getTxHash(): string {
+        const { nftModel, nftCollectionModel } = this.props;
+
+        if (nftModel !== null) {
+            return nftModel.txHash;
+        }
+
+        if (nftCollectionModel.name !== null) {
+            return nftCollectionModel.txHash;
         }
 
         return S.Strings.EMPTY;
@@ -103,11 +94,7 @@ class NftViewer extends React.Component<Props, State> {
                 {this.renderPreview()}
                 <div className={'NftDataCnt FlexColumn'} >
                     <div className={'NftHeader FlexSplit'} >
-                        <div className={'CollectionName'} >{this.getCollectionName()}</div>
-                        {/* <div className = { 'StartRight FlexRow Share' } >
-                            <div className = { 'SVG IconTwitter' } dangerouslySetInnerHTML = {{ __html: SvgTwitter }} />
-                            Share on Twitter
-                        </div> */}
+                        <div className={'CollectionName Dots'} >{this.getCollectionName()}</div>
                         {nftModel !== null && (
                             <a href={nftModel.url} className={'StartRight FlexRow Share'} target='_blank' rel='noreferrer' >
                                 <div className={'SVG IconTwitter'} dangerouslySetInnerHTML={{ __html: SvgDownload }} />
@@ -121,7 +108,7 @@ class NftViewer extends React.Component<Props, State> {
                     <div className={'TxInfo FlexColumn'} >
                         <div className={'TxInfoRow FlexSplit'} >
                             <label>Transation Hash</label>
-                            <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.nftTxHash}`} className={'TxInfoBlue StartRight'} target='_blank' rel='noreferrer' > {this.state.nftTxHash} </a>
+                            <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.getTxHash()}`} className={'TxInfoBlue StartRight Dots'} target='_blank' rel='noreferrer' > {this.getTxHash()} </a>
                         </div>
                         <div className={'TxInfoRow FlexSplit'} >
                             <label>Token Standart</label>
@@ -147,7 +134,7 @@ class NftViewer extends React.Component<Props, State> {
                         <Button
                             radius={Button.RADIUS_MAX}
                             padding={Button.PADDING_48}
-                            href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.nftTxHash}`}
+                            href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.getTxHash()}`}
                             target={'_blank'}
                         >
                             View details in Explorer
@@ -172,7 +159,7 @@ class NftViewer extends React.Component<Props, State> {
         if (nftCollectionModel !== null) {
             return (
                 <div>
-                    <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper))} />
+                    <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getCollectionPreviewUrl(nftCollectionModel, appStore.workerQueueHelper))} />
                 </div>
             )
         }

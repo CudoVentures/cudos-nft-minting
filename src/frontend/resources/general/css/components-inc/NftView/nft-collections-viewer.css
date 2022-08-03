@@ -1,4 +1,12 @@
 .NftCollectionsViewer {
+    width: 100%;
+}
+
+.NftCollectionsViewer .NoNfts {
+    text-align: center;
+}
+
+.NftCollectionsViewer.HasCollections {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     row-gap: 30px;

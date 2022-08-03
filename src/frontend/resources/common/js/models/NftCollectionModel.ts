@@ -1,17 +1,26 @@
 import { makeAutoObservable } from 'mobx';
 import Config from '../../../../../../builds/dev-generated/Config';
+import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
+import ImagePreviewHelper from '../helpers/ImagePreviewHelper';
 
 export default class NftCollectionModel implements Filterable {
 
     denomId: string;
     name: string;
     creator: string;
+    txHash: string;
+
+    previewUrl: string;
 
     constructor() {
         this.denomId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
+        this.creator = S.Strings.EMPTY;
+        this.txHash = S.Strings.EMPTY;
+
+        this.previewUrl = S.Strings.EMPTY;
 
         makeAutoObservable(this);
     }
@@ -38,11 +47,33 @@ export default class NftCollectionModel implements Filterable {
         return this.creator === walletAddress;
     }
 
+    hasPreviewUrl(): boolean {
+        return this.previewUrl !== S.Strings.EMPTY;
+    }
+
+    getPreviewUrl(url: string, workerQueueHelper: WorkerQueueHelper): string {
+        if (this.hasPreviewUrl() === true) {
+            return this.previewUrl;
+        }
+
+        const imagePreviewHelper = ImagePreviewHelper.getSingletonInstance(workerQueueHelper)
+        imagePreviewHelper.fetch(url, (mimeType, previewUrl) => {
+            this.previewUrl = previewUrl;
+        });
+
+        return ImagePreviewHelper.UNKNOWN_PREVIEW_URL;
+    }
+
+    validate(): boolean {
+        return this.denomId !== S.Strings.EMPTY && this.name !== S.Strings.EMPTY;
+    }
+
     toJson(): any {
         return {
             'denomId': this.denomId,
             'name': this.name,
             'creator': this.creator,
+            'txHash': this.txHash,
         }
     }
 
@@ -56,11 +87,12 @@ export default class NftCollectionModel implements Filterable {
         model.denomId = json.denomId ?? model.denomId;
         model.name = json.name ?? model.name;
         model.creator = json.creator ?? model.creator;
+        model.txHash = json.txHash ?? model.txHash;
 
         return model;
     }
 
-    static fromChain(json: any): NftCollectionModel {
+    static fromHasura(json: any): NftCollectionModel {
         if (json === null) {
             return null;
         }
@@ -69,12 +101,9 @@ export default class NftCollectionModel implements Filterable {
 
         model.denomId = json.id ?? model.denomId;
         model.name = json.name ?? model.name;
-        model.creator = json.creator ?? model.creator;
+        model.creator = json.owner ?? model.creator;
+        model.txHash = json.transaction_hash ?? model.txHash;
 
         return model;
-    }
-
-    validate(): boolean {
-        return this.denomId !== S.Strings.EMPTY && this.name !== S.Strings.EMPTY;
     }
 }

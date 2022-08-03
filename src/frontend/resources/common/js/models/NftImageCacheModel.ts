@@ -1,5 +1,5 @@
+import ImagePreviewHelper from '../helpers/ImagePreviewHelper';
 import S from '../utilities/Main';
-import NftModel from './NftModel';
 
 export default class NftImageCacheModel {
 
@@ -8,7 +8,7 @@ export default class NftImageCacheModel {
 
     constructor() {
         this.mimeType = S.Strings.EMPTY;
-        this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL;
+        this.previewUrl = ImagePreviewHelper.UNKNOWN_PREVIEW_URL;
     }
 
     static instance(mimeType: string, previewUrl: string) {

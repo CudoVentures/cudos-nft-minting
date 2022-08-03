@@ -1,13 +1,8 @@
 import { inject, observer } from 'mobx-react';
 import React from 'react';
-import Input from '../../../../common/js/components-inc/Input';
-import LayoutBlock from '../../../../common/js/components-inc/LayoutBlock';
 import NftMintStore from '../../../../common/js/stores/NftMintStore';
 import '../../../css/components-inc/NftMint/collection-premint-preview.css';
 
-import NftSidePreview from '../NftSidePreview';
-import Actions from '../../../../common/js/components-inc/Actions';
-import Button from '../../../../common/js/components-inc/Button';
 import NftStepWrapper from './NftStepWrapper';
 
 import S from '../../../../common/js/utilities/Main';
@@ -16,6 +11,7 @@ import Config from '../../../../../../../builds/dev-generated/Config';
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 import AppStore from '../../../../common/js/stores/AppStore';
 import NftApi from '../../../../common/js/api/NftApi';
+import NftHasuraApi from '../../../../common/js/api/NftHasuraApi';
 
 interface Props {
     nftMintStore: NftMintStore;
@@ -30,10 +26,12 @@ interface State {
 
 class CollectionPremintPreview extends React.Component<Props, State> {
     nftApi: NftApi;
+    nftHasuraApi: NftHasuraApi;
 
     constructor(props) {
         super(props);
         this.nftApi = new NftApi();
+        this.nftHasuraApi = new NftHasuraApi();
 
         this.state = {
             txHash: S.Strings.EMPTY,
@@ -41,29 +39,31 @@ class CollectionPremintPreview extends React.Component<Props, State> {
         }
     }
 
-    async componentDidMount(): Promise<void> {
+    componentDidMount(): void {
         const collection = this.props.nftMintStore.nftCollection;
-        const nftApi = this.props.myNftsStore.nftApi;
+        const nftApi = this.nftApi;
+        const nftHasuraApi = this.nftHasuraApi;
 
-        nftApi.getCollectionTxHash(collection.denomId)
+        nftHasuraApi.getCollectionTxHash(collection.denomId)
             .then((txHash: string) => {
                 this.setState({
                     txHash,
                 });
             }).catch((e) => { });
 
-        nftApi.getNumberOfNftsInCollection(collection.denomId)
+        nftHasuraApi.getTotalNumberOfNftsInCollection(collection.denomId)
             .then((nftCount: number) => {
                 this.setState({
                     nftCount,
                 });
             }).catch((e) => { });
-
     }
 
     render() {
         const nftMintStore = this.props.nftMintStore;
         const navMintStore = nftMintStore.navMintStore;
+        const myNftsStore = this.props.myNftsStore;
+
         const appStore = this.props.appStore;
         const nftCollectionModel = nftMintStore.nftCollection;
         return (
@@ -73,7 +73,7 @@ class CollectionPremintPreview extends React.Component<Props, State> {
                 stepName={'Check Collection Details'} >
                 <div className={'NftCollectionPreview FlexRow'} >
                     <div>
-                        <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(this.props.myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper))} />
+                        <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getCollectionPreviewUrl(nftCollectionModel, appStore.workerQueueHelper))} />
                     </div>
                     <div className={'CollectionDataCnt FlexColumn'} >
                         <div className={'CollectionHeader'} >COLLECTION</div>
@@ -83,7 +83,7 @@ class CollectionPremintPreview extends React.Component<Props, State> {
                         <div className={'CollectionInfo FlexColumn'} >
                             <div className={'InfoRow FlexSplit'} >
                                 <label>Transation Hash</label>
-                                <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${this.state.txHash}`} className={'TxInfoBlue StartRight'} target='_blank' rel='noreferrer' > {this.state.txHash} </a>
+                                <a href={`${Config.CUDOS_NETWORK.EXPLORER}/transactions/${nftCollectionModel.txHash}`} className={'TxInfoBlue StartRight'} target='_blank' rel='noreferrer' > {nftCollectionModel.txHash} </a>
                             </div>
                             <div className={'InfoRow FlexSplit'} >
                                 <label>Token Standart</label>

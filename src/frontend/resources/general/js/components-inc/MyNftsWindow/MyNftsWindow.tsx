@@ -3,35 +3,45 @@ import { inject, observer } from 'mobx-react';
 
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 
-import NoNfts from './NoNfts';
 import ListNfts from './ListNfts';
+import NoNfts from './NoNfts';
 import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
 import '../../../css/components-inc/MyNftsWindow/my-nfts-window.css';
 
 interface Props {
-    myNftsStore: MyNftsStore;
+    myNftsStore?: MyNftsStore;
 }
 
-class MyNftsWindow extends React.Component < Props > {
+interface State {
+    hasNfts: boolean;
+}
 
-    async componentDidMount(): Promise < void > {
-        await this.props.myNftsStore.fetchNfts();
+class MyNftsWindow extends React.Component < Props, State > {
+
+    constructor(props: Props) {
+        super(props);
+
+        this.state = {
+            hasNfts: true,
+        }
+    }
+
+    async componentDidMount() {
+        const myNftsStore = this.props.myNftsStore;
+        await myNftsStore.fetchDataCounts();
+        this.setState({
+            hasNfts: myNftsStore.hasNfts(),
+        })
     }
 
     render() {
         const myNftsStore = this.props.myNftsStore;
         return (
             <div className = { 'MyNftsWindow FlexGrow FlexColumn' } >
-                { myNftsStore.isInitialized() === false && (
-                    <LoadingIndicator margin = { 'auto' } />
-                )}
-                { myNftsStore.isInitialized() === true && (
-                    <>
-                        { myNftsStore.hasNfts() === false && <NoNfts /> }
-                        { myNftsStore.hasNfts() === true && <ListNfts /> }
-                    </>
-                )}
+                { myNftsStore.areCountsFetched() === false && <LoadingIndicator margin={'auto'}/>}
+                { myNftsStore.areCountsFetched() === true && this.state.hasNfts === false && <NoNfts /> }
+                { myNftsStore.areCountsFetched() === true && this.state.hasNfts === true && <ListNfts /> }
             </div>
         )
     }

@@ -95,19 +95,10 @@ class UploadFiles extends React.Component<Props> {
             const file = new File([imageArrayBuffer], `NFT-${Date.now()}`, {
                 type: ajax.getResponseHeader('content-type'),
             });
-            console.log(file);
+
             const uploader = this.nodes.fileUpload.current.getUploader();
             uploader.uploadFiles([file]);
 
-            // const fileReader = new FileReader();
-            // fileReader.onload = () => {
-            //     console.log(fileReader.result);
-            //     const uploader = this.nodes.fileUpload.current.getUploader();
-            //     this.nodes.fileUpload.current.uploadBase64(fileReader.result);
-            // }
-            // fileReader.readAsDataURL(imageBlob);
-
-            // await this.props.nftMintStore.addNftFromLink(this.imageUrlInputValue);
         } catch (e) {
         } finally {
             this.props.appStore.enableActions();
