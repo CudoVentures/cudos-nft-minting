@@ -1,7 +1,9 @@
 import { makeAutoObservable } from 'mobx';
 import Config from '../../../../../../builds/dev-generated/Config';
+import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
 import S from '../utilities/Main';
 import Filterable from './Filterable';
+import ImagePreviewHelper from '../helpers/ImagePreviewHelper';
 
 export default class NftCollectionModel implements Filterable {
 
@@ -10,10 +12,14 @@ export default class NftCollectionModel implements Filterable {
     creator: string;
     txHash: string;
 
+    previewUrl: string;
+
     constructor() {
         this.denomId = S.Strings.EMPTY;
         this.name = S.Strings.EMPTY;
         this.txHash = S.Strings.EMPTY;
+
+        this.previewUrl = S.Strings.EMPTY;
 
         makeAutoObservable(this);
     }
@@ -38,6 +44,23 @@ export default class NftCollectionModel implements Filterable {
 
     isOwn(walletAddress: string): boolean {
         return this.creator === walletAddress;
+    }
+
+    hasPreviewUrl(): boolean {
+        return this.previewUrl !== S.Strings.EMPTY;
+    }
+
+    getPreviewUrl(url: string, workerQueueHelper: WorkerQueueHelper): string {
+        if (this.hasPreviewUrl() === true) {
+            return this.previewUrl;
+        }
+
+        const imagePreviewHelper = ImagePreviewHelper.getSingletonInstance(workerQueueHelper)
+        imagePreviewHelper.fetch(url, (mimeType, previewUrl) => {
+            this.previewUrl = previewUrl;
+        });
+
+        return ImagePreviewHelper.UNKNOWN_PREVIEW_URL;
     }
 
     toJson(): any {

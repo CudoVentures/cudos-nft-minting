@@ -158,7 +158,7 @@ class NftViewer extends React.Component<Props> {
         if (nftCollectionModel !== null) {
             return (
                 <div>
-                    <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper))} />
+                    <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getCollectionPreviewUrl(nftCollectionModel, appStore.workerQueueHelper))} />
                 </div>
             )
         }

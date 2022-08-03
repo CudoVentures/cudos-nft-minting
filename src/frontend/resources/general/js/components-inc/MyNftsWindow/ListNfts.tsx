@@ -23,23 +23,15 @@ import TimeoutHelper from '../../../../common/js/helpers/TimeoutHelper';
 import SingleRowTable from '../../../../common/js/components-inc/SingleRowTable';
 
 interface Props {
-    myNftsStore: MyNftsStore;
+    myNftsStore?: MyNftsStore;
 }
 
-interface State {
-    loadingModels: boolean;
-}
-
-class ListNfts extends React.Component<Props, State> {
+class ListNfts extends React.Component<Props> {
     timeoutHelper: TimeoutHelper;
 
     constructor(props: Props) {
         super(props);
         this.timeoutHelper = new TimeoutHelper();
-
-        this.state = {
-            loadingModels: true,
-        }
     }
 
     componentDidMount(): void {
@@ -57,10 +49,7 @@ class ListNfts extends React.Component<Props, State> {
     }
 
     fetchModels() {
-        this.setState({ loadingModels: true });
-        this.timeoutHelper.signal(() => {
-            this.props.myNftsStore.fetchViewingModels(() => this.setState({ loadingModels: false }))
-        });
+        this.props.myNftsStore.fetchViewingModels();
     }
 
     render() {
@@ -77,22 +66,14 @@ class ListNfts extends React.Component<Props, State> {
                                 type={myNftsStore.isViewSingleNfts() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE}
                                 color={myNftsStore.isViewSingleNfts() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2}
                                 onClick={this.onClickViewSingleNfts} >
-                                Single NFTs
-                                {myNftsStore.nftsCount === S.NOT_EXISTS
-                                    ? <LoadingIndicator margin={'auto'} size={'20px'}/>
-                                    : `(${myNftsStore.nftsCount})`
-                                }
+                                Single NFTs ({ myNftsStore.nftsCount })
                             </Button>
 
                             <Button
                                 type={myNftsStore.isViewNftCollections() === true ? Button.TYPE_ROUNDED : Button.TYPE_TEXT_INLINE}
                                 color={myNftsStore.isViewNftCollections() === true ? Button.COLOR_SCHEME_3 : Button.COLOR_SCHEME_2}
                                 onClick={this.onClickViewCollections} >
-                                Collections
-                                {myNftsStore.collectionsCount === S.NOT_EXISTS
-                                    ? <LoadingIndicator margin={'auto'} size={'20px'}/>
-                                    : `(${myNftsStore.collectionsCount})`
-                                }
+                                Collections ({ myNftsStore.collectionsCount })
                             </Button>
 
                         </Actions>
@@ -119,7 +100,7 @@ class ListNfts extends React.Component<Props, State> {
 
     renderNftModel() {
         const myNftsStore = this.props.myNftsStore;
-        const display = myNftsStore.hasViewNft() === true;
+        const display = myNftsStore.hasViewNft();
 
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
@@ -145,7 +126,7 @@ class ListNfts extends React.Component<Props, State> {
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true
-                && (this.state.loadingModels
+                && (myNftsStore.isDataFetched() === false
                     ? <LoadingIndicator margin={'200px'}/>
                     : <SingleRowTable
                         className={'NftModelsViewerTable'}
@@ -168,7 +149,7 @@ class ListNfts extends React.Component<Props, State> {
         return (
             <div className={`ActiveDisplayHidden Transition ${S.CSS.getActiveClassName(display)}`} >
                 {display === true
-                && (this.state.loadingModels
+                && (myNftsStore.isDataFetched() === false
                     ? <LoadingIndicator margin={'200px'}/>
                     : <SingleRowTable
                         className={'NftModelsViewerTable'}

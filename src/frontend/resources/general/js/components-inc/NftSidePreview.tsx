@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../css/components-inc/nft-side-preview.css';
 import ProjectUtils from '../../../common/js/ProjectUtils';
-import NftModel from '../../../common/js/models/NftModel';
+import ImagePreviewHelper from '../../../common/js/helpers/ImagePreviewHelper';
 
 interface Props {
     imageUrl?: string;
@@ -23,5 +23,5 @@ export default class NftSidePreview extends React.Component < Props > {
 }
 
 NftSidePreview.defaultProps = {
-    imageUrl: NftModel.UNKNOWN_PREVIEW_URL,
+    imageUrl: ImagePreviewHelper.UNKNOWN_PREVIEW_URL,
 };

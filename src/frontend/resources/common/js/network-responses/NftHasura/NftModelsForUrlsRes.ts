@@ -1,10 +1,11 @@
-import NftModel from '../../models/NftModel';
-
 export default class NftModelsForUrlsRes {
-    nftModels: NftModel[];
+
+    denomIdToUrlMap: Map < string, string >
 
     constructor(json) {
-        const nftJsons = json.data.nft_nft;
-        this.nftModels = nftJsons.map((nftJson) => NftModel.fromHasura(nftJson));
+        this.denomIdToUrlMap = new Map();
+        json.data.nft_nft.forEach((partialNftJson) => {
+            this.denomIdToUrlMap.set(partialNftJson.denom_id, partialNftJson.uri);
+        });
     }
 }

@@ -11,8 +11,8 @@ import ProjectUtils from '../../../../common/js/ProjectUtils';
 import '../../../css/components-inc/NftView/nft-models-viewer.css'
 
 interface Props {
-    appStore: AppStore;
-    myNftsStore: MyNftsStore;
+    appStore?: AppStore;
+    myNftsStore?: MyNftsStore;
     nftModels: NftModel[];
 }
 

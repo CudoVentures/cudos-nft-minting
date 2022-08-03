@@ -73,7 +73,7 @@ class CollectionPremintPreview extends React.Component<Props, State> {
                 stepName={'Check Collection Details'} >
                 <div className={'NftCollectionPreview FlexRow'} >
                     <div>
-                        <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getPreviewUrl(nftCollectionModel.denomId, appStore.workerQueueHelper))} />
+                        <div className={'Img ImgCoverNode'} style={ProjectUtils.makeBgImgStyle(myNftsStore.getCollectionPreviewUrl(nftCollectionModel, appStore.workerQueueHelper))} />
                     </div>
                     <div className={'CollectionDataCnt FlexColumn'} >
                         <div className={'CollectionHeader'} >COLLECTION</div>

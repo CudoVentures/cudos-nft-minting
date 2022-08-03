@@ -95,7 +95,7 @@ export default class NftApi extends AbsApi {
         return { nftModels: res.nftModels, totalCount: res.totalCount };
     }
 
-    async getNftModelsForUrls(denomIds: string[]): Promise<NftModel[]> {
+    async getNftModelsForUrls(denomIds: string[]): Promise<Map<string, string>> {
 
         const req = new NftModelsForUrlsReq(denomIds);
 
@@ -103,7 +103,7 @@ export default class NftApi extends AbsApi {
 
         const res = new NftModelsForUrlsRes(resJson);
 
-        return res.nftModels;
+        return res.denomIdToUrlMap;
     }
 
     async getCollections(owner: string, from: number, to: number, filter: string): Promise<{nftCollectionModels: NftCollectionModel[], totalCount: number}> {

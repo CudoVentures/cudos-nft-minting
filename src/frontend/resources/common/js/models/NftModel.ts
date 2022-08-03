@@ -1,13 +1,11 @@
-import { makeAutoObservable, runInAction } from 'mobx';
-import Config from '../../../../../../builds/dev-generated/Config';
-import WorkerQueueHelper, { Runnable } from '../helpers/WorkerQueueHelper';
+import { makeAutoObservable } from 'mobx';
+
 import S from '../utilities/Main';
+import WorkerQueueHelper from '../helpers/WorkerQueueHelper';
 import Filterable from './Filterable';
-import StorageHelper from '../helpers/StorageHelper';
+import ImagePreviewHelper from '../helpers/ImagePreviewHelper';
 
 export default class NftModel implements Filterable {
-
-    static UNKNOWN_PREVIEW_URL = `${Config.URL.RESOURCES}/common/img/file-preview/unknown.svg`;
 
     denomId: string;
     tokenId: string;
@@ -36,7 +34,7 @@ export default class NftModel implements Filterable {
         this.fileName = S.Strings.EMPTY;
         this.type = S.Strings.EMPTY;
         this.sizeBytes = S.NOT_EXISTS;
-        this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL;
+        this.previewUrl = S.Strings.EMPTY;
 
         makeAutoObservable(this, {
             'type': false,
@@ -98,47 +96,21 @@ export default class NftModel implements Filterable {
     }
 
     getPreviewUrl(workerQueueHelper: WorkerQueueHelper): string {
-        // if in local storage - get it from there
-        const storageHelper = StorageHelper.getSingletonInstance();
-        const nftImageCacheModel = storageHelper.getNftImageCache(this.url);
-
-        if (nftImageCacheModel !== null) {
-            runInAction(() => {
-                this.type = nftImageCacheModel.mimeType;
-                this.previewUrl = nftImageCacheModel.previewUrl;
-            })
-        } else if (this.previewUrl === NftModel.UNKNOWN_PREVIEW_URL && this.isMimeTypeKnown() === false) {
-            workerQueueHelper.pushAndExecute(new Runnable(async () => {
-                const res = await fetch(this.url);
-                return res.headers.get('content-type');
-            }, (type: string | null) => {
-                // save to local storage
-                this.type = type ?? 'null';
-                this.updatePreviewUrlByType();
-
-                storageHelper.addNftImageCache(this.url, this.type, this.previewUrl);
-            }));
+        if (this.previewUrl !== S.Strings.EMPTY) {
+            return this.previewUrl;
         }
 
-        this.type = 'null';
+        const imagePreviewHelper = ImagePreviewHelper.getSingletonInstance(workerQueueHelper)
+        imagePreviewHelper.fetch(this.url, (mimeType, previewUrl) => {
+            this.type = mimeType;
+            this.previewUrl = previewUrl;
+        });
 
-        return this.previewUrl;
+        return ImagePreviewHelper.UNKNOWN_PREVIEW_URL;
     }
 
     updatePreviewUrlByType() {
-        if (this.type.indexOf('svg') !== -1) {
-            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/svg.svg`
-        } else if (this.type.indexOf('mpeg') !== -1 || this.type.indexOf('mp3') !== -1 || this.type.indexOf('wav') !== -1 || this.type.indexOf('ogg') !== -1) {
-            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/music.svg`
-        } else if (this.type.indexOf('mp4') !== -1 || this.type.indexOf('webm') !== -1 || this.type.indexOf('webp') !== -1) {
-            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/video.svg`
-        } else if (this.type.indexOf('application') !== -1 || this.type.indexOf('gltf') !== -1 || this.type.indexOf('glb') !== -1) {
-            this.previewUrl = `${Config.URL.RESOURCES}/common/img/file-preview/gl.svg`
-        } else if (this.type.indexOf('jpeg') !== -1 || this.type.indexOf('jpg') !== -1 || this.type.indexOf('png') !== -1 || this.type.indexOf('gif') !== -1) {
-            this.previewUrl = this.url
-        } else {
-            this.previewUrl = NftModel.UNKNOWN_PREVIEW_URL;
-        }
+        this.previewUrl = ImagePreviewHelper.getPreviewUrlByType(this.url, this.type);
     }
 
     clone(): NftModel {
