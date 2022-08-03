@@ -53,13 +53,13 @@ export default class MyNftsStore {
         this.fetchingNftModels = 0;
         this.fetchingNftCollectionModels = 0;
 
-        this.reset();
-
-        this.denomIdToUrlMap = new Map();
-
         this.tableHelperSingleNfts = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
         this.tableHelperNftCollections = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
         this.tableHelperNftCollection = new TableHelper(S.NOT_EXISTS, [], this.fetchViewingModels, 1);
+
+        this.reset();
+
+        this.denomIdToUrlMap = new Map();
 
         this.timeoutHelper = new TimeoutHelper();
 
