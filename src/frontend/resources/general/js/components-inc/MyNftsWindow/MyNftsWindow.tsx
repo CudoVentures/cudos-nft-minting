@@ -4,13 +4,13 @@ import { inject, observer } from 'mobx-react';
 import MyNftsStore from '../../../../common/js/stores/MyNftsStore';
 
 import ListNfts from './ListNfts';
-
-import '../../../css/components-inc/MyNftsWindow/my-nfts-window.css';
 import NoNfts from './NoNfts';
 import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
+import '../../../css/components-inc/MyNftsWindow/my-nfts-window.css';
+
 interface Props {
-    myNftsStore: MyNftsStore;
+    myNftsStore?: MyNftsStore;
 }
 
 class MyNftsWindow extends React.Component < Props > {

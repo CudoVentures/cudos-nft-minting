@@ -6,6 +6,14 @@ import Table from './Table';
 
 export default class SingleRowTable extends React.Component {
 
+    static singleCell(content: any, sortValue: any = null) {
+        return [
+            Table.row([
+                Table.cell(content, sortValue),
+            ]),
+        ];
+    }
+
     render() {
         return (
             <Table

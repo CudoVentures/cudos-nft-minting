@@ -24,8 +24,8 @@ import Config from '../../../../../../builds/dev-generated/Config';
 import Tooltip from '../../../common/js/components-inc/Tooltip';
 
 interface Props {
-    walletStore: WalletStore,
-    popupConnectWalletsStore: PopupConnectWalletsStore,
+    walletStore?: WalletStore,
+    popupConnectWalletsStore?: PopupConnectWalletsStore,
 }
 
 interface State {

@@ -8,14 +8,13 @@ import NavStore from '../../../../common/js/stores/NavStore';
 import NftCollectionModel from '../../../../common/js/models/NftCollectionModel';
 import NftModelsViewer from './NftModelsViewer';
 import NftViewer from './NftViewer';
+import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
+import SingleRowTable from '../../../../common/js/components-inc/SingleRowTable';
+import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
 import SvgArrowLeft from '../../../../common/svg/arrow-left.svg';
 import SvgPlus from '../../../../common/svg/plus.svg';
 import '../../../css/components-inc/NftView/nft-collection-viewer.css'
-import Table from '../../../../common/js/components-inc/Table';
-import TableDesktop from '../../../../common/js/components-inc/TableDesktop';
-import SingleRowTable from '../../../../common/js/components-inc/SingleRowTable';
-import LoadingIndicator from '../../../../common/js/components-core/LoadingIndicator';
 
 interface Props {
     myNftsStore?: MyNftsStore;
@@ -55,11 +54,12 @@ class NftCollectionViewer extends React.Component<Props> {
                 <div className={'NftModelsLabel FlexRow FlexSplit'} >
                     <div className={'NftModelsLabelHeading'}>NFTs in this collection</div>
                     <div className={'NftModelsCount'}>Items {nftModels.length}</div>
-                    { this.props.nftCollectionModel.isOwn(this.props.walletStore.keplrWallet.accountAddress) === true
-                        && <div className={'StartRight FlexRow AddMoreButton'} onClick={this.onClickAddNfts}>
+                    { this.props.nftCollectionModel.isOwn(this.props.walletStore.keplrWallet.accountAddress) === true && (
+                        <div className={'StartRight FlexRow AddMoreButton'} onClick={this.onClickAddNfts}>
                             <div className={'SVG'} dangerouslySetInnerHTML={{ __html: SvgPlus }} />
                             <div className={'AddMoreButtonText'}>Add more NFTs to Collection</div>
-                        </div>}
+                        </div>
+                    )}
                 </div>
 
                 { myNftsStore.isDataFetched() === false && <LoadingIndicator margin={'auto'}/> }
@@ -70,7 +70,7 @@ class NftCollectionViewer extends React.Component<Props> {
                         widths={['100%']}
                         aligns={[TableDesktop.ALIGN_CENTER]}
                         helper={myNftsStore.tableHelper}
-                        rows={[Table.row([Table.cell(<NftModelsViewer nftModels={nftModels} />)])]}
+                        rows={SingleRowTable.singleCell(<NftModelsViewer nftModels={nftModels} />)}
                         noRowsContent={<div className={'NoNfts'}>There are no NFTs in the collection</div>} />
                 ) }
 
