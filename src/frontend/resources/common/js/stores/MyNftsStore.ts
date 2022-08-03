@@ -82,6 +82,10 @@ export default class MyNftsStore {
         this.nftCollectionModels = [];
         this.denomIdToNftModelsMap = new Map();
         this.denomIdToNftModelsCount = new Map();
+
+        this.tableHelperSingleNfts.tableState.pageZero();
+        this.tableHelperNftCollection.tableState.pageZero();
+        this.tableHelperNftCollection.tableState.pageZero();
     }
 
     areCountsFetched(): boolean {
@@ -110,14 +114,6 @@ export default class MyNftsStore {
 
     hasViewCollection(): boolean {
         return this.viewNftCollectionModel !== null;
-    }
-
-    shouldDisplayNoNftsAtAll() {
-        return this.hasFilter() === false && this.hasNfts() === false;
-    }
-
-    hasFilter(): boolean {
-        return this.filterString !== S.Strings.EMPTY;
     }
 
     hasNfts(): boolean {
@@ -237,8 +233,9 @@ export default class MyNftsStore {
     }
 
     async fetchDataCounts(): Promise < void > {
-        const nftsCount = await this.fetchNftModelsCount(Config.CUDOS_NETWORK.NFT_DENOM_ID, this.filterString);
-        const collectionsCount = await this.fetchNftCollectionModelsCount(this.walletStore.keplrWallet.accountAddress, this.filterString);
+        const filterString = this.filterString;
+        const nftsCount = await this.fetchNftModelsCount(Config.CUDOS_NETWORK.NFT_DENOM_ID, filterString);
+        const collectionsCount = await this.fetchNftCollectionModelsCount(this.walletStore.keplrWallet.accountAddress, filterString);
 
         runInAction(() => {
             this.nftsCount = nftsCount;
