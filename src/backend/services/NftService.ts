@@ -168,8 +168,8 @@ export default class NftService {
 
             return url;
         } catch (e) {
-            Logger.error(`Failed to upload image to infura: ${e}`);
-            throw new StateException(Response.S_STATUS_INFURA_ERROR, `Failed to upload image to infura: ${e}`);
+            Logger.error(`Failed to upload image to NFT.Storage: ${e}`);
+            throw new StateException(Response.S_STATUS_IPFS_ERROR, `Failed to upload image to NFT.Storage: ${e}`);
         }
 
     }

@@ -56,9 +56,8 @@ Fill the following params:
 1. **GRAPHQL:** Base URL of the BDJuno. <em>Example: GRAPHQL="http://....."</em>
 1. **NFT_DENOM_ID:** Denom's id of the default collection where the NFT will be minted at. <em>Example: NFT_DENOM_ID="cudosone"</em>
 1. **SIGNER_MNEMONIC:** Mnemonic of the wallet that will pay the transaction fees when minting NFTs to the default collection <em>Example: SIGNER_MNEMONIC="word1...word24"</em>
-1. **INFURA_HOST:** IPFS endpoint <em>Example: INFURA_HOST="https://ipfs.infura.io:5001"</em>
-1. **INFURA_ID:** Id required when using Infura's IPFS node. It can be obtained from Infura's control panel. <em>Example: INFURA_ID="425u80425802458"</em>
-1. **INFURA_SECRET:** Secret key required when using Infura's IPFS node. It can be obtained from Infura's control panel. <em>Example: INFURA_SECRET="425u80425802458"</em>
+1. **NFT_STORAGE_API_KEY:** Key required when using NFT.Storage. It can be obtained from NFT.Storage's control panel. <em>Example: NFT_STORAGE_API_KEY="425u80425802458......"</em>
+1. **NFT_STORAGE_HOST:** NFT.Storage endpoint <em>Example: NFT_STORAGE_HOST="https://api.nft.storage/"</em>
 
 ### IIII. Start the docker
 

@@ -31,9 +31,6 @@ const envVariables = [
     'GRAPHQL',
     'NFT_DENOM_ID',
     'SIGNER_MNEMONIC',
-    // 'INFURA_HOST',
-    // 'INFURA_ID',
-    // 'INFURA_SECRET',
     'NFT_STORAGE_API_KEY',
     'CAPTCHA_FRONTEND_KEY',
     'CAPTCHA_SECRET_KEY',
@@ -223,11 +220,6 @@ const Config = {
     UTILS: {
         CAPTCHA_FRONTEND_KEY: process.env.CAPTCHA_FRONTEND_KEY,
     },
-    // INFURA: {
-    //     HOST: process.env.INFURA_HOST,
-    //     ID: process.env.INFURA_ID,
-    //     SECRET: process.env.INFURA_SECRET,
-    // },
     NFT_STORAGE: {
         API_KEY: process.env.NFT_STORAGE_API_KEY,
         HOST: process.env.NFT_STORAGE_HOST,
