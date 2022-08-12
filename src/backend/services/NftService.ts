@@ -2,7 +2,8 @@ import NftModel from '../modules/cudos-network/model/nft/NftModel';
 import { GasPrice, DirectSecp256k1HdWallet, SigningStargateClient, StdFee } from 'cudosjs';
 import Config from '../../../config/config';
 import { NftInfo } from 'cudosjs/build/stargate/modules/nft/module';
-import { create, IPFSHTTPClient } from 'ipfs-http-client';
+import { NFTStorage, File, Blob } from 'nft.storage'
+
 import StateException from '../utilities/network/StateException';
 import Response from '../utilities/network/Response';
 import SV from '../utilities/SV';
@@ -154,23 +155,16 @@ export default class NftService {
 
             const base64Buffer = file.substring(file.indexOf(',') + 1);
             const documentBuffer = Buffer.from(base64Buffer, 'base64');
-            const authorization = `Basic ${Buffer.from(`${Config.INFURA.ID}:${Config.INFURA.SECRET}`).toString('base64')}`;
 
             if (base64Buffer.length > (2 << 20)) {
                 throw new StateException(Response.S_STATUS_RUNTIME_ERROR, `File too big: ${base64Buffer.length} bytes`);
             }
 
-            const ipfs: IPFSHTTPClient = create({
-                url: Config.INFURA.HOST,
-            });
+            const client = new NFTStorage({ token: Config.NFT_STORAGE.API_KEY })
+            const imageFile = new Blob([documentBuffer]);
+            const cid = await client.storeBlob(imageFile)
 
-            const added = await ipfs.add(documentBuffer, {
-                pin: true,
-                headers: {
-                    authorization,
-                },
-            });
-            const url = `https://ipfs.io/ipfs/${added.path}`
+            const url = `https://ipfs.io/ipfs/${cid}`
 
             return url;
         } catch (e) {
