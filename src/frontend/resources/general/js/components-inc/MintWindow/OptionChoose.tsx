@@ -34,25 +34,35 @@ class OptionChoose extends React.Component<Props> {
                 stepName={'Choose Option'} >
                 <div className={'OptionHolder FlexRow'}>
                     <div
-                        className={`OptionBox FlexColumn Transition ${S.CSS.getActiveClassName(navMintStore.isMintOptionSingle())}`}
+                        // removed so it doesn't show as selected when going back from the next page
+                        // this is because of CUDOS-1596
+                        // className={`OptionBox FlexColumn Transition ${S.CSS.getActiveClassName(navMintStore.isMintOptionSingle())}`}
+                        className={'OptionBox FlexColumn Transition'}
                         onClick={this.onSelectSingleMintOption} >
                         <div className={'FlexRow SvgBox'}>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadSingle }}></div>
-                            {navMintStore.isMintOptionSingle()
+                            {/* removed so it doesn't show as selected when going back from the next page
+                             this is because of CUDOS-1596
+                             {navMintStore.isMintOptionSingle()
                                 && <div className={'SVG Icon Tick'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }}></div>
-                            }
+                            } */}
                         </div>
                         <div className={'Heading4'}>{NavMintStore.getMintOptionText(NavMintStore.MINT_OPTION_SINGLE)}</div>
                         <div className={'OptionInfo'}>This option allows you to upload and mint only one file for NFT</div>
                     </div>
                     <div
-                        className={`OptionBox FlexColumn Transition ${S.CSS.getActiveClassName(navMintStore.isMintOptionMultiple())}`}
+                        // removed so it doesn't show as selected when going back from the next page
+                        // this is because of CUDOS-1596
+                        // className={`OptionBox FlexColumn Transition ${S.CSS.getActiveClassName(navMintStore.isMintOptionMultiple())}`}
+                        className={'OptionBox FlexColumn Transition'}
                         onClick={this.onSelectMultipleMintOption} >
                         <div className={'FlexRow SvgBox'}>
                             <div className={'SVG Icon'} dangerouslySetInnerHTML={{ __html: SvgUploadMultiple }}></div>
+                            {/* // removed so it doesn't show as selected when going back from the next page
+                            // this is because of CUDOS-1596
                             {navMintStore.isMintOptionMultiple()
                                 && <div className={'SVG Icon Tick'} dangerouslySetInnerHTML={{ __html: SvgTickCircle }}></div>
-                            }
+                            } */}
                         </div>
                         <div className={'Heading4'}>{NavMintStore.getMintOptionText(NavMintStore.MINT_OPTION_MULTIPLE)}</div>
                         <div className={'OptionInfo'}>This option allows you to upload and mint multiple files in one mint</div>

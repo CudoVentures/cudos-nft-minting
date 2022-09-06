@@ -516,7 +516,7 @@ export class NavMintStore {
     }
 
     shouldShowNextStep(): boolean {
-        return !this.isMintStepFinish() && !this.isMintStepMinting() && !this.isMintStepFailed();
+        return !this.isMintStepChooseOption() && !this.isMintStepFinish() && !this.isMintStepMinting() && !this.isMintStepFailed();
     }
 
     shouldShowMintStepNavMap(): boolean {
@@ -565,11 +565,13 @@ export class NavMintStore {
     selectSingleMintOption(): void {
         this.mintOption = NavMintStore.MINT_OPTION_SINGLE;
         this.nftMintStore.selectSingleMintOption();
+        this.selectNextStep();
     }
 
     selectMultipleMintOption(): void {
         this.mintOption = NavMintStore.MINT_OPTION_MULTIPLE;
         this.nftMintStore.selectMultipleMintOption();
+        this.selectNextStep();
     }
 
     static getMintOptionText(mintOption: number): string {
