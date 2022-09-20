@@ -21,6 +21,10 @@ export default class NftController {
 
         const req = new MintNftReq(payload.params);
 
+        if (req.nftModels.length > 50) {
+            throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'Too many nfts at once.');
+        }
+
         let captchaPassed = false;
 
         try {
@@ -51,6 +55,10 @@ export default class NftController {
 
         const req = new EstimateFeeMintNftReq(payload.params);
 
+        if (req.nftModels.length > 50) {
+            throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'Too many nfts at once.');
+        }
+
         const nftService = servicesFactory.getNftService();
         const fee = await nftService.estimateFeeMintNft(req.nftModels);
 
@@ -68,6 +76,11 @@ export default class NftController {
         const nftService = servicesFactory.getNftService();
 
         const urls = req.files;
+
+        if (urls.length > 50) {
+            throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'Too many nfts at once.');
+        }
+
         for (let i = 0; i < urls.length; i++) {
             if (urls[i].includes(';base64,')) {
                 urls[i] = await nftService.imageUpload(urls[i]);
