@@ -15,6 +15,8 @@ import AppStore from './AppStore';
 
 export default class NftMintStore {
 
+    static MAX_NUMBER_NFTS_IN_COLLECTION = 3;
+
     static LOWER_ALPHANUMERIC_START_WITH_LETTER_REGEX = /^[a-z][a-z0-9]*$/;
 
     static MINT_MODE_LOCAL: number = 1;
@@ -380,6 +382,24 @@ export default class NftMintStore {
 
     isNftsEmpty(): boolean {
         return this.nfts.length === 0;
+    }
+
+    getFreeNftsSlots(): number {
+        const navMintStore = this.navMintStore;
+        if (navMintStore.isMintOptionSingle() === true) {
+            return 1 - this.nfts.length;
+        }
+
+        return NftMintStore.MAX_NUMBER_NFTS_IN_COLLECTION - this.nfts.length;
+    }
+
+    shouldProhibitMoreNfts(): boolean {
+        const navMintStore = this.navMintStore;
+        if (navMintStore.isMintOptionSingle() === true) {
+            return this.isNftsEmpty() === false;
+        }
+
+        return this.nfts.length >= NftMintStore.MAX_NUMBER_NFTS_IN_COLLECTION;
     }
 
 }

@@ -79,6 +79,9 @@ class UploadFiles extends React.Component<Props> {
                 this.imageUrlInputValue = S.Strings.EMPTY;
                 await this.props.nftMintStore.addNftFromUpload(base64File, files[i].name, files[i].type, files[i].size);
             },
+            'fileSizeLimitDelegate': () => {
+                return this.props.nftMintStore.getFreeNftsSlots();
+            },
         }
     }
 
@@ -121,7 +124,7 @@ class UploadFiles extends React.Component<Props> {
                 className={'UploadFiles'}
                 stepNumber={`Step ${navMintStore.getMintStepShowNumber()}`}
                 stepName={'Upload File'} >
-                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(!this.props.nftMintStore.isNftsEmpty() && navMintStore.isMintOptionSingle())}`}>
+                <div className={`FileAddRow FlexRow ${S.CSS.getActiveClassName(this.props.nftMintStore.shouldProhibitMoreNfts())}`}>
                     <FileUpload
                         ref={this.nodes.fileUpload}
                         uploadId={'OptionChoosePage'}
