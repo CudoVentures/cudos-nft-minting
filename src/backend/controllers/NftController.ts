@@ -25,6 +25,10 @@ export default class NftController {
             throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'Too many nfts at once.');
         }
 
+        if (req.nftModels[0].denomId === Config.CUDOS_NETWORK.NFT_DENOM_ID && req.nftModels.length > 1) {
+            throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'More than one nft in Cudos collection.');
+        }
+
         let captchaPassed = false;
 
         try {
