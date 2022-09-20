@@ -15,7 +15,7 @@ import AppStore from './AppStore';
 
 export default class NftMintStore {
 
-    static MAX_NUMBER_NFTS_IN_COLLECTION = 3;
+    static MAX_NUMBER_NFTS_IN_COLLECTION = 50;
 
     static LOWER_ALPHANUMERIC_START_WITH_LETTER_REGEX = /^[a-z][a-z0-9]*$/;
 
