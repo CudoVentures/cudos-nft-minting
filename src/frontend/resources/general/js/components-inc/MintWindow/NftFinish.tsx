@@ -44,13 +44,10 @@ class NftFinish extends React.Component<Props, State> {
     async componentDidMount(): Promise<void> {
         const navMintStore = this.props.nftMintStore.navMintStore;
 
-        // set cudos usd price
         if (navMintStore.isMintOptionMultiple()) {
+            // set cudos usd price
             this.props.nftMintStore.getUsdPrice();
-        }
-
-        // set denom issue fee if needed
-        if (navMintStore.isMintOptionMultiple()) {
+            // set denom issue fee if needed
             await this.props.nftMintStore.esimateDenomIssueFees();
         }
 
@@ -111,7 +108,7 @@ class NftFinish extends React.Component<Props, State> {
                 <div className={'FlexColumn FlexGrow'}>
                     {navMintStore.isMintOptionSingle() ? this.renderSingleMintInfo() : this.renderMultipleMintInfo()}
                     <Actions className={'MintNftButton'} layout={Actions.LAYOUT_ROW_RIGHT} height={Actions.HEIGHT_52}>
-                        {this.props.nftMintStore.navMintStore.mintOption === NavMintStore.MINT_OPTION_SINGLE
+                        {navMintStore.isMintOptionSingle()
                             && <ReCaptchaV2
                                 sitekey={Config.UTILS.CAPTCHA_FRONTEND_KEY}
                                 onChange={this.handleRecaptchaToken}
@@ -221,7 +218,6 @@ class NftFinish extends React.Component<Props, State> {
         const { nftMintStore } = this.props;
         const navMintStore = nftMintStore.navMintStore;
         const nftCollectionModel = nftMintStore.nftCollection;
-        const nfts = this.props.nftMintStore.nfts;
         return (
             <div className={'FlexColumn SummaryDetails'}>
                 <div className={'SummaryHeading'}>Minting details</div>
@@ -232,24 +228,8 @@ class NftFinish extends React.Component<Props, State> {
                             <div className={'DetailData'}>{nftCollectionModel.name}</div>
                         </div>
                         {navMintStore.isMintOptionMultiple()
-                            ? <div className={'FlexColumn DetailColumn'}>
-                                <div className={'DetailHeading'}>Estimated Gas Fee Collection</div>
-                                <div className={'DetailData FlexRow'}>
-                                    <div className={'FeeEstimate '}>{nftMintStore.denomIssueFeeEstimate} CUDOS</div>
-                                    <div className={'RealPrice FlexRow'}>
-                                        {`$ ${nftMintStore.getDenomIssueFeeInUsd().toFixed(2)}`}
-                                    </div>
-                                </div>
-                            </div>
-                            : <div className={'FlexColumn DetailColumn'}>
-                                <div className={'DetailHeading'}>Estimated Gas Fee NFTs</div>
-                                <div className={'DetailData FlexRow'}>
-                                    <div className={'FeeEstimate'}>{nftMintStore.nftMintFeeEstimate} CUDOS</div>
-                                    <div className={'RealPrice FlexRow'}>
-                                        {`$ ${nftMintStore.getNftMintFeeInUsd().toFixed(2)}`}
-                                    </div>
-                                </div>
-                            </div>}
+                            ? this.renderEstimatedGasFeeCollection()
+                            : this.renderEstimatedGasFeeNfts() }
                     </div>
                     <div className={'FlexColumn DetailsHolderColumn'}>
                         <div className={'FlexRow'}>
@@ -262,18 +242,41 @@ class NftFinish extends React.Component<Props, State> {
                                 <div className={'DetailData'}>{NavMintStore.getMintTypeText(navMintStore.mintOption)}</div>
                             </div>
                         </div>
-                        {navMintStore.isMintOptionMultiple()
-                            && <div className={'FlexRow DetailsRow'}>
-                                <div className={'FlexColumn DetailColumn'}>
-                                    <div className={'DetailHeading'}>Estimated Gas Fee NFTs</div>
-                                    <div className={'DetailData FlexRow'}>
-                                        <div className={'FeeEstimate'}>{nftMintStore.nftMintFeeEstimate} CUDOS</div>
-                                        <div className={'RealPrice FlexRow'}>
-                                            {`$ ${nftMintStore.getNftMintFeeInUsd().toFixed(2)}`}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>}
+                        {navMintStore.isMintOptionMultiple() && this.renderEstimatedGasFeeNfts()}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    renderEstimatedGasFeeCollection() {
+        const { nftMintStore } = this.props;
+
+        return (
+            <div className={'FlexColumn DetailColumn'}>
+                <div className={'DetailHeading'}>Estimated Gas Fee Collection</div>
+                <div className={'DetailData FlexRow'}>
+                    <div className={'FeeEstimate '}>{nftMintStore.denomIssueFeeEstimate} CUDOS</div>
+                    <div className={'RealPrice FlexRow'}>
+                        {`$ ${nftMintStore.getDenomIssueFeeInUsd().toFixed(2)}`}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    renderEstimatedGasFeeNfts() {
+        const { nftMintStore } = this.props;
+
+        return (
+            <div className={'FlexRow DetailsRow'}>
+                <div className={'FlexColumn DetailColumn'}>
+                    <div className={'DetailHeading'}>Estimated Gas Fee NFTs</div>
+                    <div className={'DetailData FlexRow'}>
+                        <div className={'FeeEstimate'}>{nftMintStore.nftMintFeeEstimate} CUDOS</div>
+                        <div className={'RealPrice FlexRow'}>
+                            {`$ ${nftMintStore.getNftMintFeeInUsd().toFixed(2)}`}
+                        </div>
                     </div>
                 </div>
             </div>

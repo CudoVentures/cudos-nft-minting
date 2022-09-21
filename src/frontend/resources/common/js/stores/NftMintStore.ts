@@ -210,9 +210,7 @@ export default class NftMintStore {
             this.appStore.disableActions();
             if (this.navMintStore.isMintOptionSingle() === true) {
                 await this.mintSingleNftInCudosCollection(recaptchaToken);
-            } else if (this.navMintStore.isMintOptionMultiple() === true
-                || this.navMintStore.isMintOptionAddToExistingollection() === true
-            ) {
+            } else if (this.navMintStore.isMintOptionMultipleOrAddToExistingollection() === true) {
                 await this.mintNftsInOwnCollection();
             } else {
                 this.navMintStore.selectStepMintingFailed();
@@ -566,6 +564,10 @@ export class NavMintStore {
 
     isMintOptionAddToExistingollection(): boolean {
         return this.mintOption === NavMintStore.MINT_OPTION_ADD_TO_EXISTING_COLLECTION;
+    }
+
+    isMintOptionMultipleOrAddToExistingollection(): boolean {
+        return this.isMintOptionMultiple() || this.isMintOptionAddToExistingollection();
     }
 
     getMintStepShowNumber(): number {

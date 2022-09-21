@@ -67,7 +67,7 @@ class UploadFiles extends React.Component<Props> {
             'maxSize': 1 << 20, // 1MB
             'fileExt': '.jpeg, .jpg, .png, .gif, .svg, .mp4, .mpeg, .webp, .webm, .mp3, .wav, .ogg, .gltf, .glb',
             'controller': '#',
-            'multi': this.props.nftMintStore.navMintStore.isMintOptionMultiple(),
+            'multi': this.props.nftMintStore.navMintStore.isMintOptionMultipleOrAddToExistingollection(),
             'progressWindow': false,
             'onExceedLimit': () => {
                 this.props.alertStore.show('Max files size is 1MB');
@@ -213,7 +213,7 @@ class UploadFiles extends React.Component<Props> {
         return this.props.nftMintStore.nfts.map((nft: NftModel, index: number) => {
             let cells = [];
 
-            if (navMintStore.isMintOptionMultiple()) {
+            if (navMintStore.isMintOptionMultipleOrAddToExistingollection()) {
                 cells.push(Table.cell(
                     <Checkbox
                         value={this.props.nftMintStore.isNftSelected(index)}
@@ -245,7 +245,7 @@ class UploadFiles extends React.Component<Props> {
 
         let legends = [];
 
-        if (navMintStore.isMintOptionMultiple()) {
+        if (navMintStore.isMintOptionMultipleOrAddToExistingollection()) {
             legends.push((<Checkbox
                 value={this.props.nftMintStore.areAllNftsSelected()}
                 onChange={() => this.props.nftMintStore.onSelectAllNfts()}
@@ -265,7 +265,7 @@ class UploadFiles extends React.Component<Props> {
     getTableWidths() {
         const navMintStore = this.props.nftMintStore.navMintStore;
 
-        if (navMintStore.isMintOptionMultiple()) {
+        if (navMintStore.isMintOptionMultipleOrAddToExistingollection()) {
             return ['5%', '30%', '20%', '15%', '35%']
         }
 
@@ -275,7 +275,7 @@ class UploadFiles extends React.Component<Props> {
     getTableAligns() {
         const navMintStore = this.props.nftMintStore.navMintStore;
 
-        if (navMintStore.isMintOptionMultiple()) {
+        if (navMintStore.isMintOptionMultipleOrAddToExistingollection()) {
             return [
                 TableDesktop.ALIGN_CENTER,
                 TableDesktop.ALIGN_LEFT,

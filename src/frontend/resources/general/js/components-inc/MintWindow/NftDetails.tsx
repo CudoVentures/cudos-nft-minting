@@ -158,8 +158,7 @@ class NftDetails extends React.Component<Props, State> {
     renderMultipleNftDetails() {
         const { appStore, nftMintStore } = this.props;
         const navMintStore = nftMintStore.navMintStore;
-        if (navMintStore.isMintOptionMultiple() !== true
-            && navMintStore.isMintOptionAddToExistingollection() !== true) {
+        if (navMintStore.isMintOptionMultipleOrAddToExistingollection() !== true) {
             return null;
         }
 
