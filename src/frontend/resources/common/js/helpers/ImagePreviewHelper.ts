@@ -47,12 +47,21 @@ export default class ImagePreviewHelper {
 
             this.workerQueueHelper.pushAndExecute(new Runnable(async () => {
                 const res = await fetch(url);
+                if (res.status !== 200) {
+                    throw new Error('Unable to fetch');
+                }
+
                 return res.headers.get('content-type');
             }, (type: string | null) => {
                 const resultType = type ?? S.Strings.EMPTY;
                 const resultPreviewUrl = ImagePreviewHelper.getPreviewUrlByType(url, resultType);
 
                 storageHelper.addNftImageCache(url, resultType, resultPreviewUrl);
+                this.invokeCallbacks(url, resultType, resultPreviewUrl);
+            }, () => {
+                const resultType = S.Strings.EMPTY;
+                const resultPreviewUrl = ImagePreviewHelper.getPreviewUrlByType(url, resultType);
+
                 this.invokeCallbacks(url, resultType, resultPreviewUrl);
             }));
         });

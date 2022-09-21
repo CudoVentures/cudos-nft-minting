@@ -30,7 +30,7 @@ export default class WorkerQueueHelper {
                 const result = await runnable.run();
                 await runnable.onFinish(result);
             } catch (e) {
-                await runnable.onFinish(null);
+                await runnable.onError();
             }
         }
 
@@ -43,10 +43,12 @@ export class Runnable {
 
     run: () => void;
     onFinish: (params: any) => void;
+    onError: () => void;
 
-    constructor(run: () => any, onFinish: (params: any) => void) {
+    constructor(run: () => any, onFinish: (params: any) => void, onError: () => void) {
         this.run = run;
         this.onFinish = onFinish;
+        this.onError = onError;
     }
 
 }
