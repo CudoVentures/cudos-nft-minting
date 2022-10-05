@@ -1,5 +1,17 @@
 import Ajax from './Ajax';
 import Params from './../../../../../../builds/dev-generated/Params';
+import NftApi from '../../../../../backend/requests/api/nft/NftApi';
+import NftApiH from '../../../../../backend/requests/api/nft/NftApi.h';
+
+class GeneralPostRequest {
+    action: string;
+    body: any;
+
+    constructor(action: string, body: any) {
+        this.action = action;
+        this.body = body;
+    }
+}
 
 export default class Api {
 
@@ -17,11 +29,12 @@ export default class Api {
         this.disableActions = disableActions;
     }
 
-    req(action: string, param: any | null, callback: any, type: number = Api.TYPE_JSON, background: boolean = false, async: boolean = true) {
+    req(action: string, body: any | null, callback: any, type: number = Api.TYPE_JSON, background: boolean = false, async: boolean = true) {
         const ajax = new Ajax(background === true ? null : this.enableActions, background === true ? null : this.disableActions);
 
-        ajax.addParam(Params.ACTION, action);
-        ajax.addParam(Params.PAYLOAD, JSON.stringify(param === null ? {} : param));
+        const generalRequest = new GeneralPostRequest(action, body);
+
+        ajax.setBody(generalRequest);
 
         ajax.onError = (status, responseText) => {
             if (status === 0) {

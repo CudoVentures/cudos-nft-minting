@@ -42,7 +42,7 @@ export default class Ajax {
         this.url = url;
         this.async = (async === undefined ? true : async);
         if (this.method === Ajax.POST) {
-            this.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            this.setRequestHeader('Content-type', 'application/json');
         }
     }
 
@@ -56,6 +56,10 @@ export default class Ajax {
 
     addParam(key: string, value: string) {
         this.requestQueryBuiler.add(key, value);
+    }
+
+    setBody(body: any) {
+        this.requestQueryBuiler.setBody(body);
     }
 
     getResponseHeader(name: string) {
@@ -144,12 +148,28 @@ export default class Ajax {
 class RequestQueryBuilder {
 
     params: string[] = [];
+    body: any;
 
     add(key: string, value: string) {
+        if (this.body !== null) {
+            throw Error('request body already set');
+        }
+
         this.params.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
     }
 
+    setBody(body:any) {
+        if (this.params.length !== 0) {
+            throw Error('request params already set');
+        }
+        this.body = body;
+    }
+
     build() {
+        if (this.body !== null) {
+            return JSON.stringify(this.body);
+        }
+
         return this.params.join('&');
     }
 }
