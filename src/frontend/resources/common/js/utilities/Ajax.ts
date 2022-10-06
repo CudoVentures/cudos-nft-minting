@@ -46,7 +46,7 @@ export default class Ajax {
                 this.setRequestHeader('Content-type', 'application/json');
             }
             if (this.requestQueryBuiler.isForm() === true) {
-                this.setRequestHeader('Content-type', 'x-www-form-urlencoded');
+                this.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             }
         }
     }
@@ -171,11 +171,15 @@ class RequestQueryBuilder {
     }
 
     build() {
-        if (this.body !== null) {
+        if (this.isJson() === true) {
             return JSON.stringify(this.body);
         }
 
-        return this.params.join('&');
+        if (this.isForm() === true) {
+            return this.params.join('&');
+        }
+
+        return '';
     }
 
     isJson() {
