@@ -1,4 +1,4 @@
-// version 2.0.0
+// version 3.0.0
 import S from './Main';
 
 export default class Ajax {
@@ -42,7 +42,12 @@ export default class Ajax {
         this.url = url;
         this.async = (async === undefined ? true : async);
         if (this.method === Ajax.POST) {
-            this.setRequestHeader('Content-type', 'application/json');
+            if (this.requestQueryBuiler.isJson() === true) {
+                this.setRequestHeader('Content-type', 'application/json');
+            }
+            if (this.requestQueryBuiler.isForm() === true) {
+                this.setRequestHeader('Content-type', 'x-www-form-urlencoded');
+            }
         }
     }
 
@@ -148,7 +153,7 @@ export default class Ajax {
 class RequestQueryBuilder {
 
     params: string[] = [];
-    body: any;
+    body: any = null;
 
     add(key: string, value: string) {
         if (this.body !== null) {
@@ -171,6 +176,14 @@ class RequestQueryBuilder {
         }
 
         return this.params.join('&');
+    }
+
+    isJson() {
+        return this.body !== null;
+    }
+
+    isForm() {
+        return this.params.length > 0;
     }
 }
 
