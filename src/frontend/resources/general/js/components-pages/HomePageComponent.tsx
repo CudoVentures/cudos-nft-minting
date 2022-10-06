@@ -54,7 +54,7 @@ export default class PageHomeComponent extends ContextPageComponent<Props> {
                     <div className={'HomeContent'} >
                         <div className={'IntroCnt'} >
                             <div className={'IntroBlockTitle'}>Start Minting NFTs On CUDOS Network</div>
-                            <div className={'IntroBlockDesc'}>CUDOS NFT Minet is the world&apos;s simplest NFT creation service on CUDOS Network. Try it out yourself</div>
+                            <div className={'IntroBlockDesc'}>CUDOS NFT Mint is the world&apos;s simplest NFT creation service on CUDOS Network. Try it out yourself</div>
                             <Actions height={Actions.HEIGHT_60} layout={Actions.LAYOUT_ROW_LEFT} >
                                 <Button
                                     className={'ButtonStartMinting'}
