@@ -1,6 +1,6 @@
 const Params = {
 
-    ACTION: 'ac',
+    ACTION: 'action',
     PAYLOAD: 'pl',
     ID: 'id',
 

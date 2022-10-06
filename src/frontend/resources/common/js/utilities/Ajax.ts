@@ -1,4 +1,4 @@
-// version 2.0.0
+// version 3.0.0
 import S from './Main';
 
 export default class Ajax {
@@ -42,7 +42,12 @@ export default class Ajax {
         this.url = url;
         this.async = (async === undefined ? true : async);
         if (this.method === Ajax.POST) {
-            this.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            if (this.requestQueryBuiler.isJson() === true) {
+                this.setRequestHeader('Content-type', 'application/json');
+            }
+            if (this.requestQueryBuiler.isForm() === true) {
+                this.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            }
         }
     }
 
@@ -56,6 +61,10 @@ export default class Ajax {
 
     addParam(key: string, value: string) {
         this.requestQueryBuiler.add(key, value);
+    }
+
+    setBody(body: any) {
+        this.requestQueryBuiler.setBody(body);
     }
 
     getResponseHeader(name: string) {
@@ -144,13 +153,41 @@ export default class Ajax {
 class RequestQueryBuilder {
 
     params: string[] = [];
+    body: any = null;
 
     add(key: string, value: string) {
+        if (this.body !== null) {
+            throw Error('request body already set');
+        }
+
         this.params.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
     }
 
+    setBody(body:any) {
+        if (this.params.length !== 0) {
+            throw Error('request params already set');
+        }
+        this.body = body;
+    }
+
     build() {
-        return this.params.join('&');
+        if (this.isJson() === true) {
+            return JSON.stringify(this.body);
+        }
+
+        if (this.isForm() === true) {
+            return this.params.join('&');
+        }
+
+        return '';
+    }
+
+    isJson() {
+        return this.body !== null;
+    }
+
+    isForm() {
+        return this.params.length > 0;
     }
 }
 

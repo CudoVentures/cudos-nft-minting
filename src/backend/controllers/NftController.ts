@@ -19,7 +19,7 @@ export default class NftController {
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
 
-        const req = new MintNftReq(payload.params);
+        const req = new MintNftReq(payload.params.body);
 
         if (req.nftModels.length > 50) {
             throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'Too many nfts at once.');
@@ -58,7 +58,7 @@ export default class NftController {
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
 
-        const req = new EstimateFeeMintNftReq(payload.params);
+        const req = new EstimateFeeMintNftReq(payload.params.body);
 
         if (req.nftModels.length > 50) {
             throw new StateException(Response.S_STATUS_INVALID_NFT_ERROR, 'Too many nfts at once.');
@@ -76,7 +76,7 @@ export default class NftController {
         const servicesFactory = context.servicesFactory;
         const payload = context.payload;
 
-        const req = new UploadImagesReq(payload.params);
+        const req = new UploadImagesReq(payload.params.body);
 
         const nftService = servicesFactory.getNftService();
 
