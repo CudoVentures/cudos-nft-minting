@@ -98,7 +98,7 @@ class NftViewer extends React.Component<Props> {
                         {nftModel !== null && (
                             <a href={nftModel.url} className={'StartRight FlexRow Share'} target='_blank' rel='noreferrer' >
                                 <div className={'SVG IconTwitter'} dangerouslySetInnerHTML={{ __html: SvgDownload }} />
-                                Downlaod
+                                Download
                             </a>
                         )}
                     </div>
