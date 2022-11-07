@@ -16,8 +16,8 @@ export default class PageHome extends PageHomeH {
         context.payload.ctx.type = 'html';
         context.payload.ctx.body = TEMPLATE.stream({
             META: {
-                TITLE: 'Cudos NFT Minting | Home',
-                DESC: '',
+                TITLE: 'CUDOS NFT Minting | Simple, cheap & fast NFT creation',
+                DESC: 'Mint Non-Fungible Tokens directly on the Cudos network | Cheaper to mint than other blockchains | Native NFTs reduces time taken to mint | 100% Carbon neutral',
                 KEYWORDS: SV.KEYWORDS,
                 ROBOTS: 'noindex, nofollow',
                 PAGE_URL: `${Config.URL.GENERAL}${PageHome.URL}`,
