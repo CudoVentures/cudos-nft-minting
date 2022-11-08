@@ -19,7 +19,7 @@ export default class PageNft extends PageNftH {
                 TITLE: 'Cudos NFT Minting | NFTs',
                 DESC: 'Mint Non-Fungible Tokens directly on the Cudos network | Cheaper to mint than other blockchains | Native NFTs reduces time taken to mint | 100% Carbon neutral',
                 KEYWORDS: SV.KEYWORDS,
-                ROBOTS: 'noindex, nofollow',
+                ROBOTS: 'index, follow',
                 PAGE_URL: `${Config.URL.GENERAL}${PageNft.URL}`,
             },
             CSS: {
