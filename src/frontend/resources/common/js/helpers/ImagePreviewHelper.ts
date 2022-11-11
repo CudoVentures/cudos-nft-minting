@@ -56,13 +56,14 @@ export default class ImagePreviewHelper {
                 const resultType = type ?? S.Strings.EMPTY;
                 const resultPreviewUrl = ImagePreviewHelper.getPreviewUrlByType(url, resultType);
 
-                storageHelper.addNftImageCache(url, resultType, resultPreviewUrl);
+                try {
+                    storageHelper.addNftImageCache(url, resultType, resultPreviewUrl);
+                } catch (e) {
+                    console.log('the storage has been full');
+                }
                 this.invokeCallbacks(url, resultType, resultPreviewUrl);
             }, () => {
-                const resultType = S.Strings.EMPTY;
-                const resultPreviewUrl = ImagePreviewHelper.getPreviewUrlByType(url, resultType);
-
-                this.invokeCallbacks(url, resultType, resultPreviewUrl);
+                this.invokeCallbacks(url, '', ImagePreviewHelper.UNKNOWN_PREVIEW_URL);
             }));
         });
     }
