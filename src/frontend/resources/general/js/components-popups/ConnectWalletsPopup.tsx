@@ -14,10 +14,12 @@ import SvgSuccessfulWaves from '../../../common/svg/unsuccessful-waves.svg';
 import SvgWallet from '../../../common/svg/wallet.svg';
 import SvgLighting from '../../../common/svg/lighting.svg';
 import '../../css/components-popups/connect-wallets-popup.css';
+import AlertStore from '../../../common/js/stores/AlertStore';
 
 interface Props extends PopupWindowProps {
     walletStore: WalletStore;
     popupStore: PopupConnectWalletsStore;
+    alertStore: AlertStore;
 }
 
 class ConnectWalletsPopup extends PopupWindow < Props > {
@@ -37,6 +39,11 @@ class ConnectWalletsPopup extends PopupWindow < Props > {
     onClickToggleKeplr = async () => {
         const popupStore = this.props.popupStore;
         const walletStore = this.props.walletStore;
+
+        if (!walletStore.keplrWallet.isLedgerExtensionPresent()) {
+            this.props.alertStore.show('Keplr wallet extension not detected. Please install it first.');
+            return;
+        }
 
         try {
             popupStore.markWalletStatusAsConnecting();
@@ -173,5 +180,6 @@ export default inject((stores) => {
     return {
         walletStore: stores.walletStore,
         popupStore: stores.popupConnectWalletsStore,
+        alertStore: stores.alertStore,
     }
 })(observer(ConnectWalletsPopup));

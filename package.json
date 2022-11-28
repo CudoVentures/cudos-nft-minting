@@ -1,7 +1,7 @@
 {
   "name": "cudos-nft-minting-mycroservice",
   "version": "0.2.0",
-  "description": "CudosNftMintingnMycroService",
+  "description": "CudosNftMintingMycroService",
   "author": "LimeChain",
   "private": true,
   "scripts": {
@@ -18,7 +18,7 @@
     "aes-js": "^3.1.2",
     "axios": "^0.27.2",
     "bignumber.js": "9.0.0",
-    "cudosjs": "1.0.0",
+    "cudosjs": "1.2.3",
     "dotenv": "^16.0.1",
     "js-sha256": "^0.9.0",
     "koa": "^2.13.4",
